@@ -8,6 +8,7 @@ import "./components/Customer/Zodiac controller/zodiac.css";
 import ForgotPassword from "./components/LoginController/forgot-password.jsx";
 import Login from "./components/LoginController/login.jsx";
 import "./index.css";
+import DetailProduct  from "./components/Customer/detail-product/detail-product.jsx"
 
 ReactDOM.createRoot(document.getElementById("root")).render(
   <BrowserRouter>
@@ -16,6 +17,7 @@ ReactDOM.createRoot(document.getElementById("root")).render(
       <Route exact path="/customer-page" element={<MyComponent />} />
       <Route exact path="/login" element={<Login />} />
       <Route path="/forgot-password" element={<ForgotPassword />} />
+      <Route path="/DetailProduct" element={<DetailProduct />} />
       {/* Các tuyến đường khác nếu cần */}
     </Routes>
   </BrowserRouter>
