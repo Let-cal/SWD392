@@ -1,0 +1,79 @@
+.coolBeans {
+    background-color: black;
+    padding: 1.25rem 2rem; /* tương đương với px-8 py-5 */
+    margin-top: 3.5rem; /* tương đương với mt-14 */
+    font-size: 1.25rem; /* tương đương với text-xl */
+    font-weight: bold;
+    color: #fff; /* tương đương với text-white */
+    text-transform: lowercase;
+    border-width: 2px; /* tương đương với border-2 */
+    border-color: #fff; /* tương đương với border-white */
+    border-style: solid; /* tương đương với border-solid */
+    border-radius: 0.375rem; /* tương đương với rounded-md */
+    max-width: 20rem; /* tương đương với max-md:px-5 */
+    margin-top: 2.5rem; /* tương đương với max-md:mt-10 */
+    overflow: hidden;
+    position: relative;
+    text-decoration: none;
+    transition: 0.2s transform ease-in-out;
+    will-change: transform;
+    z-index: 0;
+  }
+  
+  .coolBeans::after {
+    background-color: white;
+    content: "";
+    display: block;
+    height: 100%;
+    width: 100%;
+    position: absolute;
+    left: 0;
+    top: 0;
+    transform: translate(-100%, 0) rotate(10deg);
+    transform-origin: top left;
+    transition: 0.2s transform ease-out;
+    will-change: transform;
+    z-index: -1;
+  }
+  
+  .coolBeans:hover::after {
+    transform: translate(0, 0);
+  }
+  
+  .coolBeans:hover {
+    color: black;
+    transform: scale(1.05);
+    will-change: transform;
+  }
+  @tailwind base;
+  @tailwind components;
+  @tailwind utilities;
+  
+  @layer utilities {
+    .bg-gradient-custom-Zodiac-button {
+      background: rgb(25, 23, 22);
+      background: linear-gradient(
+        86deg,
+        rgba(25, 23, 22, 1) 7%,
+        rgba(8, 174, 244, 1) 29%,
+        rgba(255, 230, 109, 1) 93%
+      );
+    }
+  }
+  
+  group:hover img {
+    transform: scale(1.05);
+    transition: transform 0.3s ease;
+  }
+  .group:hover h3,
+  .group:hover p {
+    opacity: 0.3;
+  }
+  .grayed {
+    filter: grayscale(100%);
+  }
+  .group:hover .article a {
+    filter: none;
+    background-color: transparent;
+    opacity: 1;
+  }
