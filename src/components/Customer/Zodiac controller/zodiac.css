@@ -1,0 +1,47 @@
+.button-zodiac {
+  position: relative;
+  background-color: transparent;
+  color: #444547; /* Initial text color */
+  border: none;
+  font-size: 18px;
+  transition: transform 0.2s, background-color 0.2s, box-shadow 0.3s ease;
+  outline: none;
+  border-radius: 3px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Initial box-shadow */
+}
+
+.button-zodiac::after {
+  content: "";
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  width: 0;
+  height: 3px;
+  background-color: #1a2a4a; /* Color of the underline */
+  transition: width 0.3s ease, left 0.3s ease;
+}
+
+.button-zodiac:hover::after {
+  width: 100%;
+  left: 0;
+}
+
+.button-zodiac:active {
+  transform: translateY(3px);
+}
+
+.button-zodiac:hover {
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3), 0 0 10px rgba(255, 255, 255, 0.5); /* Glowing effect */
+  background-color: white;
+  transition: all 0.5s ease, left 0.5s ease;
+}
+
+.button-zodiac .text {
+  color: #1a2a4a; /* Initial text color */
+  transition: color 0.5s, text-shadow 0.3s ease;
+}
+
+.button-zodiac:hover .text {
+  text-shadow: 0 0 10px rgba(118, 118, 118, 0.954); /* Glowing text effect */
+  color: rgb(0, 0, 0); /* Ensure text color is maintained */
+}

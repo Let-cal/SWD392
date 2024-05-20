@@ -2,7 +2,8 @@ import LoginIcon from "@mui/icons-material/Login";
 import { TextField } from "@mui/material";
 import Button from "@mui/material/Button";
 import { useEffect, useRef, useState } from "react";
-import CartIcon from "./CartIcon.jsx";
+import { Link } from "react-router-dom";
+import CartIcon from "./Cart-Icon.jsx";
 import ColorTabs from "./Colored-tab.jsx";
 
 function Header() {
@@ -66,10 +67,10 @@ function Header() {
         alt=""
       />
       <div className="title-header flex-auto text-4xl leading-10">
-        <span className="font-bold text-gradient bg-clip-text text-transparent">
+        <span className="font-bold bg-gradient-custom-header-title bg-clip-text text-transparent">
           Z
         </span>
-        <span className="text-gradient bg-clip-text text-transparent">
+        <span className="bg-gradient-custom-header-title bg-clip-text text-transparent">
           odiacGems
         </span>
       </div>
@@ -98,13 +99,16 @@ function Header() {
         )}
 
         <CartIcon />
-        <Button
-          variant="contained"
-          endIcon={<LoginIcon />}
-          style={{ backgroundColor: "black", color: "white" }}
-        >
-          Login
-        </Button>
+
+        <Link to="/login">
+          <Button
+            variant="contained"
+            endIcon={<LoginIcon />}
+            style={{ backgroundColor: "black", color: "white" }}
+          >
+            Login
+          </Button>
+        </Link>
       </nav>
     </header>
   );
