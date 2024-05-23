@@ -105,7 +105,7 @@ function Hero() {
         loading="lazy"
         src="https://cdn.builder.io/api/v1/image/assets/TEMP/144da04db8c4d0e3e7a071c38f8b815a5f45c3ffeebd74750f24671c4845d030?apiKey=2cf111b7142f4a06bfb2b5c186f14037&"
         alt="Gold big hoops earrings"
-        className="object-cover absolute inset-0 size-full"
+        className="mt-[70px] object-cover absolute inset-0 size-full"
       />
       <h1 className="relative mt-40 text-4xl font-medium leading-10 max-md:mt-10 max-md:max-w-full">
         Gold big hoops{" "}
@@ -166,14 +166,17 @@ function Footer() {
 function MyComponent() {
   return (
     <div>
+
       <Header />
-      <div className="flex flex-col items-center px-20 pb-0 bg-white max-md:px-5">
-        <Hero />
-        <Zodiac />
-        <MonthlyDeals />
-        <TrustedCompanies />
-        <Footer />
-      </div>
+    <div className="flex flex-col items-center px-20 pb-0 bg-white max-md:px-5">
+      
+      <Hero />
+      <Zodiac />
+      <MonthlyDeals />
+      <ProductGrid title="Shop The Latest" products={latestProducts} />
+      <ProductGrid title="" products={otherProducts} />
+      <Footer />
+    </div>
     </div>
   );
 }

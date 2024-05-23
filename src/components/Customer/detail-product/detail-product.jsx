@@ -127,8 +127,9 @@ const DetailProduct = () => {
   };
 
   return (
+    <>
+    <Header />
     <div className="container">
-      <Header />
 
       <div className="header-separator" />
 
@@ -262,6 +263,7 @@ const DetailProduct = () => {
         </footer>
       </main>
     </div>
+    </>
   );
 };
 
