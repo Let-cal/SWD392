@@ -13,7 +13,7 @@ function Header() {
 
     const handleScroll = () => {
       const offset = window.scrollY;
-      if (offset > 20) {
+      if (offset >= 0) {
         setSticky(true);
       } else {
         setSticky(false);
@@ -63,7 +63,7 @@ function Header() {
       <img
         loading="lazy"
         src="https://cdn.builder.io/api/v1/image/assets/TEMP/761a3e35369fc6c259c389bd4b678d676da11023c4860c23c48806e300fd51ea?apiKey=2cf111b7142f4a06bfb2b5c186f14037&"
-        className="shrink-0 max-w-full aspect-[0.88] w-[76px]"
+        className="shrink-0 max-w-full aspect-[0.88] w-[76px] "
         alt=""
       />
       <div className="title-header flex-auto text-4xl leading-10">

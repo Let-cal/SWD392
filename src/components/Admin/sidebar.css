@@ -1,0 +1,69 @@
+/* Sidebar CSS */
+.sidebar-admin {
+    width: 18%;
+    /* Width of the sidebar */
+    height: 100vh;
+    color: black;
+    /* Text color */
+    position: fixed;
+    /* Fix position */
+    top: 0;
+    /* Align to the top */
+    left: 0;
+    /* Align to the left */
+    padding-top: 20px;
+
+    border-right: 2px solid #ccc;
+    /* background-color: #f0f0f0; */
+
+}
+
+.sidebar-admin h2 {
+    text-align: center;
+    /* font-size: 30px; */
+    margin-bottom: 50px;
+
+}
+
+.sidebar-nav {
+    list-style-type: none;
+    /* Remove bullet points */
+    padding: 0;
+    /* Remove default padding */
+    margin: 0;
+    /* Remove default margin */
+}
+
+.sidebar-nav li {
+    padding: 0;
+    margin-bottom: 20px;
+}
+
+.sidebar-nav li a {
+    text-decoration: none;
+    /* Remove underline */
+    color: black;
+    /* Text color */
+    display: flex;
+    /* Flexbox for icon and text */
+    align-items: center;
+    /* Align items */
+    padding: 10px 20px;
+    /* Padding for a */
+    width: 100%;
+    /* Full width */
+    box-sizing: border-box;
+    /* Include padding in width calculation */
+}
+
+.sidebar-nav li a:hover {
+    background-color: rgba(201, 186, 186, 0.5);
+    /* Semi-transparent background color on hover */
+    cursor: pointer;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.sidebar-nav li a svg {
+    margin-right: 10px;
+    /* Space between icon and text */
+}
