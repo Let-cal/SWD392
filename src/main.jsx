@@ -4,7 +4,7 @@ import AminPage from "./components/Admin/AminPage.jsx";
 import "./components/Customer/Customer.css";
 import "./components/Customer/Header/header.css";
 import MyComponent from "./components/Customer/MyComponent.jsx";
-import AccountOrders from "./components/Customer/ProfileController/CustomerProfile.jsx";
+import AccountProfileMain from "./components/Customer/ProfileController/ProfileMain.jsx";
 import "./components/Customer/Zodiac controller/zodiac.css";
 import DetailProduct from "./components/Customer/detail-product/detail-product.jsx";
 import ForgotPassword from "./components/LoginController/forgot-password.jsx";
@@ -16,7 +16,11 @@ ReactDOM.createRoot(document.getElementById("root")).render(
       <Route exact path="/" element={<AminPage />} />
       <Route exact path="/customer-page" element={<MyComponent />} />
       <Route exact path="/login" element={<Login />} />
-      <Route exact path="/CustomerProfile" element={<AccountOrders />} />
+      <Route
+        exact
+        path="/CustomerProfile-order"
+        element={<AccountProfileMain />}
+      />
       <Route path="/forgot-password" element={<ForgotPassword />} />
       <Route path="/DetailProduct" element={<DetailProduct />} />
       {/* Các tuyến đường khác nếu cần */}

@@ -69,20 +69,19 @@ export default function AvatarProfile() {
         transformOrigin={{ horizontal: "right", vertical: "top" }}
         anchorOrigin={{ horizontal: "right", vertical: "bottom" }}
       >
-        <Link to="/CustomerProfile">
-          <MenuItem onClick={handleClose}>
-            <Avatar /> My account
-          </MenuItem>
-        </Link>
-
-        <Divider />
         <MenuItem onClick={handleClose}>
-          <ListItemIcon>
-            <GradingIcon fontSize="small" />
-          </ListItemIcon>
-          My orders
+          <Avatar /> My account
         </MenuItem>
 
+        <Divider />
+        <Link to="/CustomerProfile-order">
+          <MenuItem onClick={handleClose}>
+            <ListItemIcon>
+              <GradingIcon fontSize="small" />
+            </ListItemIcon>
+            My orders
+          </MenuItem>
+        </Link>
         <MenuItem onClick={handleClose}>
           <ListItemIcon>
             <Logout fontSize="small" />
