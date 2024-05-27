@@ -1,3 +1,5 @@
+import PropTypes from "prop-types";
+
 function ZodiacSignCard({ name, imageSrc }) {
   return (
     <button className="button-zodiac flex flex-col items-center px-4 py-6 bg-white rounded-lg shadow-md">
@@ -11,7 +13,10 @@ function ZodiacSignCard({ name, imageSrc }) {
     </button>
   );
 }
-
+ZodiacSignCard.propTypes = {
+  name: PropTypes.string.isRequired,
+  imageSrc: PropTypes.string.isRequired,
+};
 function ZodiacSignList() {
   const zodiacSigns = [
     {
@@ -92,7 +97,7 @@ function ZodiacSignList() {
 export default function App() {
   return (
     <div className="container mx-auto px-0 py-8">
-      <h1 className="text-3xl font-bold mb-6">Zodiac Signs</h1>
+      <h1 className="text-3xl font-bold mb-6 font-serif">Zodiac Signs</h1>
       <ZodiacSignList />
     </div>
   );
