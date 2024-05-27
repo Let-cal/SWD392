@@ -85,12 +85,12 @@ export default function ColorTabs() {
         >
           <Tab
             value="one"
-            label="Collection"
+            label="Home Page"
             component="a"
-            href="#collection"
+            href="/customer-page"
           />
-          <Tab value="two" label="For Man" component="a" href="#man" />
-          <Tab value="three" label="For Women" component="a" href="#women" />
+          <Tab value="two" label="Collection" component="a" href="#man" />
+          <Tab value="three" label="About" component="a" href="#women" />
         </Tabs>
       )}
     </Box>

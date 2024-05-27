@@ -1,15 +1,13 @@
-import LoginIcon from "@mui/icons-material/Login";
 import { TextField } from "@mui/material";
-import Button from "@mui/material/Button";
 import { useEffect, useRef, useState } from "react";
-import { Link } from "react-router-dom";
+
+import AvatarProfile from "./Avatar-profile.jsx";
 import CartIcon from "./Cart-Icon.jsx";
 import ColorTabs from "./Colored-tab.jsx";
-
 function Header() {
   const [isSticky, setSticky] = useState(false);
   useEffect(() => {
-    const mediaQuery = window.matchMedia("(min-width: 768px)"); 
+    const mediaQuery = window.matchMedia("(min-width: 768px)");
 
     const handleScroll = () => {
       const offset = window.scrollY;
@@ -97,10 +95,10 @@ function Header() {
             inputRef={searchInputRef}
           />
         )}
-
         <CartIcon />
+        <AvatarProfile />
 
-        <Link to="/login">
+        {/* <Link to="/login">
           <Button
             variant="contained"
             endIcon={<LoginIcon />}
@@ -108,7 +106,7 @@ function Header() {
           >
             Login
           </Button>
-        </Link>
+        </Link> */}
       </nav>
     </header>
   );
