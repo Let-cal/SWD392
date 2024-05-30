@@ -8,8 +8,8 @@ function Sidebar() {
 
   return (
     <div>
-      <div className="sidebar-admin">
-        <h2>ADMIN</h2>
+      <div className="sidebar-admin bg-gray-100 shadow-md">
+      
         <ul className="sidebar-nav">
 
           <li >

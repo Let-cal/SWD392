@@ -2,48 +2,8 @@ import AddShoppingCartIcon from "@mui/icons-material/AddShoppingCart";
 import { useState } from "react";
 import Header from "./Header/header.jsx";
 import Zodiac from "./Zodiac controller/Zodiac.jsx";
+import TrustedCompanies from "./customer-productCard/productCard.jsx";
 
-const latestProducts = [
-  {
-    name: "Lira Earrings",
-    price: "$ 20,00",
-    image:
-      "https://cdn.builder.io/api/v1/image/assets/TEMP/aae30422978342647c8d0d9193c8a66845f2bb0ae55e2f8c4877d6f67f292156?apiKey=2cf111b7142f4a06bfb2b5c186f14037&",
-  },
-  {
-    name: "Hal Earrings",
-    price: "$ 25,00",
-    image:
-      "https://cdn.builder.io/api/v1/image/assets/TEMP/d4d0e0c41c27a8ba8bf6d968218df6cc3aed36f2b2acc3b20439a7031c87c463?apiKey=2cf111b7142f4a06bfb2b5c186f14037&",
-  },
-  {
-    name: "Kaede Hair Pin Set Of 3",
-    price: "$ 30,00",
-    image:
-      "https://cdn.builder.io/api/v1/image/assets/TEMP/19bff757d68beaff2705f47f3233c20dcc4b96aaeb729c00b0fe35c9db4f20ad?apiKey=2cf111b7142f4a06bfb2b5c186f14037&",
-  },
-];
-
-const otherProducts = [
-  {
-    name: "Hair Pin Set of 3",
-    price: "$ 30,00",
-    image:
-      "https://cdn.builder.io/api/v1/image/assets/TEMP/85b98ed4e25a833586bc54c1d5c6457cfd243aeb3bf5249ca27fbce37631719b?apiKey=2cf111b7142f4a06bfb2b5c186f14037&",
-  },
-  {
-    name: "Plaine Necklace",
-    price: "$ 19,00",
-    image:
-      "https://cdn.builder.io/api/v1/image/assets/TEMP/a9e977caf29eb1b2eec1c3fae1d3171f992fe449c6cf1451fc6304cc7ed72cd8?apiKey=2cf111b7142f4a06bfb2b5c186f14037&",
-  },
-  {
-    name: "Yuki Hair Pin Set of 3",
-    price: "$ 29,00",
-    image:
-      "https://cdn.builder.io/api/v1/image/assets/TEMP/17ba2627293335fe5285c0ef2c8c8fe27152c8e9df6d99e400f5abe71a4428d8?apiKey=2cf111b7142f4a06bfb2b5c186f14037&",
-  },
-];
 const ProductsMonthly = ({
   imgSrc,
   title,
@@ -168,50 +128,6 @@ function Hero() {
   );
 }
 
-function ProductCard({ product }) {
-  return (
-    <div className="flex flex-col grow text-xl leading-7 max-md:mt-10">
-      <img
-        loading="lazy"
-        src={product.image}
-        alt={product.name}
-        className="w-full aspect-square"
-      />
-      <div className="mt-8 text-black">{product.name}</div>
-      <div className="mt-5 font-medium capitalize text-stone-500">
-        {product.price}
-      </div>
-    </div>
-  );
-}
-
-function ProductGrid({ title, products }) {
-  return (
-    <>
-      <div className="flex gap-5 mt-10 w-full font-medium max-w-[1249px] max-md:flex-wrap max-md:mt-10 max-md:max-w-full">
-        <h2 className="flex-auto text-4xl leading-10 text-black">{title}</h2>
-        <button className="my-auto text-xl leading-7 capitalize text-stone-500 transition duration-300 ease-in-out transform hover:scale-125">
-          View All
-        </button>
-      </div>
-      <div className="px-px mt-11 w-full max-w-[1249px] max-md:mt-10 max-md:max-w-full">
-        <div className="flex gap-5 max-md:flex-col max-md:gap-0">
-          {products.map((product, index) => (
-            <div
-              key={index}
-              className={`flex flex-col ${
-                index === 0 ? "w-[33%] max-md:ml-0" : "ml-5 w-[33%]"
-              } max-md:w-full`}
-            >
-              <ProductCard product={product} />
-            </div>
-          ))}
-        </div>
-      </div>
-    </>
-  );
-}
-
 function Footer() {
   return (
     <>
@@ -250,17 +166,14 @@ function Footer() {
 function MyComponent() {
   return (
     <div>
-
       <Header />
-    <div className="flex flex-col items-center px-20 pb-0 bg-white max-md:px-5">
-      
-      <Hero />
-      <Zodiac />
-      <MonthlyDeals />
-      <ProductGrid title="Shop The Latest" products={latestProducts} />
-      <ProductGrid title="" products={otherProducts} />
-      <Footer />
-    </div>
+      <div className="flex flex-col items-center px-20 pb-0 bg-white max-md:px-5">
+        <Hero />
+        <Zodiac />
+        <MonthlyDeals />
+        <TrustedCompanies />
+        <Footer />
+      </div>
     </div>
   );
 }

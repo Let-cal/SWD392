@@ -9,7 +9,7 @@ import ColorTabs from "./Colored-tab.jsx";
 function Header() {
   const [isSticky, setSticky] = useState(false);
   useEffect(() => {
-    const mediaQuery = window.matchMedia("(min-width: 768px)"); // Tailwind 'md' breakpoint is 768px
+    const mediaQuery = window.matchMedia("(min-width: 768px)"); 
 
     const handleScroll = () => {
       const offset = window.scrollY;
@@ -54,11 +54,11 @@ function Header() {
       searchInputRef.current.focus();
     }
   }, [isSearchOpen]);
+  
   return (
     <header
-      className={`header-container flex gap-5 w-full text-black max-md:flex-wrap max-md:max-w-full items-end ${
-        isSticky ? "sticky" : ""
-      }`}
+      className={`header-container flex gap-5 w-full text-black max-md:flex-wrap max-md:max-w-full items-end ${isSticky ? "sticky" : ""
+        }`}
     >
       <img
         loading="lazy"
