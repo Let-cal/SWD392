@@ -50,9 +50,10 @@ export default function ProfileColorTabs() {
           onChange={handleChange}
           aria-label="basic tabs example"
         >
-          <Tab label="Item One" {...a11yProps(0)} />
-          <Tab label="Item Two" {...a11yProps(1)} />
-          <Tab label="Item Three" {...a11yProps(2)} />
+          <Tab label="MY ORDERS" {...a11yProps(0)} />
+          <Tab label="ADDRESSES" {...a11yProps(1)} />
+          <Tab label="ACCOUNT DETAIL" {...a11yProps(2)} />
+          <Tab label="LOGOUT" {...a11yProps(3)} />
         </Tabs>
       </Box>
       <CustomTabPanel value={value} index={0}>

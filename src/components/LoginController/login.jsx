@@ -5,7 +5,7 @@ import axios from "axios"; // Thêm axios để gọi API
 import { useSnackbar } from "notistack";
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom"; // Thêm useNavigate để điều hướng sau khi đăng nhập thành công
-
+import { useAuth } from "./AuthContext";
 function ImageSection() {
   return (
     <div className="flex flex-col w-3/5 max-md:ml-0 max-md:w-full">
@@ -28,6 +28,7 @@ function ImageSection() {
 }
 
 function LoginForm() {
+  const { setIsAuthenticated } = useAuth();
   const [showPassword, setShowPassword] = useState(false);
   const [formData, setFormData] = useState({ email: "", password: "" }); // Thêm state để lưu trữ email và password
   const [checked, setChecked] = useState(true);
@@ -51,7 +52,7 @@ function LoginForm() {
     e.preventDefault();
 
     const requestBody = {
-      userName: formData.email,
+      email: formData.email,
       password: formData.password,
     };
 
@@ -64,15 +65,17 @@ function LoginForm() {
       if (response.data && response.data.token) {
         localStorage.setItem("token", response.data.token);
         localStorage.setItem("role", response.data.roleId);
-        localStorage.setItem("userId", response.data.username);
-
+        localStorage.setItem("userName", response.data.fullName);
+        localStorage.setItem("email", formData.email);
+        setIsAuthenticated(true); // Cập nhật trạng thái đăng nhập
+        console.log("Đăng nhập thành công", localStorage.getItem("email"));
         enqueueSnackbar("Đăng nhập thành công", {
           variant: "success",
           anchorOrigin: { horizontal: "right", vertical: "top" },
           preventDuplicate: true,
         });
 
-        navigate("/");
+        navigate("/customer-page");
       }
     } catch (error) {
       console.error("Đăng nhập thất bại:", error);
@@ -188,6 +191,12 @@ function LoginForm() {
             className="self-center mt-5 text-sm leading-5 underline text-slate-500"
           >
             Forgot password?
+          </Link>
+          <Link
+            to="/Register-page"
+            className="self-center mt-5 text-sm leading-5 underline text-slate-500"
+          >
+            Register right now !!! If you don’t have accounnt.
           </Link>
         </div>
       </div>

@@ -32,22 +32,13 @@ const CardStack = ({ images }) => {
         setTimeout(() => {
           CollectionCard.classList.remove("swap");
           stack.insertBefore(CollectionCard, stack.firstElementChild);
-          resetAutoplay();
         }, 500);
       }
     });
 
-    let autoplayInterval = setInterval(moveCard, 4000);
-
-    function resetAutoplay() {
-      clearInterval(autoplayInterval);
-      autoplayInterval = setInterval(moveCard, 4000);
-    }
-
     // Cleanup function to remove event listener and clear interval
     return () => {
       stack.removeEventListener("click", moveCard);
-      clearInterval(autoplayInterval);
     };
   }, []);
   CardStack.propTypes = {

@@ -38,7 +38,7 @@ function ForgotPassword() {
               </div>
             </div>
             <Link
-              to="/customer-page"
+              to="/login"
               className="self-center mt-5 text-sm leading-5 underline text-slate-500"
             >
               Back to login page

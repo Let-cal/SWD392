@@ -1,8 +1,12 @@
-import AssessmentIcon from "@mui/icons-material/Assessment";
-import GroupIcon from "@mui/icons-material/Group";
+import HomeIcon from "@mui/icons-material/Home";
+import LibraryBooksIcon from "@mui/icons-material/LibraryBooks";
+import ManageAccountsIcon from "@mui/icons-material/ManageAccounts";
+import ManageSearchIcon from "@mui/icons-material/ManageSearch";
+import ShoppingBagIcon from "@mui/icons-material/ShoppingBag";
 import Divider from "@mui/material/Divider";
 import "./sidebar.css";
-function Sidebar() {
+import PropTypes from 'prop-types';
+function Sidebar({ setSelectedContent }) {
   return (
     <div>
       <div className="bg-gray-100 shadow-md sidebar-admin">
@@ -16,21 +20,40 @@ function Sidebar() {
         </div>
         <Divider />
         <ul className="sidebar-nav">
-          <li>
+          <li onClick={() => setSelectedContent('HomePage')}>
             <a>
-              <GroupIcon /> Staff account
+              <HomeIcon /> Home Page
             </a>
           </li>
-
-          <li>
+          <li onClick={() => setSelectedContent('OrdersManagement')}>
             <a>
-              <GroupIcon /> Customer account
+              <ManageSearchIcon /> Orders Management
             </a>
           </li>
-
-          <li>
+          <li onClick={() => setSelectedContent('ProductsManagement')}>
             <a>
-              <AssessmentIcon /> Report management
+              <ShoppingBagIcon /> Products Management
+            </a>
+          </li>
+          <li onClick={() => setSelectedContent('CollectionsManagement')}>
+            <a>
+              <LibraryBooksIcon /> Collections Management
+            </a>
+          </li>
+          <Divider />
+          <li onClick={() => setSelectedContent('ZodiacsManagement')}>
+            <a className="gap-1">
+              <img
+                className="w-[13%]"
+                src="src/components/Customer/images/zodiac.png"
+                alt=""
+              />{" "}
+              Zodiacs Management
+            </a>
+          </li>
+          <li onClick={() => setSelectedContent('UsersManagement')}>
+            <a>
+              <ManageAccountsIcon /> Users Management
             </a>
           </li>
         </ul>
@@ -38,5 +61,7 @@ function Sidebar() {
     </div>
   );
 }
-
+Sidebar.propTypes = {
+  setSelectedContent: PropTypes.func.isRequired,
+};
 export default Sidebar;
