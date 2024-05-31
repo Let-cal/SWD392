@@ -97,7 +97,8 @@ function ZodiacSignList() {
 export default function App() {
   return (
     <div className="container mx-auto px-0 py-8">
-      <h1 className="text-3xl font-bold mb-6 font-serif">Zodiac Signs</h1>
+      <h1 className="font-serif md:text-4xl ">Zodiac Signs</h1>
+      <div className="shrink-0 mb-8 h-px bg-black border border-black border-solid"></div>
       <ZodiacSignList />
     </div>
   );

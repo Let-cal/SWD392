@@ -1,13 +1,13 @@
 import AddCircleIcon from "@mui/icons-material/AddCircle";
+import { CssBaseline } from "@mui/material";
 import Button from "@mui/material/Button";
-import Pagination from "@mui/material/Pagination";
-import TextField from "@mui/material/TextField";
 import "./AdminAccountManagement.css";
+import Dashboard from "./ChartController/Dashboard.jsx";
 import User from "./NumberOfUser.jsx";
-import CustomTab from "./TabsToTable.jsx";
+
 const AdminAccountManagement = () => {
   return (
-    <div className="w-full relative bg-background overflow-hidden flex flex-col items-start justify-start pt-[104px] pb-[43px] pr-[38px] pl-10 box-border gap-[20px] leading-[normal] tracking-[normal] text-left text-19xl text-heading font-body-medium">
+    <div className="w-full relative bg-background overflow-hidden flex flex-col items-start justify-start  box-border gap-[20px] leading-[normal] tracking-[normal] text-left text-19xl text-heading font-body-medium">
       <div className="self-stretch flex flex-row items-center justify-between max-w-full gap-[20px] font-urbanist mq750:flex-wrap">
         <h1 className="m-0 text-[30px] w-[394px] relative text-inherit leading-[48px] font-bold font-inherit inline-block shrink-0 max-w-full mq450:text-[23px] mq450:leading-[29px] mq1050:text-11xl mq1050:leading-[38px]">
           Account management
@@ -64,26 +64,8 @@ const AdminAccountManagement = () => {
           propFontSize="20px"
         />
       </nav>
-      <div className="flex flex-row justify-between w-full items-center">
-        <h1 className="text-[30px] text-[30px] w-[394px] relative text-inherit leading-[48px] font-bold font-inherit inline-block shrink-0 max-w-full mq450:text-[23px] mq450:leading-[29px] mq1050:text-11xl mq1050:leading-[38px]">
-          Total Users
-        </h1>
-        <TextField
-          id="standard-textarea"
-          label="Search"
-          placeholder="Search name of user account"
-          multiline
-          variant="standard"
-          sx={{ width: "30%" }}
-        />
-      </div>
-
-      <section className="w-full mt-8">
-        <CustomTab />
-        <div className="flex justify-center mt-6">
-          <Pagination count={10} showFirstButton showLastButton />
-        </div>
-      </section>
+      <CssBaseline />
+      <Dashboard />
     </div>
   );
 };

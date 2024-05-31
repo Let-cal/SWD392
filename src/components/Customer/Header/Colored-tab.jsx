@@ -9,14 +9,26 @@ import Tab from "@mui/material/Tab";
 import Tabs from "@mui/material/Tabs";
 import { useTheme } from "@mui/material/styles";
 import useMediaQuery from "@mui/material/useMediaQuery";
-import { useState } from "react";
-
+import { useEffect, useState } from "react";
+import { useLocation } from "react-router-dom";
 export default function ColorTabs() {
   const [value, setValue] = useState("one");
   const [drawerOpen, setDrawerOpen] = useState(false);
-
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
+  const location = useLocation();
+
+  useEffect(() => {
+    if (location.pathname === "/customer-page") {
+      setValue("one");
+    } else if (location.pathname.includes("#Collection")) {
+      setValue("two");
+    } else if (location.pathname.includes("/AboutPage")) {
+      setValue("three");
+    } else {
+      setValue(false);
+    }
+  }, [location]);
 
   const handleChange = (event, newValue) => {
     setValue(newValue);
@@ -41,17 +53,17 @@ export default function ColorTabs() {
     >
       <List>
         <ListItem button>
-          <a href="#Collection" onClick={() => handleChange(null, "one")}>
+          <a href="/customer-page" onClick={() => handleChange(null, "one")}>
             <ListItemText primary="Home Page" />
           </a>
         </ListItem>
         <ListItem button>
-          <a href="#For Man" onClick={() => handleChange(null, "two")}>
+          <a href="#Collection" onClick={() => handleChange(null, "two")}>
             <ListItemText primary="Collection" />
           </a>
         </ListItem>
         <ListItem button>
-          <a href="#For Women" onClick={() => handleChange(null, "three")}>
+          <a href="/AboutPage" onClick={() => handleChange(null, "three")}>
             <ListItemText primary="About" />
           </a>
         </ListItem>
@@ -89,8 +101,13 @@ export default function ColorTabs() {
             component="a"
             href="/customer-page"
           />
-          <Tab value="two" label="Collection" component="a" href="#man" />
-          <Tab value="three" label="About" component="a" href="#women" />
+          <Tab
+            value="two"
+            label="Collection"
+            component="a"
+            href="#Collection"
+          />
+          <Tab value="three" label="About" component="a" href="/AboutPage" />
         </Tabs>
       )}
     </Box>

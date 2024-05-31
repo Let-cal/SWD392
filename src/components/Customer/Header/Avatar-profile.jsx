@@ -10,7 +10,8 @@ import {
   Tooltip,
 } from "@mui/material";
 import * as React from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import { useAuth } from "../../LoginController/AuthContext.jsx";
 export default function AvatarProfile() {
   const [anchorEl, setAnchorEl] = React.useState(null);
   const open = Boolean(anchorEl);
@@ -20,6 +21,16 @@ export default function AvatarProfile() {
   };
   const handleClick = (event) => {
     setAnchorEl(event.currentTarget);
+  };
+  const { setIsAuthenticated } = useAuth();
+  const navigate = useNavigate();
+  const handleLogout = () => {
+    localStorage.removeItem("token");
+    localStorage.removeItem("role");
+    localStorage.removeItem("userName");
+    localStorage.removeItem("userId");
+    setIsAuthenticated(false);
+    navigate("/login");
   };
   return (
     <>
@@ -82,7 +93,7 @@ export default function AvatarProfile() {
             My orders
           </MenuItem>
         </Link>
-        <MenuItem onClick={handleClose}>
+        <MenuItem onClick={handleLogout}>
           <ListItemIcon>
             <Logout fontSize="small" />
           </ListItemIcon>

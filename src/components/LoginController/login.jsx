@@ -5,7 +5,7 @@ import axios from "axios"; // Thêm axios để gọi API
 import { useSnackbar } from "notistack";
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom"; // Thêm useNavigate để điều hướng sau khi đăng nhập thành công
-
+import { useAuth } from "./AuthContext";
 function ImageSection() {
   return (
     <div className="flex flex-col w-3/5 max-md:ml-0 max-md:w-full">
@@ -28,9 +28,10 @@ function ImageSection() {
 }
 
 function LoginForm() {
+  const { setIsAuthenticated, setUserRole } = useAuth();
   const [showPassword, setShowPassword] = useState(false);
   const [formData, setFormData] = useState({ email: "", password: "" }); // Thêm state để lưu trữ email và password
-  const [checked, setChecked] = useState(true);
+const [checked, setChecked] = useState(true);
   const navigate = useNavigate(); // Sử dụng để điều hướng sau khi đăng nhập thành công
   const { enqueueSnackbar } = useSnackbar(); // Sử dụng để hiển thị thông báo
 
@@ -63,8 +64,11 @@ function LoginForm() {
 
       if (response.data && response.data.token) {
         localStorage.setItem("token", response.data.token);
-        localStorage.setItem("role", response.data.roleId);
-        localStorage.setItem("email", response.data.email);
+        localStorage.setItem("role", response.data.role);
+        localStorage.setItem("userName", response.data.fullName);
+        localStorage.setItem("email", formData.email);
+        setIsAuthenticated(true);
+        setUserRole(response.data.role); // Set the user role in context
 
         enqueueSnackbar("Đăng nhập thành công", {
           variant: "success",
@@ -72,7 +76,11 @@ function LoginForm() {
           preventDuplicate: true,
         });
 
-        navigate("/viewcart");
+        if (response.data.role === "Admin") {
+          navigate("/AdminPage");
+        } else {
+          navigate("/customer-page");
+        }
       }
     } catch (error) {
       console.error("Đăng nhập thất bại:", error);
@@ -103,12 +111,11 @@ function LoginForm() {
                   Email
                 </div>
                 <div className="flex flex-col justify-center mt-1.5 text-base leading-6 text-slate-400">
-                  <div className="flex flex-col justify-center">
+<div className="flex flex-col justify-center">
                     <TextField
                       name="email"
                       type="email"
                       placeholder="Email"
-                      required
                       variant="outlined"
                       fullWidth
                       value={formData.email} // Thêm giá trị từ state
@@ -136,7 +143,6 @@ function LoginForm() {
                     name="password"
                     type={showPassword ? "text" : "password"}
                     placeholder="Password"
-                    required
                     variant="outlined"
                     fullWidth
                     value={formData.password} // Thêm giá trị từ state
@@ -179,7 +185,7 @@ function LoginForm() {
               </div>
               <button
                 type="submit"
-                className="flex justify-center items-center px-4 py-2 mt-4 text-sm font-medium leading-6 text-white rounded-md bg-slate-900 max-md:px-5"
+className="flex justify-center items-center px-4 py-2 mt-4 text-sm font-medium leading-6 text-white rounded-md bg-slate-900 max-md:px-5"
               >
                 Log in
               </button>
@@ -190,6 +196,12 @@ function LoginForm() {
             className="self-center mt-5 text-sm leading-5 underline text-slate-500"
           >
             Forgot password?
+          </Link>
+          <Link
+            to="/Register-page"
+            className="self-center mt-5 text-sm leading-5 underline text-slate-500"
+          >
+            Register right now !!! If you don’t have accounnt.
           </Link>
         </div>
       </div>

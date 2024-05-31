@@ -1,67 +1,33 @@
-import { TextField } from "@mui/material";
-import { useEffect, useRef, useState } from "react";
-
+import LoginIcon from "@mui/icons-material/Login";
+import { Button, TextField } from "@mui/material";
+import { useEffect, useState } from "react";
+import { Link } from "react-router-dom";
+import { useAuth } from "../../LoginController/AuthContext.jsx";
 import AvatarProfile from "./Avatar-profile.jsx";
 import CartIcon from "./Cart-Icon.jsx";
 import ColorTabs from "./Colored-tab.jsx";
 function Header() {
-  const [isSticky, setSticky] = useState(false);
-  useEffect(() => {
-    const mediaQuery = window.matchMedia("(min-width: 768px)");
-
-    const handleScroll = () => {
-      const offset = window.scrollY;
-      if (offset >= 0) {
-        setSticky(true);
-      } else {
-        setSticky(false);
-      }
-    };
-
-    if (mediaQuery.matches) {
-      window.addEventListener("scroll", handleScroll);
-    }
-
-    const handleResize = () => {
-      if (mediaQuery.matches) {
-        window.addEventListener("scroll", handleScroll);
-      } else {
-        window.removeEventListener("scroll", handleScroll);
-        setSticky(false);
-      }
-    };
-
-    mediaQuery.addEventListener("change", handleResize);
-
-    return () => {
-      window.removeEventListener("scroll", handleScroll);
-      mediaQuery.removeEventListener("change", handleResize);
-    };
-  }, []);
-
   const [isSearchOpen, setSearchOpen] = useState(false);
-  const searchInputRef = useRef(null);
-
+  const { isAuthenticated, setIsAuthenticated } = useAuth();
   const toggleSearch = (event) => {
     event.preventDefault();
     setSearchOpen((prev) => !prev);
   };
 
   useEffect(() => {
-    if (isSearchOpen && searchInputRef.current) {
-      searchInputRef.current.focus();
+    const token = localStorage.getItem("token");
+    if (token) {
+      // Xác định người dùng đã đăng nhập và cập nhật trạng thái
+      setIsAuthenticated(true);
     }
-  }, [isSearchOpen]);
-  
+  }, [isAuthenticated]);
+
   return (
-    <header
-      className={`header-container flex gap-5 w-full text-black max-md:flex-wrap max-md:max-w-full items-end ${isSticky ? "sticky" : ""
-        }`}
-    >
+    <header className="header-container sticky top-0 z-50 bg-white shadow flex gap-5 w-full text-black max-md:flex-wrap max-md:max-w-full items-end">
       <img
         loading="lazy"
         src="https://cdn.builder.io/api/v1/image/assets/TEMP/761a3e35369fc6c259c389bd4b678d676da11023c4860c23c48806e300fd51ea?apiKey=2cf111b7142f4a06bfb2b5c186f14037&"
-        className="shrink-0 max-w-full aspect-[0.88] w-[76px] "
+        className="shrink-0 max-w-full aspect-[0.88] w-[76px]"
         alt=""
       />
       <div className="title-header flex-auto text-4xl leading-10">
@@ -72,7 +38,7 @@ function Header() {
           odiacGems
         </span>
       </div>
-      <nav className="flex gap-5 max-md:gap-2 items-center justify-between text-base leading-7  max-md:max-w-full">
+      <nav className="flex gap-5 max-md:gap-2 items-center justify-between text-base leading-7 max-md:max-w-full">
         <ColorTabs />
         <div className="shrink-0 w-px border border-solid bg-neutral-500 border-neutral-500 h-[22px]" />
         <a
@@ -88,25 +54,22 @@ function Header() {
           />
         </a>
         {isSearchOpen && (
-          <TextField
-            id="standard-basic"
-            label="Search"
-            variant="standard"
-            inputRef={searchInputRef}
-          />
+          <TextField id="standard-basic" label="Search" variant="standard" />
         )}
         <CartIcon />
-        <AvatarProfile />
-
-        {/* <Link to="/login">
-          <Button
-            variant="contained"
-            endIcon={<LoginIcon />}
-            style={{ backgroundColor: "black", color: "white" }}
-          >
-            Login
-          </Button>
-        </Link> */}
+        {!isAuthenticated ? (
+          <Link to="/login">
+            <Button
+              variant="contained"
+              endIcon={<LoginIcon />}
+              style={{ backgroundColor: "black", color: "white" }}
+            >
+              Login
+            </Button>
+          </Link>
+        ) : (
+          <AvatarProfile /> // Hiển thị AvatarProfile khi người dùng đã đăng nhập
+        )}
       </nav>
     </header>
   );
