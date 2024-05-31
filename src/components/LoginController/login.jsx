@@ -1,10 +1,10 @@
 import { Visibility, VisibilityOff } from "@mui/icons-material";
 import { IconButton, InputAdornment, TextField } from "@mui/material";
 import Checkbox from "@mui/material/Checkbox";
+import axios from "axios"; // Thêm axios để gọi API
+import { useSnackbar } from "notistack";
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom"; // Thêm useNavigate để điều hướng sau khi đăng nhập thành công
-import axios from 'axios'; // Thêm axios để gọi API
-import { useSnackbar } from 'notistack'; // Thêm notistack để hiển thị thông báo
 
 function ImageSection() {
   return (
@@ -29,7 +29,7 @@ function ImageSection() {
 
 function LoginForm() {
   const [showPassword, setShowPassword] = useState(false);
-  const [formData, setFormData] = useState({ email: '', password: '' }); // Thêm state để lưu trữ email và password
+  const [formData, setFormData] = useState({ email: "", password: "" }); // Thêm state để lưu trữ email và password
   const [checked, setChecked] = useState(true);
   const navigate = useNavigate(); // Sử dụng để điều hướng sau khi đăng nhập thành công
   const { enqueueSnackbar } = useSnackbar(); // Sử dụng để hiển thị thông báo
@@ -39,10 +39,11 @@ function LoginForm() {
   };
 
   const handleChange = (event) => {
+    setChecked(event.target.checked);
     const { name, value, type, checked } = event.target;
     setFormData({
       ...formData,
-      [name]: type === 'checkbox' ? checked : value,
+      [name]: type === "checkbox" ? checked : value,
     });
   };
 
@@ -55,21 +56,31 @@ function LoginForm() {
     };
 
     try {
-      const response = await axios.post('https://zodiacjewerly.azurewebsites.net/api/Authen/Login', requestBody);
-      
+      const response = await axios.post(
+        "https://zodiacjewerly.azurewebsites.net/api/Authen/Login",
+        requestBody
+      );
 
       if (response.data && response.data.token) {
-        localStorage.setItem('token', response.data.token);
-        localStorage.setItem('role', response.data.roleId);
-        localStorage.setItem('userId', response.data.email);
+        localStorage.setItem("token", response.data.token);
+        localStorage.setItem("role", response.data.roleId);
+        localStorage.setItem("email", response.data.email);
 
-        enqueueSnackbar('Đăng nhập thành công', { variant: 'success', anchorOrigin: { horizontal: 'right', vertical: 'top' }, preventDuplicate: true });
+        enqueueSnackbar("Đăng nhập thành công", {
+          variant: "success",
+          anchorOrigin: { horizontal: "right", vertical: "top" },
+          preventDuplicate: true,
+        });
 
-        navigate('/customer-page');
+        navigate("/viewcart");
       }
     } catch (error) {
-      console.error('Đăng nhập thất bại:', error);
-      enqueueSnackbar('Email hoặc mật khẩu không đúng. Vui lòng thử lại.', { variant: 'error', anchorOrigin: { horizontal: 'right', vertical: 'top' }, preventDuplicate: true });
+      console.error("Đăng nhập thất bại:", error);
+      enqueueSnackbar("Email hoặc mật khẩu không đúng. Vui lòng thử lại.", {
+        variant: "error",
+        anchorOrigin: { horizontal: "right", vertical: "top" },
+        preventDuplicate: true,
+      });
     }
   };
 

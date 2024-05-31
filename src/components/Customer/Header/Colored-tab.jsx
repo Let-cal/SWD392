@@ -42,17 +42,17 @@ export default function ColorTabs() {
       <List>
         <ListItem button>
           <a href="#Collection" onClick={() => handleChange(null, "one")}>
-            <ListItemText primary="Collection" />
+            <ListItemText primary="Home Page" />
           </a>
         </ListItem>
         <ListItem button>
           <a href="#For Man" onClick={() => handleChange(null, "two")}>
-            <ListItemText primary="For Man" />
+            <ListItemText primary="Collection" />
           </a>
         </ListItem>
         <ListItem button>
           <a href="#For Women" onClick={() => handleChange(null, "three")}>
-            <ListItemText primary="For Women" />
+            <ListItemText primary="About" />
           </a>
         </ListItem>
       </List>
@@ -85,12 +85,12 @@ export default function ColorTabs() {
         >
           <Tab
             value="one"
-            label="Collection"
+            label="Home Page"
             component="a"
-            href="#collection"
+            href="/customer-page"
           />
-          <Tab value="two" label="For Man" component="a" href="#man" />
-          <Tab value="three" label="For Women" component="a" href="#women" />
+          <Tab value="two" label="Collection" component="a" href="#man" />
+          <Tab value="three" label="About" component="a" href="#women" />
         </Tabs>
       )}
     </Box>

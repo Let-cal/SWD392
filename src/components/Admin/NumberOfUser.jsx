@@ -1,6 +1,9 @@
+import { defineElement } from "@lordicon/element";
 import PeopleAltIcon from "@mui/icons-material/PeopleAlt";
+import lottie from "lottie-web";
 import PropTypes from "prop-types";
 import { useMemo } from "react";
+defineElement(lottie.loadAnimation);
 const User = ({
   className = "",
   customer,
@@ -39,10 +42,15 @@ const User = ({
       </div>
       <div className="w-[155px] flex flex-col items-start justify-between py-[9.5px] px-0 box-border min-h-[51px] text-7xl text-darkslategray font-montserrat">
         <div
-          className="w-[177px] relative font-semibold inline-block mq450:text-2xl"
+          className=" gap-4 relative font-semibold mq450:text-2xl flex items-center justify-between"
           style={accountsStyle}
         >
           {accounts}
+          <lord-icon
+            src="https://cdn.lordicon.com/qhkvfxpn.json"
+            trigger="hover"
+            style={{ width: "30%", height: "46px" }}
+          ></lord-icon>
         </div>
       </div>
     </div>

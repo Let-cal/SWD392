@@ -1,19 +1,16 @@
-import AddShoppingCartIcon from "@mui/icons-material/AddShoppingCart";
+import { defineElement } from "@lordicon/element";
+import lottie from "lottie-web";
+import PropTypes from "prop-types";
 import { useState } from "react";
+import CardStack from "./CollectionCard/CardStack.jsx";
+import "./CollectionCard/CollectionCard.css";
 import Header from "./Header/header.jsx";
 import Zodiac from "./Zodiac controller/Zodiac.jsx";
 import TrustedCompanies from "./customer-productCard/productCard.jsx";
-
-const ProductsMonthly = ({
-  imgSrc,
-  title,
-  subtitle,
-  description,
-  price,
-  oldPrice,
-}) => {
+// define "lord-icon" custom element with default properties
+defineElement(lottie.loadAnimation);
+const ProductsMonthly = ({ imgSrc, title, subtitle, price, oldPrice }) => {
   const [isHovered, setIsHovered] = useState(false);
-
   return (
     <article
       className={`group relative flex flex-col px-4 pb-8 bg-white text-2xl leading-8 text-zinc-800 w-full max-w-xs md:max-w-sm overflow-hidden ${
@@ -38,10 +35,15 @@ const ProductsMonthly = ({
 
       <a
         href="#"
-        className="absolute rounded-[3px] w-full flex justify-center items-center gap-3 bottom-0 left-1/2 transform -translate-x-1/2 translate-y-full transition-transform duration-300 bg-white text-black py-2 px-4 border border-black group-hover:translate-y-0"
+        className="absolute rounded-[3px] w-full flex justify-center items-center gap-3 bottom-0 left-1/2 transform -translate-x-1/2 translate-y-full transition-transform duration-300 bg-black text-white py-2 px-4 border border-black group-hover:translate-y-0"
       >
         Add to cart
-        <AddShoppingCartIcon />
+        <lord-icon
+          src="https://cdn.lordicon.com/mfmkufkr.json"
+          trigger="hover"
+          style={{ width: "20%", height: "40px" }}
+          colors="primary:white"
+        ></lord-icon>
       </a>
     </article>
   );
@@ -49,7 +51,7 @@ const ProductsMonthly = ({
 
 const MonthlyDeals = () => (
   <section className="bg-white mt-24 w-full ">
-    <h2 className="text-2xl md:text-4xl font-medium tracking-wider leading-10 text-zinc-800">
+    <h2 className="text-2xl md:text-4xl font-medium tracking-wider leading-10 text-zinc-800 font-serif">
       Monthly Deals
     </h2>
     <div className="shrink-0 mt-2.5 h-px bg-black border border-black border-solid"></div>
@@ -99,31 +101,42 @@ const MonthlyDeals = () => (
 );
 
 function Hero() {
+  const images = [
+    "src/components/Customer/images/gabrielle-henderson-XTp4ZzD76Xw-unsplash.jpg",
+    "src/components/Customer/images/jasmin-chew-MIyo2hqbAzk-unsplash.jpg",
+    "src/components/Customer/images/jasmin-chew-WKD2vIe8Rb0-unsplash.jpg",
+    "src/components/Customer/images/juan-burgos-3_XeNGVbTQA-unsplash.jpg",
+    "src/components/Customer/images/kateryna-hliznitsova-ceSCZzjTReg-unsplash.jpg",
+    "src/components/Customer/images/mike-von-qsJ5itg93WY-unsplash.jpg",
+  ];
   return (
-    <section className="flex overflow-hidden relative flex-col items-start pt-20 pr-20 pb-6 pl-10 mt-6 w-full text-white max-w-[1249px] min-h-[646px] max-md:px-5 max-md:max-w-full">
-      <img
-        loading="lazy"
-        src="https://cdn.builder.io/api/v1/image/assets/TEMP/144da04db8c4d0e3e7a071c38f8b815a5f45c3ffeebd74750f24671c4845d030?apiKey=2cf111b7142f4a06bfb2b5c186f14037&"
-        alt="Gold big hoops earrings"
-        className="mt-[70px] object-cover absolute inset-0 size-full"
-      />
-      <h1 className="relative mt-40 text-4xl font-medium leading-10 max-md:mt-10 max-md:max-w-full">
-        Gold big hoops{" "}
-      </h1>
-      <div className="relative mt-6 text-2xl leading-9 max-md:max-w-full">
-        $ 68,00
+    <section className="bg-custom-gradient flex absolute overflow-hidden relative flex-col items-start pt-20 pr-20 pb-6 pl-10 mt-6 w-full text-white max-w-[1249px] min-h-[646px] max-md:px-5 max-md:max-w-full">
+      <div className="Collection__content flex flex-row justify-between w-full">
+        <div>
+          <div className="relative mt-6 max-md:max-w-full text-6xl">
+            <span className="font-bold bg-white font-serif  bg-clip-text text-transparent">
+              Z
+            </span>
+            <span className=" bg-clip-text bg-white font-serif text-transparent">
+              odiacGems
+            </span>
+          </div>
+          <h1 className="Collection__content-text opacity-80 font-serif relative mt-14 text-1xl w-3/5 leading-10 max-md:mt-10 max-md:max-w-full">
+            Welcome to our e-commerce site, your go-to for zodiac-themed jewelry
+            and fashion accessories. Discover bracelets, rings, and clothing
+            designed with your zodiac sign in mind. Enter your birthdate to get
+            personalized recommendations. We offer products for all genders, and
+            special Couple Combos for two zodiac signs at a discount. Enjoy easy
+            electronic payments and access via our mobile app. Start your
+            celestial shopping journey with us today!
+          </h1>
+          <button className="coolBeans">
+            <span className="uppercase">E</span>PLORE{" "}
+            <span className="uppercase">M</span>ORE
+          </button>
+        </div>
+        <CardStack images={images} />
       </div>
-      <button className="coolBeans">
-        <span className="uppercase">v</span>IEW{" "}
-        <span className="uppercase">p</span>RODUCT
-      </button>
-
-      <img
-        loading="lazy"
-        src="https://cdn.builder.io/api/v1/image/assets/TEMP/3d38e1a62900002fc7486e3f846edf24e1daef083310ffcf46da38eccfc7482d?apiKey=2cf111b7142f4a06bfb2b5c186f14037&"
-        alt="Scroll down arrow"
-        className="self-center mt-48 max-w-full aspect-[6.67] w-[107px] max-md:mt-10"
-      />
     </section>
   );
 }
@@ -177,5 +190,12 @@ function MyComponent() {
     </div>
   );
 }
+ProductsMonthly.propTypes = {
+  imgSrc: PropTypes.string.isRequired,
+  title: PropTypes.string.isRequired,
+  subtitle: PropTypes.string,
+  price: PropTypes.string.isRequired,
+  oldPrice: PropTypes.string,
+};
 
 export default MyComponent;

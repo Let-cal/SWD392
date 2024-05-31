@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import Header from '../../Admin/HeaderOfAdmin';
 import './ViewCart.css';
 
@@ -29,26 +30,27 @@ function ViewCart() {
             imageSrc: "https://cdn.builder.io/api/v1/image/assets/TEMP/f1bb51e07d3fec2c980222cb5a092812489e1a401e71e4917bb6ba4ecad78638?apiKey=bf5f3d3b953d4f9f9f93e548457c202f&",
             itemName: "Lira Earrings",
             itemDetails: "Black / Medium",
-            itemPrice: 20.00,
-            itemQty: 3,
+            itemPrice: 30.00,
+            itemQty: 1,
         },
         {
             imageSrc: "https://cdn.builder.io/api/v1/image/assets/TEMP/b99eef8e517d6dcfb80b0c0c159f7dd0571dc4bccdc9927600b2e1239f661326?apiKey=bf5f3d3b953d4f9f9f93e548457c202f&",
             itemName: "Ollie Earrings",
-            itemDetails: "Black / Medium",
+            itemDetails: "Gold / Small",
             itemPrice: 20.00,
             itemQty: 1,
         },
         {
             imageSrc: "https://cdn.builder.io/api/v1/image/assets/TEMP/d85854aecfe81a23e7735255b6c1d788e03b9b8f46a9b90997d2ac8856a9856b?apiKey=bf5f3d3b953d4f9f9f93e548457c202f&",
             itemName: "Kaede Hair Pin",
-            itemDetails: "Black / Medium",
-            itemPrice: 20.00,
+            itemDetails: "Silver/ Large",
+            itemPrice: 50.00,
             itemQty: 1,
         },
     ]);
 
     const [selectedItems, setSelectedItems] = useState([]);
+    const navigate = useNavigate();
 
     const handleCheck = (index) => {
         setSelectedItems((prevSelectedItems) => {
@@ -78,6 +80,12 @@ function ViewCart() {
         }, 0).toFixed(2);
     };
 
+    const handleCheckout = () => {
+        const selectedProducts = selectedItems.map(index => items[index]);
+        navigate('/checkout', { state: { selectedItems: selectedProducts } });
+    };
+    
+
     useEffect(() => {
         calculateTotal();
     }, [items, selectedItems]);
@@ -101,7 +109,7 @@ function ViewCart() {
                     <div className="total-amount">
                         TOTAL: <span className="amount">${calculateTotal()}</span>
                     </div>
-                    <button className="checkout-button">PROCEED TO CHECKOUT</button>
+                    <button disabled={selectedItems.length === 0} className="checkout-button" onClick={handleCheckout}>PROCEED TO CHECKOUT</button>
                 </div>
             </div>
         </>
