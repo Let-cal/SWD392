@@ -4,10 +4,10 @@ import CustomTab from "../TabsToTable";
 
 function UserManagement() {
   return (
-    <div >
+    <div>
       {" "}
       <div className="flex flex-row justify-between w-full items-center">
-        <h1 className="text-[30px] text-[30px] w-[394px] relative text-inherit leading-[48px] font-bold font-inherit inline-block shrink-0 max-w-full mq450:text-[23px] mq450:leading-[29px] mq1050:text-11xl mq1050:leading-[38px]">
+        <h1 className="font-serif text-[30px] text-[30px] w-[394px] relative text-inherit leading-[48px] font-bold font-inherit inline-block shrink-0 max-w-full mq450:text-[23px] mq450:leading-[29px] mq1050:text-11xl mq1050:leading-[38px]">
           Total Users
         </h1>
         <TextField

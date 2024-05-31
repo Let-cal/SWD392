@@ -28,7 +28,7 @@ function ImageSection() {
 }
 
 function LoginForm() {
-  const { setIsAuthenticated } = useAuth();
+  const { setIsAuthenticated, setUserRole } = useAuth();
   const [showPassword, setShowPassword] = useState(false);
   const [formData, setFormData] = useState({ email: "", password: "" }); // Thêm state để lưu trữ email và password
   const [checked, setChecked] = useState(true);
@@ -64,18 +64,23 @@ function LoginForm() {
 
       if (response.data && response.data.token) {
         localStorage.setItem("token", response.data.token);
-        localStorage.setItem("role", response.data.roleId);
+        localStorage.setItem("role", response.data.role);
         localStorage.setItem("userName", response.data.fullName);
         localStorage.setItem("email", formData.email);
-        setIsAuthenticated(true); // Cập nhật trạng thái đăng nhập
-        console.log("Đăng nhập thành công", localStorage.getItem("email"));
+        setIsAuthenticated(true);
+        setUserRole(response.data.role); // Set the user role in context
+
         enqueueSnackbar("Đăng nhập thành công", {
           variant: "success",
           anchorOrigin: { horizontal: "right", vertical: "top" },
           preventDuplicate: true,
         });
 
-        navigate("/customer-page");
+        if (response.data.role === "Admin") {
+          navigate("/AdminPage");
+        } else {
+          navigate("/customer-page");
+        }
       }
     } catch (error) {
       console.error("Đăng nhập thất bại:", error);

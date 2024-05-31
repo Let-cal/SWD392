@@ -50,6 +50,7 @@ function PieChartComponent() {
           layout="vertical"
           verticalAlign="bottom"
           wrapperStyle={{
+            bottom: "30px",
             display: "grid",
             gridTemplateColumns: "repeat(2, 1fr)", // Create 2 columns
             gap: "10px", // Gap between grid items
