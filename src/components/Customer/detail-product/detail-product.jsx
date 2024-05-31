@@ -129,7 +129,7 @@ const DetailProduct = () => {
   return (
     <>
     <Header />
-    <div className="container">
+    <div className="detailproduct-container">
 
       <div className="header-separator" />
 

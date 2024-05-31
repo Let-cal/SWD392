@@ -1,5 +1,5 @@
-import { SnackbarProvider } from "notistack";
 import ReactDOM from "react-dom/client";
+import { SnackbarProvider } from 'notistack';
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 import AminPage from "./components/Admin/AminPage.jsx";
 import AboutPage from "./components/Customer/AboutController/AboutPage.jsx";
@@ -13,6 +13,8 @@ import { AuthProvider } from "./components/LoginController/AuthContext.jsx";
 import RegisterPage from "./components/LoginController/RegisterController/RegisterPage.jsx";
 import ForgotPassword from "./components/LoginController/forgot-password.jsx";
 import Login from "./components/LoginController/login.jsx";
+import ViewCart from "./components/Customer/view-cart/ViewCart.jsx";
+import Checkout from "./components/Customer/checkout-info/checkout.jsx";
 import "./index.css";
 
 ReactDOM.createRoot(document.getElementById("root")).render(
@@ -24,6 +26,8 @@ ReactDOM.createRoot(document.getElementById("root")).render(
           <Route exact path="/AdminPage" element={<AminPage />} />
           <Route exact path="/customer-page" element={<MyComponent />} />
           <Route exact path="/login" element={<Login />} />
+          <Route exact path="/viewcart" element={<ViewCart />} />
+          <Route exact path="/checkout" element={<Checkout />} />
           <Route
             exact
             path="/CustomerProfile-order"

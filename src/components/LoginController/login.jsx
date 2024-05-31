@@ -28,10 +28,10 @@ function ImageSection() {
 }
 
 function LoginForm() {
-  const { setIsAuthenticated } = useAuth();
+  const { setIsAuthenticated, setUserRole } = useAuth();
   const [showPassword, setShowPassword] = useState(false);
   const [formData, setFormData] = useState({ email: "", password: "" }); // Thêm state để lưu trữ email và password
-  const [checked, setChecked] = useState(true);
+const [checked, setChecked] = useState(true);
   const navigate = useNavigate(); // Sử dụng để điều hướng sau khi đăng nhập thành công
   const { enqueueSnackbar } = useSnackbar(); // Sử dụng để hiển thị thông báo
 
@@ -64,18 +64,23 @@ function LoginForm() {
 
       if (response.data && response.data.token) {
         localStorage.setItem("token", response.data.token);
-        localStorage.setItem("role", response.data.roleId);
+        localStorage.setItem("role", response.data.role);
         localStorage.setItem("userName", response.data.fullName);
         localStorage.setItem("email", formData.email);
-        setIsAuthenticated(true); // Cập nhật trạng thái đăng nhập
-        console.log("Đăng nhập thành công", localStorage.getItem("email"));
+        setIsAuthenticated(true);
+        setUserRole(response.data.role); // Set the user role in context
+
         enqueueSnackbar("Đăng nhập thành công", {
           variant: "success",
           anchorOrigin: { horizontal: "right", vertical: "top" },
           preventDuplicate: true,
         });
 
-        navigate("/customer-page");
+        if (response.data.role === "Admin") {
+          navigate("/AdminPage");
+        } else {
+          navigate("/customer-page");
+        }
       }
     } catch (error) {
       console.error("Đăng nhập thất bại:", error);
@@ -106,7 +111,7 @@ function LoginForm() {
                   Email
                 </div>
                 <div className="flex flex-col justify-center mt-1.5 text-base leading-6 text-slate-400">
-                  <div className="flex flex-col justify-center">
+<div className="flex flex-col justify-center">
                     <TextField
                       name="email"
                       type="email"
@@ -180,7 +185,7 @@ function LoginForm() {
               </div>
               <button
                 type="submit"
-                className="flex justify-center items-center px-4 py-2 mt-4 text-sm font-medium leading-6 text-white rounded-md bg-slate-900 max-md:px-5"
+className="flex justify-center items-center px-4 py-2 mt-4 text-sm font-medium leading-6 text-white rounded-md bg-slate-900 max-md:px-5"
               >
                 Log in
               </button>

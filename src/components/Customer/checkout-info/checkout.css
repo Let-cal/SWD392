@@ -1,0 +1,116 @@
+/* checkout.css */
+body {
+    margin: 0;
+    font-family: 'Arial', sans-serif;
+    background-color: #f4f4f4;
+    color: #333;
+}
+
+.checkout-container {
+    width: 90%;
+    margin: 40px auto;
+    padding: 20px;
+    background-color: #ffffff;
+    box-shadow: 0 0 10px rgba(0,0,0,0.1);
+    border-radius: 8px;
+}
+
+.checkout-items {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: space-between;
+}
+
+.checkout-item {
+    width: 45%;
+    display: flex;
+    align-items: center;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    margin-right: 20px;
+    margin-bottom: 20px;
+}
+
+.item-image img {
+    max-width: 80px;
+    max-height: 80px;
+    object-fit: cover;
+    border-radius: 8px;
+    margin-right: 20px;
+}
+
+.item-info {
+    flex: 1;
+}
+
+.item-name {
+    font-size: 16px;
+    font-weight: bold;
+    margin-bottom: 5px;
+}
+
+.item-details {
+    font-size: 14px;
+    color: #666;
+}
+
+.checkout-item-price,
+.checkout-item-quantity,
+.checkout-item-total {
+    font-size: 14px;
+    margin-left: auto;
+    display: flex;
+    text-align: center;
+    margin-right: 40px;
+    gap: 10px;
+}
+
+
+.checkout-summary {
+    text-align: right;
+    font-size: 18px;
+    font-weight: bold;
+    color: #e74c3c;
+    padding: 20px;
+    border-top: 1px solid #e0e0e0;
+    margin-bottom: 5px;
+}
+
+.checkout-form h2 {
+    margin-bottom: 20px;
+    font-size: 22px;
+    color: #333;
+}
+
+.checkout-form input[type="text"],
+.checkout-form textarea {
+    width: 100%;
+    padding: 12px;
+    margin-bottom: 15px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    font-size: 14px;
+    transition: border-color 0.3s;
+}
+
+.checkout-form input[type="text"]:focus,
+.checkout-form textarea:focus {
+    border-color: #3498db;
+}
+
+.checkout-form button {
+    background-color: rgb(0, 0, 0);
+    color: #fff;
+    padding: 12px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 16px;
+    transition: background-color 0.3s;
+    width: 100%;
+}
+
+.checkout-form button:hover {
+    opacity: 0.8;
+}

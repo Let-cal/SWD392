@@ -1,17 +1,20 @@
 /* Sidebar CSS */
 .sidebar-admin {
-  width: 20%;
-  /* Width of the sidebar */
-  height: 100vh;
-  color: black;
-  /* Text color */
-  position: fixed;
-  /* Fix position */
-  top: 0;
-  /* Align to the top */
-  left: 0;
-  /* Align to the left */
-  padding-top: 20px;
+    width: 20%;
+    /* Width of the sidebar */
+    height: 100vh;
+    color: black;
+    /* Text color */
+    position: fixed;
+    /* Fix position */
+    top: 0;
+    /* Align to the top */
+    left: 0;
+    /* Align to the left */
+    padding-top: 20px;
+
+    border-right: 2px solid #ccc;
+    /* background-color: #f0f0f0; */
 
   border-right: 2px solid #ccc;
   /* background-color: #f0f0f0; */
