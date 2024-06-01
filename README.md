@@ -5,7 +5,7 @@
 
 <p align="left"> <img src="https://komarev.com/ghpvc/?username=let-cal&label=Profile%20views&color=0e75b6&style=flat" alt="let-cal" /> </p>
 
-- 🌱 I’m currently learning **ReactJS , TypeJS ,**
+- 🌱 I’m currently learning **ReactJS , TypeJS **
 
 - 👨‍💻 All of my projects are available at [https://github.com/Let-cal](https://github.com/Let-cal)
 
