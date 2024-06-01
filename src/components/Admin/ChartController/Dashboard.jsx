@@ -1,4 +1,4 @@
-// Dashboard.jsx
+
 
 import { Container, Grid, Paper, Typography } from "@mui/material";
 import LineChartComponent from "./LineChartComponent";
@@ -10,7 +10,7 @@ function Dashboard() {
       <div className="w-[70%]">
         <Container sx={{ mt: 4, mb: 4 }}>
           <Grid container spacing={3}>
-            {/* LineChart */}
+
             <Grid item xs={12} md={8} lg={12}>
               <Paper
                 sx={{
@@ -26,7 +26,7 @@ function Dashboard() {
                 <LineChartComponent />
               </Paper>
             </Grid>
-            {/* Other components can be added here */}
+
           </Grid>
         </Container>
       </div>

@@ -34,8 +34,8 @@ const User = ({
       className={`w-[312px] shadow-[0px_4px_4px_rgba(0,_0,_0,_0.1)] rounded-xl bg-background box-border overflow-hidden shrink-0 flex flex-col items-start justify-center py-[18px] pr-3 pl-[18px] text-left text-base text-black font-body-medium border-[1px] border-solid border-lightgray ${className}`}
       style={UserStyle}
     >
-      <div className="self-stretch flex flex-row items-center justify-between gap-[20px]">
-        <div className="w-[172px] relative inline-block shrink-0">
+      <div className="self-stretch flex flex-row items-center justify-between gap-[0]">
+        <div className="w-[215px] relative inline-block shrink-0">
           {customer}
         </div>
         <PeopleAltIcon />
