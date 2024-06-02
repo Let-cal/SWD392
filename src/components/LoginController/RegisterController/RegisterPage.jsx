@@ -1,8 +1,11 @@
 import axios from "axios";
+import { useSnackbar } from "notistack";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import "../../Customer/Header/header.css";
 import Input from "./InputForm";
 const RegisterPage = () => {
+  const { enqueueSnackbar } = useSnackbar();
   const navigate = useNavigate();
   const [formData, setFormData] = useState({
     email: "",
@@ -28,12 +31,20 @@ const RegisterPage = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (!validateEmail(formData.email)) {
-      alert("Invalid email format!");
+      enqueueSnackbar("Invalid email format!", {
+        variant: "warning",
+        anchorOrigin: { horizontal: "right", vertical: "top" },
+        preventDuplicate: true,
+      });
       console.log(formData.email);
       return;
     }
     if (formData.password !== formData.confirmPassword) {
-      alert("Passwords do not match!");
+      enqueueSnackbar("Passwords do not match!", {
+        variant: "warning",
+        anchorOrigin: { horizontal: "right", vertical: "top" },
+        preventDuplicate: true,
+      });
       return;
     }
 
@@ -48,7 +59,11 @@ const RegisterPage = () => {
         }
       );
       if (response.status === 200) {
-        alert("Registration successful!");
+        enqueueSnackbar("Registration successful!", {
+          variant: "success",
+          anchorOrigin: { horizontal: "right", vertical: "top" },
+          preventDuplicate: true,
+        });
         navigate("/login");
       }
     } catch (error) {
@@ -56,16 +71,26 @@ const RegisterPage = () => {
       if (error.response) {
         console.error("Server responded with:", error.response.data);
       }
-      alert("Registration failed!");
+
+      enqueueSnackbar("Registration failed!", {
+        variant: "error",
+        anchorOrigin: { horizontal: "right", vertical: "top" },
+        preventDuplicate: true,
+      });
     }
   };
 
   return (
     <div className="w-full h-[960px] relative bg-light-colors-white-light overflow-hidden flex flex-col items-center justify-start pt-[50px] px-0 pb-0 box-border gap-[50px] leading-[normal] tracking-[normal] text-left text-[38px] text-slate-900 font-body-medium mq675:gap-[25px]">
       <div className="w-[535px] flex flex-col items-center justify-start py-0 px-5 box-border gap-[32px] max-w-full mq675:gap-[16px]">
-        <h1 className="m-0 relative text-inherit leading-[48px] font-semibold font-inherit mq450:text-[23px] mq450:leading-[29px] mq750:text-11xl mq750:leading-[38px]">
-          ZodiacGems
-        </h1>
+        <div className="title-header flex-auto text-6xl leading-10">
+          <span className="font-bold bg-gradient-custom-header-title bg-clip-text text-transparent">
+            Z
+          </span>
+          <span className="bg-gradient-custom-header-title bg-clip-text text-transparent">
+            odiacGems
+          </span>
+        </div>
         <div className="self-stretch flex flex-col items-start justify-start gap-[20px] max-w-full text-11xl">
           <div className="flex flex-col items-start justify-start gap-[8px]">
             <div className="flex flex-row items-center justify-start">

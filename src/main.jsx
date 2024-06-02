@@ -10,12 +10,12 @@ import Checkout from "./components/Customer/checkout-info/checkout.jsx";
 import DetailProduct from "./components/Customer/detail-product/detail-product.jsx";
 import ViewCart from "./components/Customer/view-cart/ViewCart.jsx";
 import { AuthProvider } from "./components/LoginController/AuthContext.jsx";
+import OTPVerification from "./components/LoginController/ForgotPasswordController/PageOTPVerification.jsx";
+import ForgotPassword from "./components/LoginController/ForgotPasswordController/forgot-password.jsx";
 import ProtectedRoute from "./components/LoginController/ProtectedRoute.jsx";
 import RegisterPage from "./components/LoginController/RegisterController/RegisterPage.jsx";
-import ForgotPassword from "./components/LoginController/forgot-password.jsx";
 import Login from "./components/LoginController/login.jsx";
 import "./index.css";
-
 ReactDOM.createRoot(document.getElementById("root")).render(
   <AuthProvider>
     <SnackbarProvider maxSnack={3}>
@@ -49,10 +49,11 @@ ReactDOM.createRoot(document.getElementById("root")).render(
               />
             }
           />
-          <Route path="/forgot-password" element={<ForgotPassword />} />
+          <Route path="/Forgot-PasswordPage" element={<ForgotPassword />} />
           <Route path="/Register-page" element={<RegisterPage />} />
           <Route path="/DetailProduct" element={<DetailProduct />} />
           <Route path="/AboutPage" element={<AboutPage />} />
+          <Route path="/OTPVerificationPage" element={<OTPVerification />} />
         </Routes>
       </BrowserRouter>
     </SnackbarProvider>

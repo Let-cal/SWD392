@@ -80,9 +80,16 @@ export default function AvatarProfile() {
         transformOrigin={{ horizontal: "right", vertical: "top" }}
         anchorOrigin={{ horizontal: "right", vertical: "bottom" }}
       >
-        <MenuItem onClick={handleClose}>
-          <Avatar /> My account
-        </MenuItem>
+        <Link
+          to={{
+            pathname: "/CustomerProfile-order",
+            state: { index: 2 }, // Pass the index value here
+          }}
+        >
+          <MenuItem onClick={handleClose}>
+            <Avatar /> My account
+          </MenuItem>
+        </Link>
 
         <Divider />
         <Link to="/CustomerProfile-order">

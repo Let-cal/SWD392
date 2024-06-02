@@ -9,7 +9,14 @@ export const AuthProvider = ({ children }) => {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [userRole, setUserRole] = useState(null);
   const [loading, setLoading] = useState(true);
-
+  const handleLogout = () => {
+    localStorage.removeItem("token");
+    localStorage.removeItem("role");
+    localStorage.removeItem("userName");
+    localStorage.removeItem("email");
+    localStorage.removeItem("password"); // Xóa mật khẩu khi đăng xuất
+    setIsAuthenticated(false);
+  };
   useEffect(() => {
     const token = localStorage.getItem("token");
     const role = localStorage.getItem("role");
@@ -27,7 +34,7 @@ export const AuthProvider = ({ children }) => {
 
   return (
     <AuthContext.Provider
-      value={{ isAuthenticated, setIsAuthenticated, userRole, setUserRole, loading }}
+      value={{ isAuthenticated, setIsAuthenticated, userRole, setUserRole, loading ,handleLogout}}
     >
       {!loading && children} {/* Chỉ render children khi không loading */}
     </AuthContext.Provider>
