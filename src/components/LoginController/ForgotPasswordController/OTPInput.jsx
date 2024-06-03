@@ -1,7 +1,7 @@
-import { useRef, useState } from "react";
+import PropTypes from "prop-types";
+import { useRef } from "react";
 
-const OTPInput = () => {
-  const [otp, setOtp] = useState(["", "", "", "", "", ""]);
+const OTPInput = ({ otp, setOtp }) => {
   const inputs = useRef([]);
 
   const handleChange = (element, index) => {
@@ -49,6 +49,11 @@ const OTPInput = () => {
       </div>
     </div>
   );
+};
+
+OTPInput.propTypes = {
+  otp: PropTypes.arrayOf(PropTypes.string).isRequired,
+  setOtp: PropTypes.func.isRequired,
 };
 
 export default OTPInput;

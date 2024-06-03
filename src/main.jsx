@@ -11,6 +11,7 @@ import DetailProduct from "./components/Customer/detail-product/detail-product.j
 import ViewCart from "./components/Customer/view-cart/ViewCart.jsx";
 import { AuthProvider } from "./components/LoginController/AuthContext.jsx";
 import OTPVerification from "./components/LoginController/ForgotPasswordController/PageOTPVerification.jsx";
+import ChangePasswordPage from "./components/LoginController/ForgotPasswordController/ResetPassword/ChangePasswordPage.jsx";
 import ForgotPassword from "./components/LoginController/ForgotPasswordController/forgot-password.jsx";
 import ProtectedRoute from "./components/LoginController/ProtectedRoute.jsx";
 import RegisterPage from "./components/LoginController/RegisterController/RegisterPage.jsx";
@@ -54,6 +55,7 @@ ReactDOM.createRoot(document.getElementById("root")).render(
           <Route path="/DetailProduct" element={<DetailProduct />} />
           <Route path="/AboutPage" element={<AboutPage />} />
           <Route path="/OTPVerificationPage" element={<OTPVerification />} />
+          <Route path="/ChangePasswordPage" element={<ChangePasswordPage />} />
         </Routes>
       </BrowserRouter>
     </SnackbarProvider>
