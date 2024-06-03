@@ -15,14 +15,15 @@ import ForgotPassword from "./components/LoginController/forgot-password.jsx";
 import Login from "./components/LoginController/login.jsx";
 import ViewCart from "./components/Customer/view-cart/ViewCart.jsx";
 import Checkout from "./components/Customer/checkout-info/checkout.jsx";
+import Profile from "./components/Customer/profile/profile.jsx";
 import "./index.css";
 
 ReactDOM.createRoot(document.getElementById("root")).render(
   <AuthProvider>
     <SnackbarProvider maxSnack={3}>
       <BrowserRouter>
-        <Routes>
-          <Route exact path="/" element={<MyComponent />} />
+        <Routes scrollBehavior="auto">
+          <Route exact path="/" element={<AccountProfileMain />} />
           <Route exact path="/AdminPage" element={<AminPage />} />
           <Route exact path="/customer-page" element={<MyComponent />} />
           <Route exact path="/login" element={<Login />} />

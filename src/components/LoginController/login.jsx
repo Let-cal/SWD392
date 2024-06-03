@@ -70,7 +70,7 @@ const [checked, setChecked] = useState(true);
         setIsAuthenticated(true);
         setUserRole(response.data.role); // Set the user role in context
 
-        enqueueSnackbar("Đăng nhập thành công", {
+        enqueueSnackbar("Logged in successfully", {
           variant: "success",
           anchorOrigin: { horizontal: "right", vertical: "top" },
           preventDuplicate: true,
@@ -84,7 +84,7 @@ const [checked, setChecked] = useState(true);
       }
     } catch (error) {
       console.error("Đăng nhập thất bại:", error);
-      enqueueSnackbar("Email hoặc mật khẩu không đúng. Vui lòng thử lại.", {
+      enqueueSnackbar("Email or password is incorrect. Please try again.", {
         variant: "error",
         anchorOrigin: { horizontal: "right", vertical: "top" },
         preventDuplicate: true,

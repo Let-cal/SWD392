@@ -2,6 +2,7 @@ import { Box, Tab, Tabs, Typography } from "@mui/material";
 import PropTypes from "prop-types";
 import { useState } from "react";
 import AccountOrders from "./CustomerProfile";
+import Profile from "../profile/profile";
 
 function CustomTabPanel(props) {
   const { children, value, index, ...other } = props;
@@ -63,7 +64,7 @@ export default function ProfileColorTabs() {
         Item Two
       </CustomTabPanel>
       <CustomTabPanel value={value} index={2}>
-        Item Three
+        <Profile/>
       </CustomTabPanel>
     </Box>
   );
