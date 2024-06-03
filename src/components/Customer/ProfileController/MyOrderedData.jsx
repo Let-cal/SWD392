@@ -1,6 +1,6 @@
 
 
-import ProfileContent from "./ProfileContent";
+import ProfileContent from "./MyOrderedTable";
 
 const testOrders = [
   {

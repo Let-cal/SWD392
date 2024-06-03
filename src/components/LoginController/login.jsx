@@ -1,22 +1,23 @@
 import { Visibility, VisibilityOff } from "@mui/icons-material";
 import { IconButton, InputAdornment, TextField } from "@mui/material";
 import Checkbox from "@mui/material/Checkbox";
-import axios from "axios"; // Thêm axios để gọi API
+import axios from "axios";
 import { useSnackbar } from "notistack";
-import { useState } from "react";
-import { Link, useNavigate } from "react-router-dom"; // Thêm useNavigate để điều hướng sau khi đăng nhập thành công
+import { useEffect, useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
 import { useAuth } from "./AuthContext";
+
 function ImageSection() {
   return (
-    <div className="flex flex-col w-3/5 max-md:ml-0 max-md:w-full">
-      <div className="flex overflow-hidden relative flex-col grow items-start px-2.5 pt-2.5 pb-2 text-lg font-bold leading-6 text-white min-h-[957px] max-md:pr-5 max-md:mt-1.5 max-md:max-w-full">
+    <div className="flex flex-col w-3/5 max-md:w-full ">
+      <div className="relative flex flex-col grow items-start px-2.5 pt-2.5 pb-2 text-lg font-bold leading-6 text-white min-h-screen">
         <img
           loading="lazy"
-          srcSet="https://cdn.builder.io/api/v1/image/assets/TEMP/e72ce113c5d66445a226f72157f39a07db7af460fe67d968c265e744a21607c0?apiKey=2cf111b7142f4a06bfb2b5c186f14037&width=100 100w, https://cdn.builder.io/api/v1/image/assets/TEMP/e72ce113c5d66445a226f72157f39a07db7af460fe67d968c265e744a21607c0?apiKey=2cf111b7142f4a06bfb2b5c186f14037&width=200 200w, https://cdn.builder.io/api/v1/image/assets/TEMP/e72ce113c5d66445a226f72157f39a07db7af460fe67d968c265e744a21607c0?apiKey=2cf111b7142f4a06bfb2b5c186f14037&width=400 400w, https://cdn.builder.io/api/v1/image/assets/TEMP/e72ce113c5d66445a226f72157f39a07db7af460fe67d968c265e744a21607c0?apiKey=2cf111b7142f4a06bfb2b5c186f14037&width=800 800w, https://cdn.builder.io/api/v1/image/assets/TEMP/e72ce113c5d66445a226f72157f39a07db7af460fe67d968c265e744a21607c0?apiKey=2cf111b7142f4a06bfb2b5c186f14037&width=1200 1200w, https://cdn.builder.io/api/v1/image/assets/TEMP/e72ce113c5d66445a226f72157f39a07db7af460fe67d968c265e744a21607c0?apiKey=2cf111b7142f4a06bfb2b5c186f14037&width=1600 1600w, https://cdn.builder.io/api/v1/image/assets/TEMP/e72ce113c5d66445a226f72157f39a07db7af460fe67d968c265e744a21607c0?apiKey=2cf111b7142f4a06bfb2b5c186f14037&width=2000 2000w, https://cdn.builder.io/api/v1/image/assets/TEMP/e72ce113c5d66445a226f72157f39a07db7af460fe67d968c265e744a21607c0?apiKey=2cf111b7142f4a06bfb2b5c186f14037&"
-          className="object-cover absolute inset-0 size-full"
+          srcSet="src/components/Customer/images/Frame.png"
+          className="object-cover absolute inset-0 w-full h-full "
         />
-        <div className="flex relative flex-col justify-center max-w-full mt-[778px] w-[500px] max-md:mt-10">
-          <div className="justify-center p-2.5 max-md:max-w-full">
+        <div className="relative flex flex-col justify-center mt-auto mb-5 w-full max-md:mt-10">
+          <div className="justify-center p-2.5 pr-[40%] max-md:pr-0 max-md:max-w-full font-serif">
             &quot;Discover the beauty of destiny – Connect your love through
             each zodiac sign, made for couples! Celebrate your unique bond with
             personalized astrological jewelry.&quot;
@@ -30,10 +31,18 @@ function ImageSection() {
 function LoginForm() {
   const { setIsAuthenticated, setUserRole } = useAuth();
   const [showPassword, setShowPassword] = useState(false);
-  const [formData, setFormData] = useState({ email: "", password: "" }); // Thêm state để lưu trữ email và password
-const [checked, setChecked] = useState(true);
-  const navigate = useNavigate(); // Sử dụng để điều hướng sau khi đăng nhập thành công
-  const { enqueueSnackbar } = useSnackbar(); // Sử dụng để hiển thị thông báo
+  const [formData, setFormData] = useState({ email: "", password: "" });
+  const [checked, setChecked] = useState(true);
+  const navigate = useNavigate();
+  const { enqueueSnackbar } = useSnackbar();
+
+  useEffect(() => {
+    const savedEmail = localStorage.getItem("email");
+    const savedPassword = localStorage.getItem("password");
+    if (savedEmail && savedPassword) {
+      setFormData({ email: savedEmail, password: savedPassword });
+    }
+  }, []);
 
   const toggleShowPassword = () => {
     setShowPassword((prevShowPassword) => !prevShowPassword);
@@ -50,12 +59,7 @@ const [checked, setChecked] = useState(true);
 
   const handleLogin = async (e) => {
     e.preventDefault();
-
-    const requestBody = {
-      email: formData.email,
-      password: formData.password,
-    };
-
+    const requestBody = { email: formData.email, password: formData.password };
     try {
       const response = await axios.post(
         "https://zodiacjewerly.azurewebsites.net/api/Authen/Login",
@@ -67,8 +71,15 @@ const [checked, setChecked] = useState(true);
         localStorage.setItem("role", response.data.role);
         localStorage.setItem("userName", response.data.fullName);
         localStorage.setItem("email", formData.email);
+
+        if (checked) {
+          localStorage.setItem("password", formData.password);
+        } else {
+          localStorage.removeItem("password");
+        }
+
         setIsAuthenticated(true);
-        setUserRole(response.data.role); // Set the user role in context
+        setUserRole(response.data.role);
 
         enqueueSnackbar("Logged in successfully", {
           variant: "success",
@@ -94,12 +105,12 @@ const [checked, setChecked] = useState(true);
 
   return (
     <div className="flex flex-col ml-5 w-2/5 max-md:ml-0 max-md:w-full">
-      <div className="flex flex-col grow justify-center px-16 w-full bg-white max-md:px-5 max-md:max-w-full">
-        <div className="flex flex-col mx-8 mt-56 max-md:mx-2.5 max-md:mt-10">
+      <div className="flex flex-col grow justify-center px-16 w-full bg-white max-md:px-5 min-h-screen">
+        <div className="flex flex-col mx-8 mt-auto mb-32 max-md:mx-2.5 max-md:mt-10">
           <form onSubmit={handleLogin}>
             <div className="flex flex-col">
-              <div className="justify-center text-3xl font-semibold tracking-tight leading-9 text-slate-900">
-                Welcome back !
+              <div className="text-3xl font-semibold tracking-tight leading-9 text-slate-900">
+                Welcome back!
               </div>
               <div className="mt-2 text-sm leading-5 text-slate-500">
                 Enter to get variant access to data & information
@@ -111,15 +122,15 @@ const [checked, setChecked] = useState(true);
                   Email
                 </div>
                 <div className="flex flex-col justify-center mt-1.5 text-base leading-6 text-slate-400">
-<div className="flex flex-col justify-center">
+                  <div className="flex flex-col justify-center">
                     <TextField
                       name="email"
                       type="email"
                       placeholder="Email"
                       variant="outlined"
                       fullWidth
-                      value={formData.email} // Thêm giá trị từ state
-                      onChange={handleChange} // Thêm hàm xử lý thay đổi
+                      value={formData.email}
+                      onChange={handleChange}
                       sx={{
                         height: "44px",
                         "& .MuiOutlinedInput-root": {
@@ -145,8 +156,8 @@ const [checked, setChecked] = useState(true);
                     placeholder="Password"
                     variant="outlined"
                     fullWidth
-                    value={formData.password} // Thêm giá trị từ state
-                    onChange={handleChange} // Thêm hàm xử lý thay đổi
+                    value={formData.password}
+                    onChange={handleChange}
                     sx={{
                       height: "44px",
                       "& .MuiOutlinedInput-root": {
@@ -165,7 +176,7 @@ const [checked, setChecked] = useState(true);
                   />
                 </div>
               </div>
-              <div className="flex gap-2 items-center self-start mt-4 text-sm font-medium leading-4 text-slate-500">
+              <div className="flex items-center gap-2 mt-4 text-sm font-medium leading-4 text-slate-500">
                 <Checkbox
                   name="rememberMe"
                   checked={checked}
@@ -185,23 +196,23 @@ const [checked, setChecked] = useState(true);
               </div>
               <button
                 type="submit"
-className="flex justify-center items-center px-4 py-2 mt-4 text-sm font-medium leading-6 text-white rounded-md bg-slate-900 max-md:px-5"
+                className="flex justify-center items-center px-4 py-2 mt-4 text-sm font-medium leading-6 text-white bg-slate-900 rounded-md max-md:px-5"
               >
                 Log in
               </button>
             </div>
           </form>
           <Link
-            to="/forgot-password"
-            className="self-center mt-5 text-sm leading-5 underline text-slate-500"
+            to="/Forgot-PasswordPage"
+            className="self-center mt-5 text-sm leading-5 text-slate-500 underline"
           >
             Forgot password?
           </Link>
           <Link
             to="/Register-page"
-            className="self-center mt-5 text-sm leading-5 underline text-slate-500"
+            className="self-center mt-5 text-sm leading-5 text-slate-500 underline"
           >
-            Register right now !!! If you don’t have accounnt.
+            Register right now!!! If you don’t have account.
           </Link>
         </div>
       </div>
@@ -211,9 +222,9 @@ className="flex justify-center items-center px-4 py-2 mt-4 text-sm font-medium l
 
 function Login() {
   return (
-    <div className="flex flex-col justify-center">
-      <div className="w-full bg-white max-md:max-w-full">
-        <div className="flex gap-5 max-md:flex-col max-md:gap-0">
+    <div className="flex flex-col justify-center min-h-screen">
+      <div className="w-full bg-white">
+        <div className="flex flex-row gap-5 max-md:flex-col max-md:gap-0 min-h-screen">
           <ImageSection />
           <LoginForm />
         </div>

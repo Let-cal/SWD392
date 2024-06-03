@@ -1,8 +1,10 @@
 import { Box, Tab, Tabs, Typography } from "@mui/material";
 import PropTypes from "prop-types";
-import { useState } from "react";
-import AccountOrders from "./CustomerProfile";
+import { useEffect, useState } from "react";
+import { useLocation } from "react-router-dom"; // Import useLocation
+import AccountOrders from "./MyOrderedData";
 import Profile from "../profile/profile";
+
 
 function CustomTabPanel(props) {
   const { children, value, index, ...other } = props;
@@ -36,8 +38,16 @@ function a11yProps(index) {
     "aria-controls": `simple-tabpanel-${index}`,
   };
 }
+
 export default function ProfileColorTabs() {
+  const location = useLocation(); // Use useLocation to get the state
   const [value, setValue] = useState(0);
+
+  useEffect(() => {
+    if (location.state && location.state.index !== undefined) {
+      setValue(location.state.index);
+    }
+  }, [location.state]);
 
   const handleChange = (event, newValue) => {
     setValue(newValue);

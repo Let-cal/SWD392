@@ -17,10 +17,9 @@ function Header() {
   useEffect(() => {
     const token = localStorage.getItem("token");
     if (token) {
-      // Xác định người dùng đã đăng nhập và cập nhật trạng thái
       setIsAuthenticated(true);
     }
-  }, [isAuthenticated]);
+  }, []);
 
   return (
     <header className="header-container sticky top-0 z-50 bg-white shadow flex gap-5 w-full text-black max-md:flex-wrap max-md:max-w-full items-end">
@@ -58,7 +57,7 @@ function Header() {
         )}
         <CartIcon />
         {!isAuthenticated ? (
-          <Link to="/login">
+          <Link to="/CustomerProfile-order">
             <Button
               variant="contained"
               endIcon={<LoginIcon />}
