@@ -28,6 +28,14 @@ const RegisterPage = () => {
     return re.test(String(email).toLowerCase());
   };
 
+  const validatePassword = (password) => {
+    const hasUpperCase = /[A-Z]/.test(password);
+    const hasSpecialChar = /[^A-Za-z0-9]/.test(password);
+    const lengthValid = password.length >= 6 && password.length <= 15;
+
+    return hasUpperCase && hasSpecialChar && lengthValid;
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (!validateEmail(formData.email)) {
@@ -36,7 +44,6 @@ const RegisterPage = () => {
         anchorOrigin: { horizontal: "right", vertical: "top" },
         preventDuplicate: true,
       });
-      console.log(formData.email);
       return;
     }
     if (formData.password !== formData.confirmPassword) {
@@ -45,6 +52,17 @@ const RegisterPage = () => {
         anchorOrigin: { horizontal: "right", vertical: "top" },
         preventDuplicate: true,
       });
+      return;
+    }
+    if (!validatePassword(formData.password)) {
+      enqueueSnackbar(
+        "Password must contain at least one uppercase letter, one special character, and be between 6 to 15 characters long.",
+        {
+          variant: "warning",
+          anchorOrigin: { horizontal: "right", vertical: "top" },
+          preventDuplicate: true,
+        }
+      );
       return;
     }
 
@@ -69,14 +87,27 @@ const RegisterPage = () => {
     } catch (error) {
       console.error("There was an error registering!", error);
       if (error.response) {
-        console.error("Server responded with:", error.response.data);
+        const errorMessage = error.response.data.message;
+        if (errorMessage) {
+          enqueueSnackbar(errorMessage, {
+            variant: "error",
+            anchorOrigin: { horizontal: "right", vertical: "top" },
+            preventDuplicate: true,
+          });
+        } else {
+          enqueueSnackbar("An unknown error occurred during registration.", {
+            variant: "error",
+            anchorOrigin: { horizontal: "right", vertical: "top" },
+            preventDuplicate: true,
+          });
+        }
+      } else {
+        enqueueSnackbar("Registration failed due to a server error.", {
+          variant: "error",
+          anchorOrigin: { horizontal: "right", vertical: "top" },
+          preventDuplicate: true,
+        });
       }
-
-      enqueueSnackbar("Registration failed!", {
-        variant: "error",
-        anchorOrigin: { horizontal: "right", vertical: "top" },
-        preventDuplicate: true,
-      });
     }
   };
 

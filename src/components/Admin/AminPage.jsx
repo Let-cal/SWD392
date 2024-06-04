@@ -1,11 +1,12 @@
 import { useState } from "react";
-import AdminAccountManagement from "./AdminAccountManagement.jsx";
-
 import UserManagement from "../Admin/UserManagement/UserController.jsx";
+import { useAuth } from "../LoginController/AuthContext.jsx";
+import AdminAccountManagement from "./AdminAccountManagement.jsx";
 import Header from "./HeaderOfAdmin.jsx";
 import Sidebar from "./sidebar.jsx";
 
 function AdminPage() {
+  const { handleLogout } = useAuth();
   const [selectedContent, setSelectedContent] = useState(
     "AdminAccountManagement"
   );
@@ -27,6 +28,9 @@ function AdminPage() {
     case "UsersManagement":
       ContentComponent = UserManagement;
       break;
+    case "Logout":
+      ContentComponent = handleLogout;
+      break;
     case "AdminAccountManagement":
       ContentComponent = AdminAccountManagement;
       break;
@@ -47,7 +51,6 @@ function AdminPage() {
         </div>
       </div>
     </div>
-
   );
 }
 

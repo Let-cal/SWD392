@@ -1,11 +1,12 @@
 import HomeIcon from "@mui/icons-material/Home";
 import LibraryBooksIcon from "@mui/icons-material/LibraryBooks";
+import LogoutIcon from "@mui/icons-material/Logout";
 import ManageAccountsIcon from "@mui/icons-material/ManageAccounts";
 import ManageSearchIcon from "@mui/icons-material/ManageSearch";
 import ShoppingBagIcon from "@mui/icons-material/ShoppingBag";
 import Divider from "@mui/material/Divider";
+import PropTypes from "prop-types";
 import "./sidebar.css";
-import PropTypes from 'prop-types';
 function Sidebar({ setSelectedContent }) {
   return (
     <div>
@@ -20,28 +21,28 @@ function Sidebar({ setSelectedContent }) {
         </div>
         <Divider />
         <ul className="sidebar-nav">
-          <li onClick={() => setSelectedContent('HomePage')}>
+          <li onClick={() => setSelectedContent("HomePage")}>
             <a>
               <HomeIcon /> Home Page
             </a>
           </li>
-          <li onClick={() => setSelectedContent('OrdersManagement')}>
+          <li onClick={() => setSelectedContent("OrdersManagement")}>
             <a>
               <ManageSearchIcon /> Orders Management
             </a>
           </li>
-          <li onClick={() => setSelectedContent('ProductsManagement')}>
+          <li onClick={() => setSelectedContent("ProductsManagement")}>
             <a>
               <ShoppingBagIcon /> Products Management
             </a>
           </li>
-          <li onClick={() => setSelectedContent('CollectionsManagement')}>
+          <li onClick={() => setSelectedContent("CollectionsManagement")}>
             <a>
               <LibraryBooksIcon /> Collections Management
             </a>
           </li>
           <Divider />
-          <li onClick={() => setSelectedContent('ZodiacsManagement')}>
+          <li onClick={() => setSelectedContent("ZodiacsManagement")}>
             <a className="gap-1">
               <img
                 className="w-[13%]"
@@ -51,9 +52,14 @@ function Sidebar({ setSelectedContent }) {
               Zodiacs Management
             </a>
           </li>
-          <li onClick={() => setSelectedContent('UsersManagement')}>
+          <li onClick={() => setSelectedContent("UsersManagement")}>
             <a>
               <ManageAccountsIcon /> Users Management
+            </a>
+          </li>
+          <li onClick={() => setSelectedContent("Logout")}>
+            <a>
+              <LogoutIcon /> Logout
             </a>
           </li>
         </ul>

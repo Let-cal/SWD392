@@ -14,8 +14,14 @@ import { Link, useNavigate } from "react-router-dom";
 import { useAuth } from "../../LoginController/AuthContext.jsx";
 export default function AvatarProfile() {
   const [anchorEl, setAnchorEl] = React.useState(null);
+  const [initial, setInitial] = React.useState("");
   const open = Boolean(anchorEl);
-
+  const email = localStorage.getItem("email");
+  React.useEffect(() => {
+    if (email) {
+      setInitial(email.charAt(0).toUpperCase());
+    }
+  }, [email]);
   const handleClose = () => {
     setAnchorEl(null);
   };
@@ -42,7 +48,7 @@ export default function AvatarProfile() {
           aria-haspopup="true"
           aria-expanded={open ? "true" : undefined}
         >
-          <Avatar sx={{ width: 32, height: 32 }}>M</Avatar>
+          <Avatar sx={{ width: 32, height: 32 }}>{initial}</Avatar>
         </IconButton>
       </Tooltip>
       <Menu
@@ -87,7 +93,7 @@ export default function AvatarProfile() {
           }}
         >
           <MenuItem onClick={handleClose}>
-            <Avatar /> My account
+            <Avatar /> My Account
           </MenuItem>
         </Link>
 
