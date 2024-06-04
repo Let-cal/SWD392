@@ -47,12 +47,12 @@ function Checkout() {
                                     <span>{item.itemQty}</span>
                                 </div>
 
-                                <div className="flex-col checkout-item-price"> <span className='font-bold'>Price</span>
-                                    <span>{item.itemPrice.toFixed(2)}</span>
+                                <div className="flex-col checkout-item-price"> <span className='font-bold'>Unit price</span>
+                                    <span>${item.itemPrice.toFixed(2)}</span>
                                 </div>
 
                                 <div className="flex-col checkout-item-total"> <span className='font-bold'>Total</span>
-                                    <span>{(item.itemPrice * item.itemQty).toFixed(2)}</span>
+                                    <span>${(item.itemPrice * item.itemQty).toFixed(2)}</span>
                                 </div>
                             </div>
                         </div>
@@ -62,7 +62,7 @@ function Checkout() {
             </div>
 
             <div className="checkout-summary">
-                TOTAL: ${selectedItems.reduce((total, item) => {
+                BILL TOTAL: ${selectedItems.reduce((total, item) => {
                     return total + item.itemPrice * item.itemQty;
                 }, 0).toFixed(2)}
 

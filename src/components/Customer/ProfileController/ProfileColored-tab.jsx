@@ -3,6 +3,8 @@ import PropTypes from "prop-types";
 import { useEffect, useState } from "react";
 import { useLocation } from "react-router-dom"; // Import useLocation
 import AccountOrders from "./MyOrderedData";
+import Profile from "../profile/profile";
+
 
 function CustomTabPanel(props) {
   const { children, value, index, ...other } = props;
@@ -72,7 +74,7 @@ export default function ProfileColorTabs() {
         Item Two
       </CustomTabPanel>
       <CustomTabPanel value={value} index={2}>
-        Item Three
+        <Profile/>
       </CustomTabPanel>
     </Box>
   );
