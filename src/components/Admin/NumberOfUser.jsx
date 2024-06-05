@@ -35,7 +35,7 @@ const User = ({
       style={UserStyle}
     >
       <div className="self-stretch flex flex-row items-center justify-between gap-[0]">
-        <div className="w-[215px] relative inline-block shrink-0">
+        <div className="w-[200px] relative inline-block shrink-0">
           {customer}
         </div>
         <PeopleAltIcon />

@@ -1,12 +1,17 @@
 import { Visibility, VisibilityOff } from "@mui/icons-material";
-import { IconButton, InputAdornment, TextField } from "@mui/material";
-import Checkbox from "@mui/material/Checkbox";
+import {
+  Backdrop,
+  Checkbox,
+  CircularProgress,
+  IconButton,
+  InputAdornment,
+  TextField,
+} from "@mui/material";
 import axios from "axios";
 import { useSnackbar } from "notistack";
 import { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { useAuth } from "./AuthContext";
-
 function ImageSection() {
   return (
     <div className="flex flex-col w-3/5 max-md:w-full ">
@@ -27,12 +32,12 @@ function ImageSection() {
     </div>
   );
 }
-
 function LoginForm() {
   const { setIsAuthenticated, setUserRole } = useAuth();
   const [showPassword, setShowPassword] = useState(false);
   const [formData, setFormData] = useState({ email: "", password: "" });
   const [checked, setChecked] = useState(true);
+  const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
   const { enqueueSnackbar } = useSnackbar();
 
@@ -59,6 +64,7 @@ function LoginForm() {
 
   const handleLogin = async (e) => {
     e.preventDefault();
+    setLoading(true); // Start loading
     const requestBody = { email: formData.email, password: formData.password };
     try {
       const response = await axios.post(
@@ -100,11 +106,19 @@ function LoginForm() {
         anchorOrigin: { horizontal: "right", vertical: "top" },
         preventDuplicate: true,
       });
+    } finally {
+      setLoading(false); // Stop loading
     }
   };
 
   return (
     <div className="flex flex-col ml-5 w-2/5 max-md:ml-0 max-md:w-full">
+      <Backdrop
+        sx={{ color: "#fff", zIndex: (theme) => theme.zIndex.drawer + 1 }}
+        open={loading}
+      >
+        <CircularProgress color="inherit" />
+      </Backdrop>
       <div className="flex flex-col grow justify-center px-16 w-full bg-white max-md:px-5 min-h-screen">
         <div className="flex flex-col mx-8 mt-auto mb-32 max-md:mx-2.5 max-md:mt-10">
           <form onSubmit={handleLogin}>

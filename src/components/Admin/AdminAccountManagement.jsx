@@ -32,7 +32,7 @@ const AdminAccountManagement = () => {
           propWidth="unset"
           propFlex="1"
           propMinWidth="211px"
-          propWidth1="200px"
+          propWidth1="220px"
           propFontSize="20px"
         />
         <User
@@ -41,7 +41,7 @@ const AdminAccountManagement = () => {
           propWidth="unset"
           propFlex="1"
           propMinWidth="211px"
-          propWidth1="200px"
+          propWidth1="220px"
           propFontSize="20px"
         />
         <User
@@ -50,7 +50,7 @@ const AdminAccountManagement = () => {
           propWidth="unset"
           propFlex="1"
           propMinWidth="211px"
-          propWidth1="200px"
+          propWidth1="220px"
           propFontSize="20px"
         />
         <User
@@ -59,7 +59,7 @@ const AdminAccountManagement = () => {
           propWidth="unset"
           propFlex="1"
           propMinWidth="211px"
-          propWidth1="200px"
+          propWidth1="220px"
           propFontSize="20px"
         />
       </nav>

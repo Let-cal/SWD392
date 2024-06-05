@@ -2,6 +2,7 @@ import { defineElement } from "@lordicon/element";
 import lottie from "lottie-web";
 import PropTypes from "prop-types";
 import { useState } from "react";
+import ReasonChoose from "./BenefitOfPage/ReasonChoose.jsx";
 import CardStack from "./CollectionCard/CardStack.jsx";
 import "./CollectionCard/CollectionCard.css";
 import Footer from "./Footer/Footer.jsx";
@@ -150,6 +151,7 @@ function MyComponent() {
         <Hero />
         <Zodiac />
         <MonthlyDeals />
+        <ReasonChoose />
         <TrustedCompanies />
         <Footer />
       </div>

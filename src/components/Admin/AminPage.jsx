@@ -3,18 +3,19 @@ import UserManagement from "../Admin/UserManagement/UserController.jsx";
 import { useAuth } from "../LoginController/AuthContext.jsx";
 import AdminAccountManagement from "./AdminAccountManagement.jsx";
 import Header from "./HeaderOfAdmin.jsx";
+import OrdersManagement from "./OrderManagement/OrderManagement.jsx";
 import Sidebar from "./sidebar.jsx";
+import "./adminpage.css"; // Add this import for the new CSS styles
 
 function AdminPage() {
   const { handleLogout } = useAuth();
-  const [selectedContent, setSelectedContent] = useState(
-    "AdminAccountManagement"
-  );
+  const [selectedContent, setSelectedContent] = useState("AdminAccountManagement");
+  const [isSidebarCollapsed, setIsSidebarCollapsed] = useState(true);
 
   let ContentComponent;
   switch (selectedContent) {
     case "OrdersManagement":
-      // ContentComponent = OrdersManagement;
+      ContentComponent = OrdersManagement;
       break;
     case "ProductsManagement":
       // ContentComponent = ProductsManagement;
@@ -41,10 +42,10 @@ function AdminPage() {
 
   return (
     <div className="flex flex-row justify-between">
-      <div className="w-1/5">
-        <Sidebar setSelectedContent={setSelectedContent} />
+      <div className={`sidebar-container ${isSidebarCollapsed ? "collapsed" : ""}`}>
+        <Sidebar setSelectedContent={setSelectedContent} setIsSidebarCollapsed={setIsSidebarCollapsed} />
       </div>
-      <div className="w-4/5">
+      <div className={`content-container ${isSidebarCollapsed ? "expanded" : ""}`}>
         <Header />
         <div className="p-5">
           <ContentComponent />

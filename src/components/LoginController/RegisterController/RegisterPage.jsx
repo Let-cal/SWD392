@@ -1,12 +1,15 @@
+import { Backdrop, CircularProgress } from "@mui/material";
 import axios from "axios";
 import { useSnackbar } from "notistack";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import "../../Customer/Header/header.css";
 import Input from "./InputForm";
+
 const RegisterPage = () => {
   const { enqueueSnackbar } = useSnackbar();
   const navigate = useNavigate();
+  const [loading, setLoading] = useState(false);
   const [formData, setFormData] = useState({
     email: "",
     password: "",
@@ -66,6 +69,7 @@ const RegisterPage = () => {
       return;
     }
 
+    setLoading(true);
     try {
       const response = await axios.post(
         "https://zodiacjewerly.azurewebsites.net/api/Authen/Register",
@@ -108,11 +112,19 @@ const RegisterPage = () => {
           preventDuplicate: true,
         });
       }
+    } finally {
+      setLoading(false);
     }
   };
 
   return (
     <div className="w-full h-[960px] relative bg-light-colors-white-light overflow-hidden flex flex-col items-center justify-start pt-[50px] px-0 pb-0 box-border gap-[50px] leading-[normal] tracking-[normal] text-left text-[38px] text-slate-900 font-body-medium mq675:gap-[25px]">
+      <Backdrop
+        sx={{ color: "#fff", zIndex: (theme) => theme.zIndex.drawer + 1 }}
+        open={loading}
+      >
+        <CircularProgress color="inherit" />
+      </Backdrop>
       <div className="w-[535px] flex flex-col items-center justify-start py-0 px-5 box-border gap-[32px] max-w-full mq675:gap-[16px]">
         <div className="title-header flex-auto text-6xl leading-10">
           <span className="font-bold bg-gradient-custom-header-title bg-clip-text text-transparent">
@@ -143,7 +155,7 @@ const RegisterPage = () => {
                 Placeholder="Enter your Email"
                 propMinWidth="66px"
                 name="email"
-                inputType="email" // Đảm bảo input type là email
+                inputType="email"
                 onChange={handleChange}
               />
               <Input
@@ -170,7 +182,7 @@ const RegisterPage = () => {
                 Placeholder="Enter your Fullname"
                 propMinWidth="200px"
                 name="fullname"
-                inputType="text" // Đảm bảo input type là text
+                inputType="text"
                 onChange={handleChange}
               />
               <Input
@@ -179,7 +191,7 @@ const RegisterPage = () => {
                 Placeholder="+84"
                 propMinWidth="200px"
                 name="phoneNumber"
-                inputType="text" // Đảm bảo input type là text
+                inputType="text"
                 onChange={handleChange}
               />
               <button

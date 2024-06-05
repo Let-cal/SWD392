@@ -29,7 +29,7 @@ function Header() {
         className="shrink-0 max-w-full aspect-[0.88] w-[76px]"
         alt=""
       />
-      <div className="title-header flex-auto text-4xl leading-10">
+      <div className="title-header-Customer flex-auto text-4xl leading-10">
         <span className="font-bold bg-gradient-custom-header-title bg-clip-text text-transparent">
           Z
         </span>
@@ -55,7 +55,10 @@ function Header() {
         {isSearchOpen && (
           <TextField id="standard-basic" label="Search" variant="standard" />
         )}
-        <CartIcon />
+        <Link to="/viewcart">
+          <CartIcon />
+        </Link>
+
         {!isAuthenticated ? (
           <Link to="/CustomerProfile-order">
             <Button

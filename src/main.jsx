@@ -43,8 +43,18 @@ ReactDOM.createRoot(document.getElementById("root")).render(
             }
           />
           <Route exact path="/login" element={<Login />} />
-          <Route exact path="/viewcart" element={<ViewCart />} />
-          <Route exact path="/checkout" element={<Checkout />} />
+          <Route
+            exact
+            path="/viewcart"
+            element={<ViewCart />}
+            roles={["Customer"]}
+          />
+          <Route
+            exact
+            path="/checkout"
+            element={<Checkout />}
+            roles={["Customer"]}
+          />
           <Route
             exact
             path="/CustomerProfile-order"
