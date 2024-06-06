@@ -9,15 +9,18 @@ const ReasonChoose = ({ className = "" }) => {
       <div className="flex-1 flex flex-col items-start justify-start gap-[24px] min-w-[247px] max-w-full">
         <div className="self-stretch flex flex-col items-start justify-start">
           <div className="self-stretch flex flex-col items-start justify-start gap-[24px] lg:self-stretch lg:w-auto">
-            <h1 className="m-0 text-[38px] self-stretch relative text-inherit leading-[58px] font-bold font-inherit md:text-19xl md:leading-[46px] sm:text-10xl sm:leading-[35px]">
+            <h1 className="m-0 font-serif text-[35px] self-stretch relative text-inherit leading-[58px] font-bold font-inherit md:text-19xl md:leading-[46px] sm:text-10xl sm:leading-[35px]">
               Why Choose Us
             </h1>
             <div className="self-stretch relative text-md leading-[150%]">
-              Welcome to our furniture store, where we believe that a
-              well-furnished home is a happy home. We offer a wide selection of
-              high-quality furniture for every room in your home, from cozy
-              sofas and elegant dining sets to stylish office desks and
-              comfortable beds.
+              Step into our celestial jewelry boutique, where every piece tells
+              a story woven with the stars. Embrace the magic of the zodiac as
+              you browse through our curated collection of handcrafted
+              treasures, each design infused with the essence of its
+              corresponding constellation. From delicate necklaces to bold
+              statement rings, our jewelry celebrates the individuality and
+              spirit of every zodiac sign, ensuring that you will find the
+              perfect adornment to reflect your cosmic destiny.
             </div>
           </div>
         </div>
@@ -34,6 +37,7 @@ const ReasonChoose = ({ className = "" }) => {
           <ListItem
             emptyBenefitMarkers="1"
             affordablePrices="Affordable Prices"
+            content="Gemini-themed necklace with intricate design, perfect for those born under the Gemini sign. This stunning necklace features a delicate twin motif symbolizing the dual nature of Gemini."
           />
           <ListItem
             emptyBenefitMarkers="2"
@@ -41,6 +45,7 @@ const ReasonChoose = ({ className = "" }) => {
             propDisplay="inline-block"
             propMinWidth="28px"
             propMargin="unset"
+            content="A stunning Leo-inspired bracelet crafted with attention to detail and shipped free of charge. The bold design of this bracelet reflects the confidence and charisma of the Leo sign. "
           />
         </div>
         <div className="self-stretch flex flex-row items-start justify-start gap-[48px] max-w-full md:flex-wrap sm:gap-[24px]">
@@ -50,6 +55,7 @@ const ReasonChoose = ({ className = "" }) => {
             propDisplay="inline-block"
             propMinWidth="28px"
             propMargin="unset"
+            content="Virgo-themed ring made from the finest materials, ensuring the best quality for the discerning Virgo. Precision-crafted with meticulous attention to detail, this ring embodies the perfectionism and practicality of the Virgo sign."
           />
           <ListItem
             emptyBenefitMarkers="4"
@@ -57,6 +63,7 @@ const ReasonChoose = ({ className = "" }) => {
             propDisplay="inline-block"
             propMinWidth="28px"
             propMargin="0"
+            content="Aquarius-inspired earrings backed by our money-back guarantee, promising satisfaction for all Aquarians. These unique earrings capture the innovative and eccentric spirit of Aquarius, making them the perfect accessory for those who march to the beat of their own drum. "
           />
         </div>
       </div>

@@ -1,7 +1,8 @@
 import { defineElement } from "@lordicon/element";
 import lottie from "lottie-web";
 import PropTypes from "prop-types";
-import { useState } from "react";
+import { useRef, useState } from "react";
+import { Link } from "react-router-dom";
 import ReasonChoose from "./BenefitOfPage/ReasonChoose.jsx";
 import CardStack from "./CollectionCard/CardStack.jsx";
 import "./CollectionCard/CollectionCard.css";
@@ -132,10 +133,12 @@ function Hero() {
             electronic payments and access via our mobile app. Start your
             celestial shopping journey with us today!
           </h1>
-          <button className="coolBeans">
-            <span className="uppercase">E</span>PLORE{" "}
-            <span className="uppercase">M</span>ORE
-          </button>
+          <Link to="/AboutPage">
+            <button className="coolBeans">
+              <span className="uppercase">E</span>PLORE{" "}
+              <span className="uppercase">M</span>ORE
+            </button>
+          </Link>
         </div>
         <CardStack images={images} />
       </div>
@@ -144,15 +147,23 @@ function Hero() {
 }
 
 function MyComponent() {
+  const trustedCompaniesRef = useRef(null);
+
+  const scrollToTrustedCompanies = () => {
+    trustedCompaniesRef.current?.scrollIntoView({ behavior: "smooth" });
+  };
+
   return (
     <div>
-      <Header />
-      <div className="flex flex-col items-center px-20 pb-0 bg-white max-md:px-5">
+      <Header scrollToTrustedCompanies={scrollToTrustedCompanies} />
+      <div className="flex flex-col items-center px-20 pb-0 bg-white max-md:px-5 max-sm:mt-[130px]">
         <Hero />
         <Zodiac />
         <MonthlyDeals />
         <ReasonChoose />
-        <TrustedCompanies />
+        <div ref={trustedCompaniesRef}>
+          <TrustedCompanies />
+        </div>
         <Footer />
       </div>
     </div>

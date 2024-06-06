@@ -6,9 +6,9 @@ import AboutPage from "./components/Customer/AboutController/AboutPage.jsx";
 import "./components/Customer/Customer.css";
 import MyComponent from "./components/Customer/MyComponent.jsx";
 import AccountProfileMain from "./components/Customer/ProfileController/ProfileMain.jsx";
-import Checkout from "./components/Customer/checkout-info/checkout.jsx";
+import Checkout from "./components/Customer/StepperControllerCart/checkout-info/checkout.jsx";
+import ViewCart from "./components/Customer/StepperControllerCart/view-cart/ViewCart.jsx";
 import DetailProduct from "./components/Customer/detail-product/detail-product.jsx";
-import ViewCart from "./components/Customer/view-cart/ViewCart.jsx";
 import { AuthProvider } from "./components/LoginController/AuthContext.jsx";
 import OTPVerification from "./components/LoginController/ForgotPasswordController/PageOTPVerification.jsx";
 import ChangePasswordPage from "./components/LoginController/ForgotPasswordController/ResetPassword/ChangePasswordPage.jsx";
@@ -22,12 +22,7 @@ ReactDOM.createRoot(document.getElementById("root")).render(
     <SnackbarProvider maxSnack={3}>
       <BrowserRouter>
         <Routes>
-          <Route
-            exact
-            path="/"
-            element={<MyComponent />}
-            roles={["Customer"]}
-          />
+          <Route exact path="/" element={<MyComponent />} />
           <Route
             exact
             path="/AdminPage"

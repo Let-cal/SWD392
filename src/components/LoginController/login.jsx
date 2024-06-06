@@ -89,7 +89,6 @@ function LoginForm() {
 
         enqueueSnackbar("Logged in successfully", {
           variant: "success",
-          anchorOrigin: { horizontal: "right", vertical: "top" },
           preventDuplicate: true,
         });
 

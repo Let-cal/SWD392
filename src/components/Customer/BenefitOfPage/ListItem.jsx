@@ -8,6 +8,7 @@ const ListItem = ({
   propDisplay,
   propMinWidth,
   propMargin,
+  content,
 }) => {
   const emptyBenefitMarkersStyle = useMemo(() => {
     return {
@@ -36,16 +37,12 @@ const ListItem = ({
         {emptyBenefitMarkers}
       </b>
       <b
-        className="self-stretch relative text-[38px] leading-[34px] font-bold sm:text-lgi sm:leading-[27px]"
+        className="self-stretch relative font-serif text-[35px] leading-[34px] font-bold sm:text-lgi sm:leading-[27px]"
         style={affordablePricesStyle}
       >
         {affordablePrices}
       </b>
-      <div className="self-stretch relative leading-[150%]">
-        Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse
-        varius enim in eros elementum tristique. Duis cursus, mi quis viverra
-        ornare, eros dolor interdum nulla.
-      </div>
+      <div className="self-stretch relative leading-[150%]">{content}</div>
       <div className="flex flex-row items-center justify-center gap-[8px]"></div>
     </div>
   );
@@ -55,6 +52,7 @@ ListItem.propTypes = {
   className: PropTypes.string,
   emptyBenefitMarkers: PropTypes.string,
   affordablePrices: PropTypes.string,
+  content: PropTypes.string.isRequired,
 
   /** Style props */
   propDisplay: PropTypes.any,

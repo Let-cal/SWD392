@@ -1,19 +1,34 @@
 import LoginIcon from "@mui/icons-material/Login";
 import { Button, TextField } from "@mui/material";
+import { useSnackbar } from "notistack";
+import PropTypes from "prop-types";
 import { useEffect, useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useAuth } from "../../LoginController/AuthContext.jsx";
 import AvatarProfile from "./Avatar-profile.jsx";
 import CartIcon from "./Cart-Icon.jsx";
 import ColorTabs from "./Colored-tab.jsx";
-function Header() {
+function Header({ scrollToTrustedCompanies }) {
   const [isSearchOpen, setSearchOpen] = useState(false);
   const { isAuthenticated, setIsAuthenticated } = useAuth();
+  const { enqueueSnackbar } = useSnackbar();
+  const Navigate = useNavigate();
   const toggleSearch = (event) => {
     event.preventDefault();
     setSearchOpen((prev) => !prev);
   };
-
+  const handleCartIconClick = () => {
+    const email = localStorage.getItem("email");
+    if (!email) {
+      enqueueSnackbar("You must login before view cart!", {
+        variant: "warning",
+        preventDuplicate: true,
+      });
+      return;
+    }
+    // Redirect to viewcart page
+    Navigate("/viewcart");
+  };
   useEffect(() => {
     const token = localStorage.getItem("token");
     if (token) {
@@ -38,7 +53,7 @@ function Header() {
         </span>
       </div>
       <nav className="flex gap-5 max-md:gap-2 items-center justify-between text-base leading-7 max-md:max-w-full">
-        <ColorTabs />
+        <ColorTabs scrollToTrustedCompanies={scrollToTrustedCompanies} />
         <div className="shrink-0 w-px border border-solid bg-neutral-500 border-neutral-500 h-[22px]" />
         <a
           href="#"
@@ -55,9 +70,9 @@ function Header() {
         {isSearchOpen && (
           <TextField id="standard-basic" label="Search" variant="standard" />
         )}
-        <Link to="/viewcart">
+        <div onClick={handleCartIconClick}>
           <CartIcon />
-        </Link>
+        </div>
 
         {!isAuthenticated ? (
           <Link to="/CustomerProfile-order">
@@ -76,5 +91,9 @@ function Header() {
     </header>
   );
 }
+
+Header.propTypes = {
+  scrollToTrustedCompanies: PropTypes.func.isRequired,
+};
 
 export default Header;

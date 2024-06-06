@@ -1,13 +1,12 @@
-import BackIcon from "@mui/icons-material/ArrowBack";
 import CancelIcon from "@mui/icons-material/Cancel";
 import CheckCircleOutlineIcon from "@mui/icons-material/CheckCircleOutline";
 import Button from "@mui/material/Button";
 import Checkbox from "@mui/material/Checkbox";
-import IconButton from "@mui/material/IconButton";
 import PropTypes from "prop-types";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import Header from "../../Admin/HeaderOfAdmin";
+import Header from "../../../Admin/HeaderOfAdmin";
+import CheckoutStepper from "../StepperComponent";
 import "./ViewCart.css";
 const CartItem = ({
   imageSrc,
@@ -66,9 +65,6 @@ CartItem.propTypes = {
 };
 
 function ViewCart() {
-  const handleBackClick = () => {
-    navigate("/"); // Điều hướng trở lại trang chủ hoặc trang cần thiết
-  };
   const [items, setItems] = useState([
     {
       imageSrc:
@@ -152,31 +148,9 @@ function ViewCart() {
   return (
     <>
       <Header />
-      <div className="shopping-cart-container mt-5">
-        <div className="flex flex-row justify-between">
-          <IconButton
-            edge="start"
-            color="inherit"
-            aria-label="back"
-            onClick={handleBackClick}
-          >
-            <BackIcon />
-          </IconButton>
-          <Button
-            variant="contained"
-            color="secondary"
-            startIcon={isGetAll ? <CheckCircleOutlineIcon /> : <CancelIcon />}
-            onClick={handleGetAll}
-            style={{
-              color: "white",
-              backgroundColor: isGetAll ? "black" : "red",
-              "&:hover": { backgroundColor: isGetAll ? "gray" : "darkred" },
-            }}
-          >
-            {isGetAll ? "Get All" : "Cancel"}
-          </Button>
-        </div>
+      <CheckoutStepper />
 
+      <div className="shopping-cart-container mt-5">
         <section className="shopping-cart">
           {items.map((item, index) => (
             <CartItem
@@ -192,13 +166,33 @@ function ViewCart() {
           <div className="total-amount">
             TOTAL: <span className="amount">${calculateTotal()}</span>
           </div>
-          <button
-            disabled={selectedItems.length === 0}
-            className="checkout-button"
-            onClick={handleCheckout}
-          >
-            PROCEED TO CHECKOUT
-          </button>
+          <div className="flex gap-4">
+            <Button
+              variant="contained"
+              color="secondary"
+              startIcon={isGetAll ? <CheckCircleOutlineIcon /> : <CancelIcon />}
+              onClick={handleGetAll}
+              style={{
+                color: "white",
+                backgroundColor: isGetAll ? "black" : "red",
+                "&:hover": { backgroundColor: isGetAll ? "gray" : "darkred" },
+              }}
+            >
+              {isGetAll ? "Get All" : "Cancel"}
+            </Button>
+            <Button
+              disabled={selectedItems.length === 0}
+              className="checkout-button"
+              onClick={handleCheckout}
+              style={{
+                color: "white",
+                backgroundColor: "black",
+                "&:hover": { backgroundColor: "gray" },
+              }}
+            >
+              PROCEED TO CHECKOUT
+            </Button>
+          </div>
         </div>
       </div>
     </>

@@ -4,12 +4,14 @@ import { useAuth } from "../LoginController/AuthContext.jsx";
 import AdminAccountManagement from "./AdminAccountManagement.jsx";
 import Header from "./HeaderOfAdmin.jsx";
 import OrdersManagement from "./OrderManagement/OrderManagement.jsx";
-import Sidebar from "./sidebar.jsx";
+import ProductsManagement from "./ProductManagement/ProductManagement.jsx";
 import "./adminpage.css"; // Add this import for the new CSS styles
-
+import Sidebar from "./sidebar.jsx";
 function AdminPage() {
   const { handleLogout } = useAuth();
-  const [selectedContent, setSelectedContent] = useState("AdminAccountManagement");
+  const [selectedContent, setSelectedContent] = useState(
+    "AdminAccountManagement"
+  );
   const [isSidebarCollapsed, setIsSidebarCollapsed] = useState(true);
 
   let ContentComponent;
@@ -18,7 +20,7 @@ function AdminPage() {
       ContentComponent = OrdersManagement;
       break;
     case "ProductsManagement":
-      // ContentComponent = ProductsManagement;
+      ContentComponent = ProductsManagement;
       break;
     case "CollectionsManagement":
       // ContentComponent = CollectionsManagement;
@@ -42,10 +44,17 @@ function AdminPage() {
 
   return (
     <div className="flex flex-row justify-between">
-      <div className={`sidebar-container ${isSidebarCollapsed ? "collapsed" : ""}`}>
-        <Sidebar setSelectedContent={setSelectedContent} setIsSidebarCollapsed={setIsSidebarCollapsed} />
+      <div
+        className={`sidebar-container ${isSidebarCollapsed ? "collapsed" : ""}`}
+      >
+        <Sidebar
+          setSelectedContent={setSelectedContent}
+          setIsSidebarCollapsed={setIsSidebarCollapsed}
+        />
       </div>
-      <div className={`content-container ${isSidebarCollapsed ? "expanded" : ""}`}>
+      <div
+        className={`content-container ${isSidebarCollapsed ? "expanded" : ""}`}
+      >
         <Header />
         <div className="p-5">
           <ContentComponent />
