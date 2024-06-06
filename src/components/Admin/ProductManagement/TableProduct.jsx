@@ -1,60 +1,68 @@
+// TableProduct.jsx
+
 import UpdateIcon from "@mui/icons-material/Update";
 import Button from "@mui/material/Button";
 import PropTypes from "prop-types";
-import {
-  getCategoryName,
-  getGenderName,
-  getZodiacName,
-} from "./ChangeIDtoName";
 import InforProduct from "./InfoProduct";
 
-const Table = ({ data }) => {
+const TableProduct = ({ data, onUpdate }) => {
   return (
     <div className="mx-auto bg-white shadow-lg rounded-lg overflow-hidden">
       <div className="flex bg-gray-100 text-xs uppercase font-semibold text-gray-600">
-        <div className="w-1/12 px-4 py-2">ID</div>
-        <div className="w-1/5 px-4 py-2">Product name</div>
-        <div className="w-1/5 px-4 py-2">Price</div>
-        <div className="w-1/5 px-4 py-2">Category</div>
-        <div className="w-1/5 px-4 py-2">Material ID</div>
-        <div className="w-1/5 px-4 py-2">Gender</div>
-        <div className="w-1/5 px-4 py-2">Zodiac</div>
-        <div className="w-1/5 px-4 py-2">Action</div>
+        <div className="w-1/12 px-1 py-2">ID</div>
+        <div className="flex w-11/12">
+          <div className="w-1/5 px-1 py-2">Product name</div>
+          <div className="w-1/5 px-1 py-2">Description</div>
+          <div className="w-1/5 px-1 py-2">Price</div>
+          <div className="w-1/5 px-1 py-2">Quantity</div>
+          <div className="w-1/5 px-1 py-2">Category</div>
+          <div className="w-1/5 px-1 py-2">Material</div>
+          <div className="w-1/5 px-1 py-2">Gender</div>
+          <div className="w-1/5 px-1 py-2">Zodiac</div>
+        </div>
+        <div className="w-1/12 px-1 py-2"></div>
       </div>
-      {Array.isArray(data) &&
-        data.map((product, index) => (
+      <div className="h-96 overflow-auto">
+        {data.map((product) => (
           <InforProduct
             key={product.id}
-            ProductNumber={index + 1}
-            nameProduct={product.nameProduct}
-            Price={product.price.toString()}
-            Category={getCategoryName(product.categoryId)}
-            materialId={product.materialId.toString()}
-            Gender={getGenderName(product.genderId)}
-            Zodiac={getZodiacName(product.zodiacId)}
+            product={product}
+            onUpdate={onUpdate}
             Action={
               <Button
-                variant="contained"
-                endIcon={<UpdateIcon />}
-                sx={{
-                  backgroundColor: "black",
-                  color: "white",
-                  "&:hover": {
-                    backgroundColor: "gray",
-                  },
-                }}
+                id={`edit-button-${product.id}`}
+                variant="outlined"
+                size="medium"
+                startIcon={<UpdateIcon />}
+                onClick={() =>
+                  document.getElementById(`edit-button-${product.id}`).click()
+                }
               >
-                Update
+                Edit
               </Button>
             }
           />
         ))}
+      </div>
     </div>
   );
 };
 
-Table.propTypes = {
-  data: PropTypes.array.isRequired,
+TableProduct.propTypes = {
+  data: PropTypes.arrayOf(
+    PropTypes.shape({
+      id: PropTypes.number.isRequired,
+      nameProduct: PropTypes.string.isRequired,
+      price: PropTypes.number.isRequired,
+      categoryId: PropTypes.number.isRequired, // Changed to number
+      materialId: PropTypes.number.isRequired, // Changed to number
+      genderId: PropTypes.number.isRequired, // Changed to number
+      zodiacId: PropTypes.number.isRequired, // Changed to number
+      descriptionProduct: PropTypes.string.isRequired,
+      quantity: PropTypes.number.isRequired,
+    })
+  ).isRequired,
+  onUpdate: PropTypes.func.isRequired,
 };
 
-export default Table;
+export default TableProduct;

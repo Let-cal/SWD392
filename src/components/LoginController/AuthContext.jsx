@@ -20,7 +20,7 @@ export const AuthProvider = ({ children }) => {
   useEffect(() => {
     const token = localStorage.getItem("token");
     const role = localStorage.getItem("role");
-    
+
     if (token) {
       setIsAuthenticated(true);
     }
@@ -34,7 +34,14 @@ export const AuthProvider = ({ children }) => {
 
   return (
     <AuthContext.Provider
-      value={{ isAuthenticated, setIsAuthenticated, userRole, setUserRole, loading ,handleLogout}}
+      value={{
+        isAuthenticated,
+        setIsAuthenticated,
+        userRole,
+        setUserRole,
+        loading,
+        handleLogout,
+      }}
     >
       {!loading && children} {/* Chỉ render children khi không loading */}
     </AuthContext.Provider>
