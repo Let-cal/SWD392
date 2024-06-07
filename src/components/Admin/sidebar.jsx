@@ -84,7 +84,7 @@ function Sidebar({ setSelectedContent, setIsSidebarCollapsed }) {
           <a className="gap-[13px]">
             <img
               className={`zodiac-icon ${isCollapsed ? "collapsed" : ""}`}
-              src="src/components/Customer/images/zodiac.png"
+              src="public/images/zodiac.png"
               alt="Zodiac"
             />
             <span className={`text-Admin ${showText ? "show" : ""}`}>

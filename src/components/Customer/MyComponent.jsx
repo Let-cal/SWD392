@@ -105,12 +105,12 @@ const MonthlyDeals = () => (
 
 function Hero() {
   const images = [
-    "src/components/Customer/images/gabrielle-henderson-XTp4ZzD76Xw-unsplash.jpg",
-    "src/components/Customer/images/jasmin-chew-MIyo2hqbAzk-unsplash.jpg",
-    "src/components/Customer/images/jasmin-chew-WKD2vIe8Rb0-unsplash.jpg",
-    "src/components/Customer/images/juan-burgos-3_XeNGVbTQA-unsplash.jpg",
-    "src/components/Customer/images/kateryna-hliznitsova-ceSCZzjTReg-unsplash.jpg",
-    "src/components/Customer/images/mike-von-qsJ5itg93WY-unsplash.jpg",
+    "public/images/gabrielle-henderson-XTp4ZzD76Xw-unsplash.jpg",
+    "public/images/jasmin-chew-MIyo2hqbAzk-unsplash.jpg",
+    "public/images/jasmin-chew-WKD2vIe8Rb0-unsplash.jpg",
+    "public/images/juan-burgos-3_XeNGVbTQA-unsplash.jpg",
+    "public/images/kateryna-hliznitsova-ceSCZzjTReg-unsplash.jpg",
+    "public/images/mike-von-qsJ5itg93WY-unsplash.jpg",
   ];
   return (
     <section className="bg-custom-gradient flex absolute overflow-hidden relative flex-col items-start pt-20 pr-20 pb-6 pl-10 mt-6 w-full text-white max-w-[1249px] min-h-[646px] max-md:px-5 max-md:max-w-full">

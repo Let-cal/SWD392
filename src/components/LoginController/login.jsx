@@ -18,7 +18,7 @@ function ImageSection() {
       <div className="relative flex flex-col grow items-start px-2.5 pt-2.5 pb-2 text-lg font-bold leading-6 text-white min-h-screen">
         <img
           loading="lazy"
-          srcSet="src/components/Customer/images/Frame.png"
+          srcSet="public/images/Frame.png"
           className="object-cover absolute inset-0 w-full h-full "
         />
         <div className="relative flex flex-col justify-center mt-auto mb-5 w-full max-md:mt-10">

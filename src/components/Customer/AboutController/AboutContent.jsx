@@ -20,10 +20,7 @@ const Content = ({ className = "" }) => {
         <div className="self-stretch flex flex-row items-start justify-start py-0 pr-0 pl-0.5 box-border max-w-full text-base">
           <p className="m-0 flex-1 relative leading-[27px] inline-block max-w-full">{`Welcome to our e-commerce website, your ultimate destination for zodiac-themed jewelry, fashion accessories, and more. Our mission is to bring you a unique shopping experience tailored to your astrological sign, helping you find items that resonate with your personality and style.`}</p>
         </div>
-        <ImgComponents
-          title="Top trends"
-          img01="src/components/Customer/images/Img 01.png"
-        />
+        <ImgComponents title="Top trends" img01="public/images/Img 02.png" />
       </div>
       <div className="self-stretch flex flex-row items-start justify-start py-0 pr-0 pl-0.5 box-border max-w-full">
         <div className="flex-1 flex flex-col items-start justify-start gap-[16px] max-w-full">
@@ -57,7 +54,7 @@ const Content = ({ className = "" }) => {
       </div>
       <ImgComponents
         title="Produced with care"
-        img01="src/components/Customer/images/Img 02.png"
+        img01="public/images/Img 01.png"
       />
       <div className="self-stretch flex flex-row items-start justify-start py-0 pr-0 pl-0.5 box-border max-w-full">
         <p className="m-0 h-[106px] flex-1 relative leading-[27px] inline-block max-w-full">
