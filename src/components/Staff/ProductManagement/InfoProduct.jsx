@@ -40,14 +40,11 @@ const InforProduct = ({ product, onUpdate, Action }) => {
   };
 
   return (
-    <div className="flex items-center justify-between py-2 border-b border-gray-200 hover:bg-gray-100 transition duration-300">
-      <div className="w-1/12 px-1 text-left text-xs uppercase text-gray-500 font-medium">
-        {product.id}
-      </div>
-
-      <div className="flex w-11/12">
-        <div className="w-1/5 px-1 text-left text-xs uppercase text-gray-500 font-medium">
-          {isEditing ? (
+    <div className="flex items-center justify-between text-center py-2 border-b border-gray-200 hover:bg-gray-100 transition duration-300">
+      {[
+        { content: product.id },
+        {
+          content: isEditing ? (
             <input
               type="text"
               name="nameProduct"
@@ -57,10 +54,10 @@ const InforProduct = ({ product, onUpdate, Action }) => {
             />
           ) : (
             product.nameProduct
-          )}
-        </div>
-        <div className="w-1/5 px-1 text-left text-xs uppercase text-gray-500 font-medium">
-          {isEditing ? (
+          ),
+        },
+        {
+          content: isEditing ? (
             <input
               type="text"
               name="descriptionProduct"
@@ -70,10 +67,10 @@ const InforProduct = ({ product, onUpdate, Action }) => {
             />
           ) : (
             product.descriptionProduct
-          )}
-        </div>
-        <div className="w-1/5 px-1 text-left text-xs uppercase text-gray-500 font-medium">
-          {isEditing ? (
+          ),
+        },
+        {
+          content: isEditing ? (
             <input
               type="number"
               name="price"
@@ -83,10 +80,10 @@ const InforProduct = ({ product, onUpdate, Action }) => {
             />
           ) : (
             product.price
-          )}
-        </div>
-        <div className="w-1/5 px-1 text-left text-xs uppercase text-gray-500 font-medium">
-          {isEditing ? (
+          ),
+        },
+        {
+          content: isEditing ? (
             <input
               type="text"
               name="quantity"
@@ -96,10 +93,10 @@ const InforProduct = ({ product, onUpdate, Action }) => {
             />
           ) : (
             product.quantity
-          )}
-        </div>
-        <div className="w-1/5 px-1 text-left text-xs uppercase text-gray-500 font-medium">
-          {isEditing ? (
+          ),
+        },
+        {
+          content: isEditing ? (
             <select
               name="categoryId"
               value={editedProduct.categoryId}
@@ -115,10 +112,10 @@ const InforProduct = ({ product, onUpdate, Action }) => {
             </select>
           ) : (
             getCategoryName(product.categoryId)
-          )}
-        </div>
-        <div className="w-1/5 px-1 text-left text-xs uppercase text-gray-500 font-medium">
-          {isEditing ? (
+          ),
+        },
+        {
+          content: isEditing ? (
             <input
               type="text"
               name="materialId"
@@ -128,10 +125,10 @@ const InforProduct = ({ product, onUpdate, Action }) => {
             />
           ) : (
             product.materialId
-          )}
-        </div>
-        <div className="w-1/5 px-1 text-left text-xs uppercase text-gray-500 font-medium">
-          {isEditing ? (
+          ),
+        },
+        {
+          content: isEditing ? (
             <select
               name="genderId"
               value={editedProduct.genderId}
@@ -147,10 +144,10 @@ const InforProduct = ({ product, onUpdate, Action }) => {
             </select>
           ) : (
             getGenderName(product.genderId)
-          )}
-        </div>
-        <div className="w-1/5 px-1 text-left text-xs uppercase text-gray-500 font-medium">
-          {isEditing ? (
+          ),
+        },
+        {
+          content: isEditing ? (
             <select
               name="zodiacId"
               value={editedProduct.zodiacId}
@@ -166,9 +163,16 @@ const InforProduct = ({ product, onUpdate, Action }) => {
             </select>
           ) : (
             getZodiacName(product.zodiacId)
-          )}
+          ),
+        },
+      ].map((item, index) => (
+        <div
+          key={index}
+          className="w-1/12 px-1 text-left text-xs uppercase text-gray-500 font-medium"
+        >
+          {item.content}
         </div>
-      </div>
+      ))}
 
       <div className="w-1/12 px-1 text-left text-xs uppercase text-gray-500 font-medium">
         {isEditing ? (

@@ -1,8 +1,8 @@
 import { useState } from "react";
 import UserManagement from "../Admin/UserManagement/UserController.jsx";
 import { useAuth } from "../LoginController/AuthContext.jsx";
-import AdminAccountManagement from "./AdminAccountManagement.jsx";
 import Header from "./HeaderOfAdmin.jsx";
+import AdminAccountManagement from "./HomePage/AdminAccountManagement.jsx";
 import OrdersManagement from "./OrderManagement/OrderManagement.jsx";
 import ProductsManagement from "./ProductManagement/ProductManagement.jsx";
 import "./adminpage.css"; // Add this import for the new CSS styles

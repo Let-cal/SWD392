@@ -1,61 +1,46 @@
-import AddCircleIcon from "@mui/icons-material/AddCircle";
 import { CssBaseline } from "@mui/material";
-import Button from "@mui/material/Button";
-import "./AdminAccountManagement.css";
 import Dashboard from "./ChartController/Dashboard.jsx";
-import User from "./NumberOfUser.jsx";
-const AdminAccountManagement = () => {
+import Product from "./NumberOfProduct.jsx";
+import "./StaffAccountManagement.css";
+const StaffAccountManagement = () => {
   return (
     <div className="w-full relative bg-background overflow-hidden flex flex-col items-start justify-start  box-border gap-[20px] leading-[normal] tracking-[normal] text-left text-19xl text-heading font-body-medium">
       <div className="self-stretch flex flex-row items-center justify-between max-w-full gap-[20px] font-urbanist mq750:flex-wrap">
         <h1 className="m-0 font-serif text-[30px] w-[394px] relative text-inherit leading-[48px] font-bold font-inherit inline-block shrink-0 max-w-full mq450:text-[23px] mq450:leading-[29px] mq1050:text-11xl mq1050:leading-[38px]">
-          Account management
+          Staff Page
         </h1>
-        <Button
-          variant="contained"
-          endIcon={<AddCircleIcon />}
-          sx={{
-            backgroundColor: "black",
-            color: "white",
-            "&:hover": {
-              backgroundColor: "gray",
-            },
-          }}
-        >
-          Create Staff
-        </Button>
       </div>
       <nav className="m-0 self-stretch flex flex-row items-start justify-center gap-[24px] max-w-full whitespace-nowrap lg:flex-wrap">
-        <User
-          customer="Customer"
-          accounts="628 accounts"
+        <Product
+          ProductName="Tredding Product of Name"
+          NumOfProducts="628 Products"
           propWidth="unset"
           propFlex="1"
           propMinWidth="211px"
           propWidth1="220px"
           propFontSize="20px"
         />
-        <User
-          customer="Staff"
-          accounts="50 accounts"
+        <Product
+          ProductName="Transaction was withdrawn"
+          NumOfProducts="50 Products"
           propWidth="unset"
           propFlex="1"
           propMinWidth="211px"
           propWidth1="220px"
           propFontSize="20px"
         />
-        <User
-          customer="Bought this month"
-          accounts="825 accounts"
+        <Product
+          ProductName="Bought this month"
+          NumOfProducts="825 Products"
           propWidth="unset"
           propFlex="1"
           propMinWidth="211px"
           propWidth1="220px"
           propFontSize="20px"
         />
-        <User
-          customer="Joined this month"
-          accounts="123 accounts"
+        <Product
+          ProductName="Bought this year"
+          NumOfProducts="123 Products"
           propWidth="unset"
           propFlex="1"
           propMinWidth="211px"
@@ -70,4 +55,4 @@ const AdminAccountManagement = () => {
   );
 };
 
-export default AdminAccountManagement;
+export default StaffAccountManagement;

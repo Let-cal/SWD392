@@ -16,6 +16,7 @@ import ForgotPassword from "./components/LoginController/ForgotPasswordControlle
 import ProtectedRoute from "./components/LoginController/ProtectedRoute.jsx";
 import RegisterPage from "./components/LoginController/RegisterController/RegisterPage.jsx";
 import Login from "./components/LoginController/login.jsx";
+import StaffPage from "./components/Staff/StaffPage.jsx";
 import "./index.css";
 ReactDOM.createRoot(document.getElementById("root")).render(
   <AuthProvider>
@@ -28,6 +29,13 @@ ReactDOM.createRoot(document.getElementById("root")).render(
             path="/AdminPage"
             element={
               <ProtectedRoute element={<AdminPage />} roles={["Admin"]} />
+            }
+          />
+          <Route
+            exact
+            path="/StaffPage"
+            element={
+              <ProtectedRoute element={<StaffPage />} roles={["Staff"]} />
             }
           />
           <Route

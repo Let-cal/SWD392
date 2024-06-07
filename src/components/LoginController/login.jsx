@@ -15,14 +15,14 @@ import { useAuth } from "./AuthContext";
 function ImageSection() {
   return (
     <div className="flex flex-col w-3/5 max-md:w-full ">
-      <div className="relative flex flex-col grow items-start px-2.5 pt-2.5 pb-2 text-lg font-bold leading-6 text-white min-h-screen">
+      <div className="relative flex flex-col grow items-start px-2.5 pt-2.5 pb-2 text-lg  leading-6 text-white min-h-screen">
         <img
           loading="lazy"
           srcSet="public/images/Frame.png"
           className="object-cover absolute inset-0 w-full h-full "
         />
         <div className="relative flex flex-col justify-center mt-auto mb-5 w-full max-md:mt-10">
-          <div className="justify-center p-2.5 pr-[40%] max-md:pr-0 max-md:max-w-full font-serif">
+          <div className="justify-center p-2.5 pr-[20%] max-md:pr-0 max-md:max-w-full font-serif">
             &quot;Discover the beauty of destiny – Connect your love through
             each zodiac sign, made for couples! Celebrate your unique bond with
             personalized astrological jewelry.&quot;
@@ -94,8 +94,10 @@ function LoginForm() {
 
         if (response.data.role === "Admin") {
           navigate("/AdminPage");
-        } else {
+        } else if (response.data.role === "Customer") {
           navigate("/customer-page");
+        } else {
+          navigate("/StaffPage");
         }
       }
     } catch (error) {

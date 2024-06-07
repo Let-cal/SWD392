@@ -1,16 +1,15 @@
 import { useState } from "react";
-import UserManagement from "../Admin/UserManagement/UserController.jsx";
 import { useAuth } from "../LoginController/AuthContext.jsx";
-import AdminAccountManagement from "./AdminAccountManagement.jsx";
-import Header from "./HeaderOfAdmin.jsx";
+import Header from "./HeaderOfStaff.jsx";
+import StaffAccountManagement from "./HomePage/StaffAccountManagement.jsx";
 import OrdersManagement from "./OrderManagement/OrderManagement.jsx";
 import ProductsManagement from "./ProductManagement/ProductManagement.jsx";
-import "./adminpage.css"; // Add this import for the new CSS styles
+import "./StaffPage.css"; // Add this import for the new CSS styles
 import Sidebar from "./sidebar.jsx";
-function AdminPage() {
+function StaffPage() {
   const { handleLogout } = useAuth();
   const [selectedContent, setSelectedContent] = useState(
-    "AdminAccountManagement"
+    "StaffAccountManagement.jsx"
   );
   const [isSidebarCollapsed, setIsSidebarCollapsed] = useState(true);
 
@@ -28,17 +27,15 @@ function AdminPage() {
     case "ZodiacsManagement":
       // ContentComponent = ZodiacsManagement;
       break;
-    case "UsersManagement":
-      ContentComponent = UserManagement;
-      break;
+
     case "Logout":
       ContentComponent = handleLogout;
       break;
-    case "AdminAccountManagement":
-      ContentComponent = AdminAccountManagement;
+    case "StaffAccountManagement":
+      ContentComponent = StaffAccountManagement;
       break;
     default:
-      ContentComponent = AdminAccountManagement;
+      ContentComponent = StaffAccountManagement;
       break;
   }
 
@@ -64,4 +61,4 @@ function AdminPage() {
   );
 }
 
-export default AdminPage;
+export default StaffPage;

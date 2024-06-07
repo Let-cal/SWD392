@@ -4,17 +4,17 @@ import lottie from "lottie-web";
 import PropTypes from "prop-types";
 import { useMemo } from "react";
 defineElement(lottie.loadAnimation);
-const User = ({
+const Product = ({
   className = "",
-  customer,
-  accounts,
+  ProductName,
+  NumOfProducts,
   propWidth,
   propFlex,
   propMinWidth,
   propWidth1,
   propFontSize,
 }) => {
-  const UserStyle = useMemo(() => {
+  const ProductStyle = useMemo(() => {
     return {
       width: propWidth,
       flex: propFlex,
@@ -22,7 +22,7 @@ const User = ({
     };
   }, [propWidth, propFlex, propMinWidth]);
 
-  const accountsStyle = useMemo(() => {
+  const NumOfProductsStyle = useMemo(() => {
     return {
       width: propWidth1,
       fontSize: propFontSize,
@@ -32,20 +32,20 @@ const User = ({
   return (
     <div
       className={`w-[312px] shadow-[0px_4px_4px_rgba(0,_0,_0,_0.1)] rounded-xl bg-background box-border overflow-hidden shrink-0 flex flex-col items-start justify-center py-[18px] pr-3 pl-[18px] text-left text-base text-black font-body-medium border-[1px] border-solid border-lightgray ${className}`}
-      style={UserStyle}
+      style={ProductStyle}
     >
       <div className="self-stretch flex flex-row items-center justify-between gap-[0]">
         <div className="w-[200px] relative inline-block shrink-0">
-          {customer}
+          {ProductName}
         </div>
         <PeopleAltIcon />
       </div>
       <div className="w-[155px] flex flex-col items-start justify-between py-[9.5px] px-0 box-border min-h-[51px] text-7xl text-darkslategray font-montserrat">
         <div
           className=" gap-4 relative font-semibold mq450:text-2xl flex items-center justify-between"
-          style={accountsStyle}
+          style={NumOfProductsStyle}
         >
-          {accounts}
+          {NumOfProducts}
           <lord-icon
             src="https://cdn.lordicon.com/qhkvfxpn.json"
             trigger="hover"
@@ -57,10 +57,10 @@ const User = ({
   );
 };
 
-User.propTypes = {
+Product.propTypes = {
   className: PropTypes.string,
-  customer: PropTypes.string,
-  accounts: PropTypes.string,
+  ProductName: PropTypes.string,
+  NumOfProducts: PropTypes.string,
 
   /** Style props */
   propWidth: PropTypes.any,
@@ -70,4 +70,4 @@ User.propTypes = {
   propFontSize: PropTypes.any,
 };
 
-export default User;
+export default Product;

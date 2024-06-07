@@ -1,7 +1,6 @@
 import HomeIcon from "@mui/icons-material/Home";
 import LibraryBooksIcon from "@mui/icons-material/LibraryBooks";
 import LogoutIcon from "@mui/icons-material/Logout";
-import ManageAccountsIcon from "@mui/icons-material/ManageAccounts";
 import ManageSearchIcon from "@mui/icons-material/ManageSearch";
 import MenuIcon from "@mui/icons-material/Menu";
 import ShoppingBagIcon from "@mui/icons-material/ShoppingBag";
@@ -37,8 +36,8 @@ function Sidebar({ setSelectedContent, setIsSidebarCollapsed }) {
       <div className="title-header-Admin bg-gray-100 shadow-md h-[88px] flex items-center justify-between">
         <div className="flex items-center">
           <MenuIcon onClick={toggleSidebar} className="menu-icon" />
-          <span className="font-bold">A</span>
-          <span className={`text-Admin ${showText ? "show" : ""}`}>dmin</span>
+          <span className="font-bold">S</span>
+          <span className={`text-Admin ${showText ? "show" : ""}`}>taff</span>
         </div>
       </div>
       <Divider />
@@ -84,21 +83,12 @@ function Sidebar({ setSelectedContent, setIsSidebarCollapsed }) {
           <a className="gap-[13px]">
             <img
               className={`zodiac-icon ${isCollapsed ? "collapsed" : ""}`}
-              src="src/components/Customer/images/zodiac.png"
+              src="public/images/zodiac.png"
               alt="Zodiac"
             />
             <span className={`text-Admin ${showText ? "show" : ""}`}>
               {" "}
               Zodiacs Management
-            </span>
-          </a>
-        </li>
-        <li onClick={() => setSelectedContent("UsersManagement")}>
-          <a>
-            <ManageAccountsIcon />
-            <span className={`text-Admin ${showText ? "show" : ""}`}>
-              {" "}
-              Users Management
             </span>
           </a>
         </li>
