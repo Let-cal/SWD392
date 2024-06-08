@@ -104,7 +104,9 @@ const FilterComponent = ({
                   <MenuItem value="">
                     <em>None</em>
                   </MenuItem>
-                  {/* Add material options here */}
+                  <MenuItem value={1}></MenuItem>
+                  <MenuItem value={2}>Female</MenuItem>
+                  <MenuItem value={3}>Other</MenuItem>
                 </Select>
               </FormControl>
               <FormControl variant="standard" sx={{ minWidth: 120 }}>

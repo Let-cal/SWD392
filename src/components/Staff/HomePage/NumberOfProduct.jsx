@@ -1,5 +1,4 @@
 import { defineElement } from "@lordicon/element";
-import PeopleAltIcon from "@mui/icons-material/PeopleAlt";
 import lottie from "lottie-web";
 import PropTypes from "prop-types";
 import { useMemo } from "react";
@@ -38,7 +37,12 @@ const Product = ({
         <div className="w-[200px] relative inline-block shrink-0">
           {ProductName}
         </div>
-        <PeopleAltIcon />
+        <lord-icon
+          src="https://cdn.lordicon.com/mqdkoaef.json"
+          trigger="loop"
+          delay="2000"
+          style={{ width: "15%", height: "46px" }}
+        ></lord-icon>
       </div>
       <div className="w-[155px] flex flex-col items-start justify-between py-[9.5px] px-0 box-border min-h-[51px] text-7xl text-darkslategray font-montserrat">
         <div
@@ -48,7 +52,8 @@ const Product = ({
           {NumOfProducts}
           <lord-icon
             src="https://cdn.lordicon.com/qhkvfxpn.json"
-            trigger="hover"
+            trigger="loop"
+            delay="2000"
             style={{ width: "30%", height: "46px" }}
           ></lord-icon>
         </div>

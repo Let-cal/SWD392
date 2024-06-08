@@ -1,15 +1,16 @@
-import { Backdrop, CircularProgress } from "@mui/material";
+import AddCircleIcon from "@mui/icons-material/AddCircle";
+import { Backdrop, Button, CircularProgress } from "@mui/material";
 import axios from "axios";
 import { enqueueSnackbar } from "notistack";
 import { useEffect, useState } from "react";
+import CreateProductModal from "./CreateProductController/CreateProductModal";
 import FilterComponent from "./FilterComponent";
 import TableProduct from "./TableProduct";
-
 const ProductPage = () => {
   const [products, setProducts] = useState([]);
   const [filteredProducts, setFilteredProducts] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [updating, setUpdating] = useState(false); // Thêm trạng thái updating
+  const [updating, setUpdating] = useState(false);
   const [search, setSearch] = useState("");
   const [category, setCategory] = useState("");
   const [material, setMaterial] = useState("");
@@ -26,7 +27,7 @@ const ProductPage = () => {
   }, [search, category, material, gender, zodiac, price]);
 
   const fetchProducts = async () => {
-    setLoading(true); // Đặt trạng thái loading
+    setLoading(true);
     try {
       const response = await axios.get(
         "https://zodiacjewerly.azurewebsites.net/api/Product/GetAllProducts"
@@ -94,7 +95,7 @@ const ProductPage = () => {
   };
 
   const updateProduct = async (product) => {
-    setUpdating(true); // Đặt trạng thái updating
+    setUpdating(true);
     try {
       if (!product.id) {
         throw new Error("Product ID is missing");
@@ -122,51 +123,106 @@ const ProductPage = () => {
       setProducts((prev) =>
         prev.map((p) => (p.id === updatedProduct.id ? updatedProduct : p))
       );
-
-      // Cập nhật dữ liệu sản phẩm
       await fetchProducts();
-
-      // Thông báo thành công
       enqueueSnackbar("Product updated successfully", { variant: "success" });
     } catch (error) {
       console.error("Error updating product:", error);
       enqueueSnackbar("Error updating product", { variant: "error" });
     } finally {
-      setUpdating(false); // Tắt trạng thái updating
+      setUpdating(false);
     }
   };
 
+  const deleteProduct = async (productId) => {
+    setUpdating(true);
+    try {
+      await axios.delete(
+        `https://zodiacjewerly.azurewebsites.net/api/Product/DeleteProduct/${productId}`
+      );
+
+      setProducts((prev) => prev.filter((product) => product.id !== productId));
+      setFilteredProducts((prev) =>
+        prev.filter((product) => product.id !== productId)
+      );
+
+      enqueueSnackbar("Product deleted successfully", { variant: "success" });
+    } catch (error) {
+      console.error("Error deleting product:", error);
+      enqueueSnackbar("Error deleting product", { variant: "error" });
+    } finally {
+      setUpdating(false);
+    }
+  };
+  const [isModalOpen, setIsModalOpen] = useState(false);
+
+  const handleOpenModal = () => {
+    setIsModalOpen(true);
+  };
+  const handleProductCreate = () => {
+    fetchProducts();
+  };
+  const handleCloseModal = () => {
+    setIsModalOpen(false);
+  };
   return (
     <div>
       <Backdrop
         sx={{ color: "#fff", zIndex: (theme) => theme.zIndex.drawer + 1 }}
-        open={loading || updating} // Kết hợp trạng thái loading và updating
+        open={loading || updating}
       >
         <CircularProgress color="inherit" />
       </Backdrop>
-      <div className="flex flex-row gap-4 w-full items-center justify-between">
-        <h1 className="font-serif text-[30px] relative text-inherit leading-[48px] font-bold">
-          Product Management
-        </h1>
-        <FilterComponent
-          search={search}
-          setSearch={setSearch}
-          category={category}
-          setCategory={setCategory}
-          material={material}
-          setMaterial={setMaterial}
-          gender={gender}
-          setGender={setGender}
-          zodiac={zodiac}
-          setZodiac={setZodiac}
-          price={price}
-          setPrice={setPrice}
-          products={products}
-        />
+      <div className="flex flex-row gap-4 items-start w-full justify-between">
+        <div>
+          <h1 className="w-[40%] font-serif text-[30px] relative text-inherit leading-[48px] font-bold">
+            Product Management
+          </h1>
+          <Button
+            variant="contained"
+            endIcon={<AddCircleIcon />}
+            sx={{
+              width: "60%",
+              backgroundColor: "black",
+              color: "white",
+              "&:hover": {
+                backgroundColor: "gray",
+              },
+            }}
+            onClick={handleOpenModal}
+          >
+            Create Product
+          </Button>
+          <CreateProductModal
+            isOpen={isModalOpen}
+            onClose={handleCloseModal}
+            onProductCreated={handleProductCreate}
+          />
+        </div>
+        <div className="w-[30%]">
+          <FilterComponent
+            search={search}
+            setSearch={setSearch}
+            category={category}
+            setCategory={setCategory}
+            material={material}
+            setMaterial={setMaterial}
+            gender={gender}
+            setGender={setGender}
+            zodiac={zodiac}
+            setZodiac={setZodiac}
+            price={price}
+            setPrice={setPrice}
+            products={products}
+          />
+        </div>
       </div>
       <section className="w-full mt-8">
         {!loading && (
-          <TableProduct data={filteredProducts} onUpdate={updateProduct} />
+          <TableProduct
+            data={filteredProducts}
+            onUpdate={updateProduct}
+            onDelete={deleteProduct}
+          />
         )}
       </section>
     </div>

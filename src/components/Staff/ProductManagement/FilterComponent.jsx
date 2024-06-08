@@ -1,4 +1,4 @@
-import TuneIcon from "@mui/icons-material/Tune";
+import { Tune as TuneIcon } from "@mui/icons-material";
 import {
   Box,
   Button,
@@ -40,7 +40,7 @@ const FilterComponent = ({
   };
 
   return (
-    <div className="flex flex-col items-end w-2/5">
+    <div className="flex flex-col items-end">
       <TextField
         label="Search"
         placeholder="Search products"
@@ -49,7 +49,7 @@ const FilterComponent = ({
         value={search}
         onChange={(e) => setSearch(e.target.value)}
       />
-      <div className="">
+      <div>
         <Button
           id="basic-button"
           aria-controls={open ? "basic-menu" : undefined}
@@ -87,11 +87,11 @@ const FilterComponent = ({
                   <MenuItem value="">
                     <em>None</em>
                   </MenuItem>
-                  <MenuItem value={1}>Necklaces</MenuItem>
-                  <MenuItem value={2}>Bracelets</MenuItem>
-                  <MenuItem value={3}>Earrings</MenuItem>
-                  <MenuItem value={4}>Rings</MenuItem>
-                  <MenuItem value={5}>Tshirt</MenuItem>
+                  <MenuItem value="Necklaces">Necklaces</MenuItem>
+                  <MenuItem value="Bracelets">Bracelets</MenuItem>
+                  <MenuItem value="Earrings">Earrings</MenuItem>
+                  <MenuItem value="Rings">Rings</MenuItem>
+                  <MenuItem value="Tshirt">Tshirt</MenuItem>
                 </Select>
               </FormControl>
               <FormControl variant="standard" sx={{ minWidth: 120 }}>
@@ -104,7 +104,9 @@ const FilterComponent = ({
                   <MenuItem value="">
                     <em>None</em>
                   </MenuItem>
-                  {/* Add material options here */}
+                  <MenuItem value="Gold">Gold</MenuItem>
+                  <MenuItem value="Emeral">Emeral</MenuItem>
+                  <MenuItem value="Diamonds">Diamonds</MenuItem>
                 </Select>
               </FormControl>
               <FormControl variant="standard" sx={{ minWidth: 120 }}>
@@ -117,9 +119,9 @@ const FilterComponent = ({
                   <MenuItem value="">
                     <em>None</em>
                   </MenuItem>
-                  <MenuItem value={1}>Male</MenuItem>
-                  <MenuItem value={2}>Female</MenuItem>
-                  <MenuItem value={3}>Other</MenuItem>
+                  <MenuItem value="Male">Male</MenuItem>
+                  <MenuItem value="Female">Female</MenuItem>
+                  <MenuItem value="Other">Other</MenuItem>
                 </Select>
               </FormControl>
               <FormControl variant="standard" sx={{ minWidth: 120 }}>
@@ -132,18 +134,18 @@ const FilterComponent = ({
                   <MenuItem value="">
                     <em>None</em>
                   </MenuItem>
-                  <MenuItem value={1}>Aries</MenuItem>
-                  <MenuItem value={2}>Taurus</MenuItem>
-                  <MenuItem value={3}>Gemini</MenuItem>
-                  <MenuItem value={4}>Cancer</MenuItem>
-                  <MenuItem value={5}>Leo</MenuItem>
-                  <MenuItem value={6}>Virgo</MenuItem>
-                  <MenuItem value={7}>Libra</MenuItem>
-                  <MenuItem value={8}>Scorpio</MenuItem>
-                  <MenuItem value={9}>Sagittarius</MenuItem>
-                  <MenuItem value={10}>Capricorn</MenuItem>
-                  <MenuItem value={11}>Aquarius</MenuItem>
-                  <MenuItem value={12}>Pisces</MenuItem>
+                  <MenuItem value="Aries">Aries</MenuItem>
+                  <MenuItem value="Taurus">Taurus</MenuItem>
+                  <MenuItem value="Gemini">Gemini</MenuItem>
+                  <MenuItem value="Cancer">Cancer</MenuItem>
+                  <MenuItem value="Leo">Leo</MenuItem>
+                  <MenuItem value="Virgo">Virgo</MenuItem>
+                  <MenuItem value="Libra">Libra</MenuItem>
+                  <MenuItem value="Scorpio">Scorpio</MenuItem>
+                  <MenuItem value="Sagittarius">Sagittarius</MenuItem>
+                  <MenuItem value="Capricorn">Capricorn</MenuItem>
+                  <MenuItem value="Aquarius">Aquarius</MenuItem>
+                  <MenuItem value="Pisces">Pisces</MenuItem>
                 </Select>
               </FormControl>
             </div>

@@ -13,6 +13,11 @@ export const genders = {
   2: "Female",
   3: "Other",
 };
+export const Material = {
+  1: "Gold",
+  2: "Emeral",
+  3: "Diamonds",
+};
 
 export const zodiacs = {
   1: "Aries",
@@ -35,6 +40,9 @@ export const getCategoryName = (id) => {
 
 export const getGenderName = (id) => {
   return genders[id] || "Unknown Gender";
+};
+export const getMaterialName = (id) => {
+  return Material[id] || "Unknown Gender";
 };
 
 export const getZodiacName = (id) => {

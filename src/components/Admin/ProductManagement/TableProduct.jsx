@@ -1,11 +1,36 @@
-// TableProduct.jsx
-
+import DeleteIcon from "@mui/icons-material/Delete";
 import UpdateIcon from "@mui/icons-material/Update";
 import Button from "@mui/material/Button";
+import Menu from "@mui/material/Menu";
+import MenuItem from "@mui/material/MenuItem";
 import PropTypes from "prop-types";
+import { useState } from "react";
 import InforProduct from "./InfoProduct";
 
-const TableProduct = ({ data, onUpdate }) => {
+const TableProduct = ({ data, onUpdate, onDelete }) => {
+  const [anchorEl, setAnchorEl] = useState(null);
+  const [selectedProductId, setSelectedProductId] = useState(null);
+
+  const handleMenuOpen = (event, productId) => {
+    setAnchorEl(event.currentTarget);
+    setSelectedProductId(productId);
+  };
+
+  const handleMenuClose = () => {
+    setAnchorEl(null);
+    setSelectedProductId(null);
+  };
+
+  const handleEditClick = () => {
+    document.getElementById(`edit-button-${selectedProductId}`).click();
+    handleMenuClose();
+  };
+
+  const handleDeleteClick = () => {
+    onDelete(selectedProductId);
+    handleMenuClose();
+  };
+
   return (
     <div className="mx-auto bg-white shadow-lg rounded-lg overflow-hidden">
       <div className="flex justify-between items-center bg-gray-100 text-xs uppercase font-semibold text-gray-600">
@@ -27,17 +52,29 @@ const TableProduct = ({ data, onUpdate }) => {
             product={product}
             onUpdate={onUpdate}
             Action={
-              <Button
-                id={`edit-button-${product.id}`}
-                variant="outlined"
-                size="medium"
-                startIcon={<UpdateIcon />}
-                onClick={() =>
-                  document.getElementById(`edit-button-${product.id}`).click()
-                }
-              >
-                Edit
-              </Button>
+              <>
+                <Button
+                  id={`edit-button-${product.id}`}
+                  variant="outlined"
+                  size="large"
+                  startIcon={<UpdateIcon />}
+                  onClick={(event) => handleMenuOpen(event, product.id)}
+                >
+                  Edit
+                </Button>
+                <Menu
+                  anchorEl={anchorEl}
+                  open={Boolean(anchorEl) && selectedProductId === product.id}
+                  onClose={handleMenuClose}
+                >
+                  <MenuItem onClick={handleEditClick}>
+                    <UpdateIcon className="mr-2" /> Update
+                  </MenuItem>
+                  <MenuItem onClick={handleDeleteClick}>
+                    <DeleteIcon className="mr-2" /> Delete
+                  </MenuItem>
+                </Menu>
+              </>
             }
           />
         ))}
@@ -61,6 +98,7 @@ TableProduct.propTypes = {
     })
   ).isRequired,
   onUpdate: PropTypes.func.isRequired,
+  onDelete: PropTypes.func.isRequired,
 };
 
 export default TableProduct;

@@ -1,10 +1,12 @@
 import PropTypes from "prop-types";
 import { useState } from "react";
 import {
+  Material,
   categories,
   genders,
   getCategoryName,
   getGenderName,
+  getMaterialName,
   getZodiacName,
   zodiacs,
 } from "./ChangeIDtoName";
@@ -116,15 +118,21 @@ const InforProduct = ({ product, onUpdate, Action }) => {
         },
         {
           content: isEditing ? (
-            <input
-              type="text"
+            <select
               name="materialId"
               value={editedProduct.materialId}
               onChange={handleChange}
               className="border px-1 py-1 rounded w-full"
-            />
+            >
+              <option value="">Select Material</option>
+              {Object.entries(Material).map(([id, name]) => (
+                <option key={id} value={id}>
+                  {name}
+                </option>
+              ))}
+            </select>
           ) : (
-            product.materialId
+            getMaterialName(product.materialId)
           ),
         },
         {
