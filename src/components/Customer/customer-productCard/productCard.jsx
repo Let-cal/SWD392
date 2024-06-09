@@ -1,3 +1,6 @@
+import React, { useState, useEffect } from 'react';
+import { useNavigate, Link } from 'react-router-dom';
+import axios from 'axios';
 import TuneIcon from "@mui/icons-material/Tune";
 import {
   Box,
@@ -13,9 +16,16 @@ import {
   Select,
 } from "@mui/material";
 import PropTypes from "prop-types";
-import { useState } from "react";
 import "./productCard.css";
-const Card = ({ image, alt, title, description, tags }) => {
+
+const Card = ({ image, alt, title, price, tags, product }) => {
+  const navigate = useNavigate();
+
+  const handleDetailClick = (e) => {
+    e.preventDefault();
+    navigate(`/DetailProduct/${product.id}`, { state: { product } });
+  };
+
   return (
     <div className="card">
       <div className="card-inner" style={{ "--clr": "#fff" }}>
@@ -23,16 +33,21 @@ const Card = ({ image, alt, title, description, tags }) => {
           <div className="imgBox">
             <img src={image} alt={alt} />
           </div>
+
           <div className="icon">
-            <a href="#" className="iconBox">
+            <button className="iconBox" onClick={handleDetailClick}>
               <span className="material-symbols-outlined">arrow_outward</span>
-            </a>
+            </button>
           </div>
+          
         </div>
       </div>
       <div className="content">
         <h3>{title}</h3>
-        <p>{description}</p>
+        <p>
+          <span className="price">{price}</span>
+          <span className="currency">đ</span>
+        </p>
         <ul>
           {tags.map((tag, index) => (
             <li
@@ -48,13 +63,16 @@ const Card = ({ image, alt, title, description, tags }) => {
     </div>
   );
 };
+
 Card.propTypes = {
   image: PropTypes.string.isRequired,
   alt: PropTypes.string,
   title: PropTypes.string,
-  description: PropTypes.string,
+  price: PropTypes.number,
   tags: PropTypes.arrayOf(PropTypes.object),
+  product: PropTypes.object.isRequired,
 };
+
 const TrustedCompanies = () => {
   const [anchorEl, setAnchorEl] = useState(null);
   const open = Boolean(anchorEl);
@@ -71,111 +89,64 @@ const TrustedCompanies = () => {
     setMaterial(event.target.value);
   };
   const [Material, setMaterial] = useState("");
+  const [cardsData, setCardsData] = useState([]);
 
-  const cardsData = [
-    {
-      image:
-        "https://cdn.builder.io/api/v1/image/assets/TEMP/aae30422978342647c8d0d9193c8a66845f2bb0ae55e2f8c4877d6f67f292156?apiKey=2cf111b7142f4a06bfb2b5c186f14037&",
-      alt: "Trust & Co.",
-      title: "trust & co.",
-      description:
-        "Fill out the form and the algorithm will offer the right team of experts",
-      tags: [
-        { name: "branding", color: "#d3b19a", className: "branding" },
-        { name: "packaging", color: "#70b3b1", className: "packaging" },
-      ],
-    },
-    {
-      image:
-        "https://cdn.builder.io/api/v1/image/assets/TEMP/d4d0e0c41c27a8ba8bf6d968218df6cc3aed36f2b2acc3b20439a7031c87c463?apiKey=2cf111b7142f4a06bfb2b5c186f14037&",
-      alt: "Tonic",
-      title: "tonic",
-      description:
-        "Fill out the form and the algorithm will offer the right team of experts",
-      tags: [
-        { name: "branding", color: "#d3b19a", className: "branding" },
-        { name: "marketing", color: "#d05fa2", className: "marketing" },
-      ],
-    },
-    {
-      image:
-        "https://cdn.builder.io/api/v1/image/assets/TEMP/d4d0e0c41c27a8ba8bf6d968218df6cc3aed36f2b2acc3b20439a7031c87c463?apiKey=2cf111b7142f4a06bfb2b5c186f14037&",
-      alt: "Shower Gel",
-      title: "shower gel",
-      description:
-        "Fill out the form and the algorithm will offer the right team of experts",
-      tags: [
-        { name: "branding", color: "#d3b19a", className: "branding" },
-        { name: "packaging", color: "#70b3b1", className: "packaging" },
-        { name: "marketing", color: "#d05fa2", className: "marketing" },
-      ],
-    },
-    {
-      image:
-        "https://cdn.builder.io/api/v1/image/assets/TEMP/a9e977caf29eb1b2eec1c3fae1d3171f992fe449c6cf1451fc6304cc7ed72cd8?apiKey=2cf111b7142f4a06bfb2b5c186f14037&",
-      alt: "Shower Gel",
-      title: "shower gel",
-      description:
-        "Fill out the form and the algorithm will offer the right team of experts",
-      tags: [
-        { name: "branding", color: "#d3b19a", className: "branding" },
-        { name: "packaging", color: "#70b3b1", className: "packaging" },
-        { name: "marketing", color: "#d05fa2", className: "marketing" },
-      ],
-    },
-    {
-      image:
-        "https://cdn.builder.io/api/v1/image/assets/TEMP/85b98ed4e25a833586bc54c1d5c6457cfd243aeb3bf5249ca27fbce37631719b?apiKey=2cf111b7142f4a06bfb2b5c186f14037&",
-      alt: "Shower Gel",
-      title: "shower gel",
-      description:
-        "Fill out the form and the algorithm will offer the right team of experts",
-      tags: [
-        { name: "branding", color: "#d3b19a", className: "branding" },
-        { name: "packaging", color: "#70b3b1", className: "packaging" },
-        { name: "marketing", color: "#d05fa2", className: "marketing" },
-      ],
-    },
-    {
-      image:
-        "https://cdn.builder.io/api/v1/image/assets/TEMP/aae30422978342647c8d0d9193c8a66845f2bb0ae55e2f8c4877d6f67f292156?apiKey=2cf111b7142f4a06bfb2b5c186f14037&",
-      alt: "Shower Gel",
-      title: "shower gel",
-      description:
-        "Fill out the form and the algorithm will offer the right team of experts",
-      tags: [
-        { name: "branding", color: "#d3b19a", className: "branding" },
-        { name: "packaging", color: "#70b3b1", className: "packaging" },
-        { name: "marketing", color: "#d05fa2", className: "marketing" },
-      ],
-    },
-    {
-      image:
-        "https://cdn.builder.io/api/v1/image/assets/TEMP/aae30422978342647c8d0d9193c8a66845f2bb0ae55e2f8c4877d6f67f292156?apiKey=2cf111b7142f4a06bfb2b5c186f14037&",
-      alt: "Shower Gel",
-      title: "shower gel",
-      description:
-        "Fill out the form and the algorithm will offer the right team of experts",
-      tags: [
-        { name: "branding", color: "#d3b19a", className: "branding" },
-        { name: "packaging", color: "#70b3b1", className: "packaging" },
-        { name: "marketing", color: "#d05fa2", className: "marketing" },
-      ],
-    },
-    {
-      image:
-        "https://cdn.builder.io/api/v1/image/assets/TEMP/aae30422978342647c8d0d9193c8a66845f2bb0ae55e2f8c4877d6f67f292156?apiKey=2cf111b7142f4a06bfb2b5c186f14037&",
-      alt: "Shower Gel",
-      title: "shower gel",
-      description:
-        "Fill out the form and the algorithm will offer the right team of experts",
-      tags: [
-        { name: "branding", color: "#d3b19a", className: "branding" },
-        { name: "packaging", color: "#70b3b1", className: "packaging" },
-        { name: "marketing", color: "#d05fa2", className: "marketing" },
-      ],
-    },
-  ];
+  useEffect(() => {
+    axios.get('https://zodiacjewerly.azurewebsites.net/api/Product/GetAllProducts')
+      .then(response => {
+        const apiData = response.data.data;
+        const categoryMap = {
+          1: 'Necklaces',
+          2: 'Bracelets',
+          3: 'Earrings',
+          4: 'Rings',
+          5: 'T-shirt',
+
+        };
+        const materialMap = {
+          1: 'Gold',
+          2: 'Emeral',
+          3: 'Diamond',
+        };
+        const genderMap = {
+          1: 'Male',
+          2: 'Female',
+          3: 'Other'
+        };
+        const zodiacMap = {
+          1: 'Aries',
+          2: 'Taurus',
+          3: 'Gemini',
+          4: 'Cancer',
+          5: 'Leo',
+          6: 'Virgo',
+          7: 'Libra',
+          8: 'Scropio',
+          9: 'Sagittarius',
+          10: 'Capricorn',
+          11: 'Aquarius',
+          12: 'Pisces',
+        };
+
+        const formattedData = apiData.map(product => ({
+          image: product.imageURLs[0] || 'default-image-url',
+          alt: product.nameProduct,
+          title: product.nameProduct,
+          price: product.price,
+          product, // pass the whole product object
+          tags: [
+            { name: categoryMap[product.categoryId], color: '#ff5733', className: 'tag-category' },
+            { name: materialMap[product.materialId], color: '#33ff57', className: 'tag-material' },
+            { name: genderMap[product.genderId], color: '#3357ff', className: 'tag-gender' },
+            { name: zodiacMap[product.zodiacId], color: '#ff33a8', className: 'tag-zodiac' },
+          ]
+        }));
+        setCardsData(formattedData);
+      })
+      .catch(error => {
+        console.error('There was an error fetching the data!', error);
+      });
+  }, []);
 
   return (
     <section>
@@ -297,14 +268,17 @@ const TrustedCompanies = () => {
 
       <div className="container-product-card">
         {cardsData.map((card, index) => (
-          <Card
-            key={index}
-            image={card.image}
-            alt={card.alt}
-            title={card.title}
-            description={card.description}
-            tags={card.tags}
-          />
+          <Link to={`/DetailProduct/${card.id}`} key={index}>
+            <Card
+              key={index}
+              image={card.image}
+              alt={card.alt}
+              title={card.title}
+              price={card.price}
+              tags={card.tags}
+              product={card.product} // pass the product object
+            />
+          </Link>
         ))}
       </div>
     </section>
