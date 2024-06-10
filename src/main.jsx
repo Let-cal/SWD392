@@ -70,7 +70,7 @@ ReactDOM.createRoot(document.getElementById("root")).render(
           />
           <Route path="/Forgot-PasswordPage" element={<ForgotPassword />} />
           <Route path="/Register-page" element={<RegisterPage />} />
-          <Route path="/DetailProduct" element={<DetailProduct />} />
+          <Route path="/DetailProduct/:id" element={<DetailProduct />} />
           <Route path="/AboutPage" element={<AboutPage />} />
           <Route path="/OTPVerificationPage" element={<OTPVerification />} />
           <Route path="/ChangePasswordPage" element={<ChangePasswordPage />} />
