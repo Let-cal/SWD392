@@ -7,7 +7,7 @@ import "./components/Customer/Customer.css";
 import MyComponent from "./components/Customer/MyComponent.jsx";
 import AccountProfileMain from "./components/Customer/ProfileController/ProfileMain.jsx";
 import Checkout from "./components/Customer/StepperControllerCart/checkout-info/checkout.jsx";
-import ViewCart from "./components/Customer/StepperControllerCart/view-cart/ViewCart.jsx";
+import ViewCartDetails from "./components/Customer/StepperControllerCart/view-cart/ViewCartDetails.jsx";
 import DetailProduct from "./components/Customer/detail-product/detail-product.jsx";
 import { AuthProvider } from "./components/LoginController/AuthContext.jsx";
 import OTPVerification from "./components/LoginController/ForgotPasswordController/PageOTPVerification.jsx";
@@ -48,8 +48,8 @@ ReactDOM.createRoot(document.getElementById("root")).render(
           <Route exact path="/login" element={<Login />} />
           <Route
             exact
-            path="/viewcart"
-            element={<ViewCart />}
+            path="/ViewCartDetails"
+            element={<ViewCartDetails />}
             roles={["Customer"]}
           />
           <Route

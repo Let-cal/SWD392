@@ -27,7 +27,7 @@ function CheckoutStepper() {
     } else if (activeStep === 2) {
       navigate("/checkout");
     } else if (activeStep === 1) {
-      navigate("/viewcart");
+      navigate("/ViewCartDetails");
     }
   };
 

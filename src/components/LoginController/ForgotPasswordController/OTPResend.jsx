@@ -49,7 +49,7 @@ const OTPResend = () => {
     }
     try {
       const response = await axios.post(
-        `https://zodiacjewerly.azurewebsites.net/api/Authen/ForgotPassword/${encodeURIComponent(
+        `https://zodiacjewerly.azurewebsites.net/api/authentication/email-pass?email=${encodeURIComponent(
           email
         )}`
       );

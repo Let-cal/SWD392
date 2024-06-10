@@ -5,8 +5,7 @@ import Checkbox from "@mui/material/Checkbox";
 import PropTypes from "prop-types";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import Header from "../../../Admin/HeaderOfAdmin";
-import CheckoutStepper from "../StepperComponent";
+
 import "./ViewCart.css";
 const CartItem = ({
   imageSrc,
@@ -147,8 +146,7 @@ function ViewCart() {
 
   return (
     <>
-      <Header />
-      <CheckoutStepper />
+
 
       <div className="shopping-cart-container mt-5">
         <section className="shopping-cart">

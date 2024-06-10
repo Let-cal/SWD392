@@ -1,8 +1,8 @@
 import { defineElement } from "@lordicon/element";
 import lottie from "lottie-web";
 import PropTypes from "prop-types";
-import { useRef, useState } from "react";
-import { Link } from "react-router-dom";
+import { useEffect, useRef, useState } from "react";
+import { Link, useLocation } from "react-router-dom";
 import ReasonChoose from "./BenefitOfPage/ReasonChoose.jsx";
 import CardStack from "./CollectionCard/CardStack.jsx";
 import "./CollectionCard/CollectionCard.css";
@@ -43,7 +43,8 @@ const ProductsMonthly = ({ imgSrc, title, subtitle, price, oldPrice }) => {
         Add to cart
         <lord-icon
           src="https://cdn.lordicon.com/mfmkufkr.json"
-          trigger="hover"
+          trigger="loop"
+          delay="1000"
           style={{ width: "20%", height: "40px" }}
           colors="primary:white"
         ></lord-icon>
@@ -148,10 +149,17 @@ function Hero() {
 
 function MyComponent() {
   const trustedCompaniesRef = useRef(null);
+  const location = useLocation();
 
   const scrollToTrustedCompanies = () => {
     trustedCompaniesRef.current?.scrollIntoView({ behavior: "smooth" });
   };
+
+  useEffect(() => {
+    if (location.state?.scrollTo === "TrustedCompanies") {
+      scrollToTrustedCompanies();
+    }
+  }, [location]);
 
   return (
     <div>
@@ -160,7 +168,7 @@ function MyComponent() {
         <Hero />
         <Zodiac />
         <MonthlyDeals />
-        <ReasonChoose />
+        <ReasonChoose scrollToTrustedCompanies={scrollToTrustedCompanies} />
         <div ref={trustedCompaniesRef}>
           <TrustedCompanies />
         </div>

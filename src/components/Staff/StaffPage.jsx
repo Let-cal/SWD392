@@ -5,7 +5,9 @@ import StaffAccountManagement from "./HomePage/StaffAccountManagement.jsx";
 import OrdersManagement from "./OrderManagement/OrderManagement.jsx";
 import ProductsManagement from "./ProductManagement/ProductManagement.jsx";
 import "./StaffPage.css"; // Add this import for the new CSS styles
+import ZodiacManagement from "./ZodiacController/ZodiacManagement.jsx";
 import Sidebar from "./sidebar.jsx";
+
 function StaffPage() {
   const { handleLogout } = useAuth();
   const [selectedContent, setSelectedContent] = useState(
@@ -24,10 +26,9 @@ function StaffPage() {
     case "CollectionsManagement":
       // ContentComponent = CollectionsManagement;
       break;
-    case "ZodiacsManagement":
-      // ContentComponent = ZodiacsManagement;
+    case "ZodiacManagement":
+      ContentComponent = ZodiacManagement;
       break;
-
     case "Logout":
       ContentComponent = handleLogout;
       break;

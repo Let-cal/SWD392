@@ -1,8 +1,8 @@
+import { Backdrop, CircularProgress } from "@mui/material";
 import axios from "axios";
 import { useSnackbar } from "notistack";
 import { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { Backdrop, CircularProgress } from "@mui/material";
 
 function ForgotPassword() {
   const [email, setEmail] = useState(localStorage.getItem("email") || "");
@@ -45,7 +45,7 @@ function ForgotPassword() {
     setLoading(true);
     try {
       const response = await axios.post(
-        `https://zodiacjewerly.azurewebsites.net/api/Authen/ForgotPassword/${encodeURIComponent(
+        `https://zodiacjewerly.azurewebsites.net/api/authentication/email-pass?email=${encodeURIComponent(
           email
         )}`
       );

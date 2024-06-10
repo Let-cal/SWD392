@@ -13,7 +13,7 @@ import {
 } from "@mui/material";
 import PropTypes from "prop-types";
 import { useState } from "react";
-
+import FilterChips from "./FilterChips";
 const FilterComponent = ({
   search,
   setSearch,
@@ -28,6 +28,7 @@ const FilterComponent = ({
   price,
   setPrice,
   products,
+  handleDeleteChip,
 }) => {
   const [anchorEl, setAnchorEl] = useState(null);
   const open = Boolean(anchorEl);
@@ -77,6 +78,16 @@ const FilterComponent = ({
         >
           <Box sx={{ flexGrow: 1, maxWidth: 752, paddingX: 2.5 }}>
             <div className="option flex flex-col gap-1">
+              <FilterChips
+                search={search}
+                category={category}
+                material={material}
+                gender={gender}
+                zodiac={zodiac}
+                price={price}
+                products={products}
+                handleDeleteChip={handleDeleteChip}
+              />
               <FormControl variant="standard" sx={{ minWidth: 120 }}>
                 <InputLabel>Category</InputLabel>
                 <Select
@@ -87,11 +98,11 @@ const FilterComponent = ({
                   <MenuItem value="">
                     <em>None</em>
                   </MenuItem>
-                  <MenuItem value="Necklaces">Necklaces</MenuItem>
-                  <MenuItem value="Bracelets">Bracelets</MenuItem>
-                  <MenuItem value="Earrings">Earrings</MenuItem>
-                  <MenuItem value="Rings">Rings</MenuItem>
-                  <MenuItem value="Tshirt">Tshirt</MenuItem>
+                  <MenuItem value="1">Necklaces</MenuItem>
+                  <MenuItem value="2">Bracelets</MenuItem>
+                  <MenuItem value="3">Earrings</MenuItem>
+                  <MenuItem value="4">Rings</MenuItem>
+                  <MenuItem value="5">Tshirt</MenuItem>
                 </Select>
               </FormControl>
               <FormControl variant="standard" sx={{ minWidth: 120 }}>
@@ -104,9 +115,9 @@ const FilterComponent = ({
                   <MenuItem value="">
                     <em>None</em>
                   </MenuItem>
-                  <MenuItem value="Gold">Gold</MenuItem>
-                  <MenuItem value="Emeral">Emeral</MenuItem>
-                  <MenuItem value="Diamonds">Diamonds</MenuItem>
+                  <MenuItem value="1">Gold</MenuItem>
+                  <MenuItem value="2">Emeral</MenuItem>
+                  <MenuItem value="3">Diamonds</MenuItem>
                 </Select>
               </FormControl>
               <FormControl variant="standard" sx={{ minWidth: 120 }}>
@@ -119,9 +130,9 @@ const FilterComponent = ({
                   <MenuItem value="">
                     <em>None</em>
                   </MenuItem>
-                  <MenuItem value="Male">Male</MenuItem>
-                  <MenuItem value="Female">Female</MenuItem>
-                  <MenuItem value="Other">Other</MenuItem>
+                  <MenuItem value="1">Male</MenuItem>
+                  <MenuItem value="2">Female</MenuItem>
+                  <MenuItem value="3">Other</MenuItem>
                 </Select>
               </FormControl>
               <FormControl variant="standard" sx={{ minWidth: 120 }}>
@@ -134,18 +145,18 @@ const FilterComponent = ({
                   <MenuItem value="">
                     <em>None</em>
                   </MenuItem>
-                  <MenuItem value="Aries">Aries</MenuItem>
-                  <MenuItem value="Taurus">Taurus</MenuItem>
-                  <MenuItem value="Gemini">Gemini</MenuItem>
-                  <MenuItem value="Cancer">Cancer</MenuItem>
-                  <MenuItem value="Leo">Leo</MenuItem>
-                  <MenuItem value="Virgo">Virgo</MenuItem>
-                  <MenuItem value="Libra">Libra</MenuItem>
-                  <MenuItem value="Scorpio">Scorpio</MenuItem>
-                  <MenuItem value="Sagittarius">Sagittarius</MenuItem>
-                  <MenuItem value="Capricorn">Capricorn</MenuItem>
-                  <MenuItem value="Aquarius">Aquarius</MenuItem>
-                  <MenuItem value="Pisces">Pisces</MenuItem>
+                  <MenuItem value="1">Aries</MenuItem>
+                  <MenuItem value="2">Taurus</MenuItem>
+                  <MenuItem value="3">Gemini</MenuItem>
+                  <MenuItem value="4">Cancer</MenuItem>
+                  <MenuItem value="5">Leo</MenuItem>
+                  <MenuItem value="6">Virgo</MenuItem>
+                  <MenuItem value="7">Libra</MenuItem>
+                  <MenuItem value="8">Scorpio</MenuItem>
+                  <MenuItem value="9">Sagittarius</MenuItem>
+                  <MenuItem value="10">Capricorn</MenuItem>
+                  <MenuItem value="11">Aquarius</MenuItem>
+                  <MenuItem value="12">Pisces</MenuItem>
                 </Select>
               </FormControl>
             </div>
@@ -197,6 +208,7 @@ FilterComponent.propTypes = {
       zodiacId: PropTypes.number.isRequired,
     })
   ).isRequired,
+  handleDeleteChip: PropTypes.func.isRequired,
 };
 
 export default FilterComponent;

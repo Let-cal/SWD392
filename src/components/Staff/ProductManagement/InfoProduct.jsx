@@ -1,5 +1,9 @@
+import { Backdrop, CircularProgress } from "@mui/material";
+import axios from "axios";
+import { useSnackbar } from "notistack";
 import PropTypes from "prop-types";
 import { useState } from "react";
+import Swal from "sweetalert2";
 import {
   Material,
   categories,
@@ -10,11 +14,12 @@ import {
   getZodiacName,
   zodiacs,
 } from "./ChangeIDtoName";
-
-const InforProduct = ({ product, onUpdate, Action }) => {
+const InforProduct = ({ product, onUpdate, Action, onGetAll }) => {
   const [isEditing, setIsEditing] = useState(false);
   const [editedProduct, setEditedProduct] = useState({ ...product });
-
+  const [showImages, setShowImages] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const { enqueueSnackbar } = useSnackbar();
   const handleEdit = () => {
     setIsEditing(true);
   };
@@ -39,6 +44,52 @@ const InforProduct = ({ product, onUpdate, Action }) => {
       ...prev,
       [name]: name.endsWith("Id") ? parseInt(value) : value,
     }));
+  };
+
+  const handleImageUpload = async (e) => {
+    const files = e.target.files;
+    if (files.length === 0) return;
+
+    const formData = new FormData();
+    for (let i = 0; i < files.length; i++) {
+      formData.append("files", files[i]);
+    }
+
+    setLoading(true);
+    try {
+      // Upload images
+      const uploadResponse = await axios.post(
+        `https://zodiacjewerly.azurewebsites.net/api/productimage/${product.id}/upload`,
+        formData,
+        {
+          headers: {
+            "Content-Type": "multipart/form-data",
+          },
+        }
+      );
+
+      console.log("Upload Response:", uploadResponse.data);
+
+      const newImageURLs = uploadResponse.data["image-urls"] || [];
+
+      if (!Array.isArray(newImageURLs)) {
+        throw new Error("Image URLs are not in an array format");
+      }
+
+      setEditedProduct((prev) => ({
+        ...prev,
+        imageURLs: [...prev.imageURLs, ...newImageURLs],
+      }));
+
+      await onGetAll();
+
+      Swal.fire("Success", "Images uploaded successfully!", "success");
+    } catch (error) {
+      console.error("Error uploading images:", error);
+      enqueueSnackbar("Failed to upload images.", { variant: "error" });
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -173,6 +224,48 @@ const InforProduct = ({ product, onUpdate, Action }) => {
             getZodiacName(product.zodiacId)
           ),
         },
+        {
+          content: (
+            <>
+              <button
+                onClick={() => setShowImages(true)}
+                className="text-blue-500 underline"
+              >
+                View Images
+              </button>
+              {showImages && (
+                <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center">
+                  <div className="bg-white p-5 rounded">
+                    <h2 className="text-xl mb-4">Product Images</h2>
+                    <div className="grid grid-cols-2 gap-2">
+                      {product.imageURLs.map((url, index) => (
+                        <img
+                          key={index}
+                          src={url}
+                          alt={`Product Image ${index + 1}`}
+                          className="w-48 h-48 object-cover"
+                        />
+                      ))}
+                    </div>
+                    <div className="mt-4 flex justify-between">
+                      <input
+                        type="file"
+                        multiple
+                        onChange={handleImageUpload}
+                      />
+                      <button
+                        onClick={() => setShowImages(false)}
+                        className="text-red-500"
+                      >
+                        Close
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              )}
+            </>
+          ),
+        },
       ].map((item, index) => (
         <div
           key={index}
@@ -201,6 +294,10 @@ const InforProduct = ({ product, onUpdate, Action }) => {
         )}
         {Action}
       </div>
+
+      <Backdrop open={loading} style={{ color: "#fff", zIndex: 9999 }}>
+        <CircularProgress color="inherit" />
+      </Backdrop>
     </div>
   );
 };
@@ -216,8 +313,10 @@ InforProduct.propTypes = {
     zodiacId: PropTypes.number.isRequired,
     descriptionProduct: PropTypes.string.isRequired,
     quantity: PropTypes.number.isRequired,
+    imageURLs: PropTypes.arrayOf(PropTypes.string).isRequired,
   }).isRequired,
   onUpdate: PropTypes.func.isRequired,
+  onGetAll: PropTypes.func.isRequired,
   Action: PropTypes.node.isRequired,
 };
 
