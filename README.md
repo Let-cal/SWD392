@@ -11,7 +11,7 @@
 
 - 👨‍💻 All of my projects are available at [https://github.com/Let-cal](https://github.com/Let-cal)
 
-- 💬 Ask me about **HTML/CSS/SCSS - JAVA SERVLET - SQL SEVER - REACTJS - DESIGN FIGMA - FLLUTER MOBILE APP**
+- 💬 Ask me about **HTML/CSS/SCSS - JAVA SERVLET - SQL SEVER - REACTJS - DESIGN FIGMA - FLUTTER MOBILE APP**
 
 - 📫 How to reach me **letrancatlam123@gmail.com**
 
