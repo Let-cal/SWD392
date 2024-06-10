@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { useNavigate, Link } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import TuneIcon from "@mui/icons-material/Tune";
 import {
@@ -23,6 +23,7 @@ const Card = ({ image, alt, title, price, tags, product }) => {
 
   const handleDetailClick = (e) => {
     e.preventDefault();
+    e.stopPropagation();
     navigate(`/DetailProduct/${product.id}`, { state: { product } });
   };
 
@@ -39,7 +40,6 @@ const Card = ({ image, alt, title, price, tags, product }) => {
               <span className="material-symbols-outlined">arrow_outward</span>
             </button>
           </div>
-          
         </div>
       </div>
       <div className="content">
@@ -92,8 +92,10 @@ const TrustedCompanies = () => {
   const [cardsData, setCardsData] = useState([]);
 
   useEffect(() => {
-    axios.get('https://zodiacjewerly.azurewebsites.net/api/Product/GetAllProducts')
+    axios.get('https://zodiacjewerly.azurewebsites.net/api/products/all-products')
       .then(response => {
+        console.log('API response:', response.data); // Kiểm tra phản hồi từ API
+
         const apiData = response.data.data;
         const categoryMap = {
           1: 'Necklaces',
@@ -129,16 +131,16 @@ const TrustedCompanies = () => {
         };
 
         const formattedData = apiData.map(product => ({
-          image: product.imageURLs[0] || 'default-image-url',
-          alt: product.nameProduct,
-          title: product.nameProduct,
+          image: product["image-urls"] && product["image-urls"][0] ? product["image-urls"][0] : 'default-image-url',
+          alt: product["name-product"],
+          title: product["name-product"],
           price: product.price,
           product, // pass the whole product object
           tags: [
-            { name: categoryMap[product.categoryId], color: '#ff5733', className: 'tag-category' },
-            { name: materialMap[product.materialId], color: '#33ff57', className: 'tag-material' },
-            { name: genderMap[product.genderId], color: '#3357ff', className: 'tag-gender' },
-            { name: zodiacMap[product.zodiacId], color: '#ff33a8', className: 'tag-zodiac' },
+            { name: categoryMap[product["category-id"]], color: '#ff5733', className: 'tag-category' },
+            { name: materialMap[product["material-id"]], color: '#33ff57', className: 'tag-material' },
+            { name: genderMap[product["gender-id"]], color: '#3357ff', className: 'tag-gender' },
+            { name: zodiacMap[product["zodiac-id"]], color: '#ff33a8', className: 'tag-zodiac' },
           ]
         }));
         setCardsData(formattedData);
@@ -268,17 +270,15 @@ const TrustedCompanies = () => {
 
       <div className="container-product-card">
         {cardsData.map((card, index) => (
-          <Link to={`/DetailProduct/${card.id}`} key={index}>
-            <Card
-              key={index}
-              image={card.image}
-              alt={card.alt}
-              title={card.title}
-              price={card.price}
-              tags={card.tags}
-              product={card.product} // pass the product object
-            />
-          </Link>
+          <Card
+            key={index}
+            image={card.image}
+            alt={card.alt}
+            title={card.title}
+            price={card.price}
+            tags={card.tags}
+            product={card.product} // pass the product object
+          />
         ))}
       </div>
     </section>
