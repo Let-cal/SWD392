@@ -21,7 +21,7 @@ const StaffAccountManagement = () => {
           propFontSize="20px"
         />
         <Product
-          ProductName="Transaction was withdrawn"
+          ProductName="Transaction has been refunded"
           NumOfProducts="50 Products"
           propWidth="unset"
           propFlex="1"

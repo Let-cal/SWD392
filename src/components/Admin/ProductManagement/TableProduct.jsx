@@ -43,6 +43,7 @@ const TableProduct = ({ data, onUpdate, onDelete }) => {
         <div className="w-1/12 px-1 py-2">Material</div>
         <div className="w-1/12 px-1 py-2">Gender</div>
         <div className="w-1/12 px-1 py-2">Zodiac</div>
+        <div className="w-1/12 px-1 py-2">ImgURL</div>
         <div className="w-1/12 px-1 py-2">Action</div>
       </div>
       <div className="h-[500px] overflow-auto">

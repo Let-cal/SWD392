@@ -1,3 +1,5 @@
+import { Backdrop, CircularProgress } from "@mui/material";
+import axios from "axios";
 import PropTypes from "prop-types";
 import { useState } from "react";
 import {
@@ -14,6 +16,8 @@ import {
 const InforProduct = ({ product, onUpdate, Action }) => {
   const [isEditing, setIsEditing] = useState(false);
   const [editedProduct, setEditedProduct] = useState({ ...product });
+  const [showImages, setShowImages] = useState(false);
+  const [loading, setLoading] = useState(false);
 
   const handleEdit = () => {
     setIsEditing(true);
@@ -39,6 +43,38 @@ const InforProduct = ({ product, onUpdate, Action }) => {
       ...prev,
       [name]: name.endsWith("Id") ? parseInt(value) : value,
     }));
+  };
+
+  const handleImageUpload = async (e) => {
+    const files = e.target.files;
+    if (files.length === 0) return;
+
+    const formData = new FormData();
+    for (let i = 0; i < files.length; i++) {
+      formData.append("images", files[i]);
+    }
+
+    setLoading(true); // Bắt đầu loading
+    try {
+      await axios.post(
+        `https://zodiacjewerly.azurewebsites.net/api/productimage/${product.id}/upload`,
+        formData,
+        {
+          headers: {
+            "Content-Type": "multipart/form-data",
+          },
+        }
+      );
+
+      // Gửi yêu cầu cập nhật sản phẩm sau khi upload hình ảnh thành công
+      await onUpdate(product);
+      alert("Images uploaded successfully!");
+    } catch (error) {
+      console.error("Error uploading images:", error);
+      alert("Failed to upload images.");
+    } finally {
+      setLoading(false); // Kết thúc loading
+    }
   };
 
   return (
@@ -173,6 +209,48 @@ const InforProduct = ({ product, onUpdate, Action }) => {
             getZodiacName(product.zodiacId)
           ),
         },
+        {
+          content: (
+            <>
+              <button
+                onClick={() => setShowImages(true)}
+                className="text-blue-500 underline"
+              >
+                View Images
+              </button>
+              {showImages && (
+                <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center">
+                  <div className="bg-white p-5 rounded">
+                    <h2 className="text-xl mb-4">Product Images</h2>
+                    <div className="grid grid-cols-2 gap-2">
+                      {product.imageURLs.map((url, index) => (
+                        <img
+                          key={index}
+                          src={url}
+                          alt={`Product Image ${index + 1}`}
+                          className="w-48 h-48 object-cover"
+                        />
+                      ))}
+                    </div>
+                    <div className="mt-4 flex justify-between">
+                      <input
+                        type="file"
+                        multiple
+                        onChange={handleImageUpload}
+                      />
+                      <button
+                        onClick={() => setShowImages(false)}
+                        className="text-red-500"
+                      >
+                        Close
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              )}
+            </>
+          ),
+        },
       ].map((item, index) => (
         <div
           key={index}
@@ -201,6 +279,10 @@ const InforProduct = ({ product, onUpdate, Action }) => {
         )}
         {Action}
       </div>
+
+      <Backdrop open={loading} style={{ color: "#fff", zIndex: 9999 }}>
+        <CircularProgress color="inherit" />
+      </Backdrop>
     </div>
   );
 };
@@ -216,6 +298,7 @@ InforProduct.propTypes = {
     zodiacId: PropTypes.number.isRequired,
     descriptionProduct: PropTypes.string.isRequired,
     quantity: PropTypes.number.isRequired,
+    imageURLs: PropTypes.arrayOf(PropTypes.string).isRequired,
   }).isRequired,
   onUpdate: PropTypes.func.isRequired,
   Action: PropTypes.node.isRequired,

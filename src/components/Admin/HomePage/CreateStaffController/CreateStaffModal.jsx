@@ -43,8 +43,13 @@ const CreateStaffModal = ({ isOpen, onClose }) => {
       console.log("Request Data:", requestData); // Log the request payload
 
       await axios.post(
-        "https://zodiacjewerly.azurewebsites.net/api/Authen/NewAccountStaff",
-        requestData,
+        "https://zodiacjewerly.azurewebsites.net/api/authentication/staff-new",
+        {
+          email: email,
+          password: password,
+          "full-name": fullName,
+          "telephone-number": telephoneNumber,
+        },
         {
           headers: {
             Authorization: `Bearer ${token}`,

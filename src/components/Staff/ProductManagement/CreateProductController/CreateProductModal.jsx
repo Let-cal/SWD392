@@ -60,13 +60,13 @@ const CreateProductModal = ({ isOpen, onClose, onProductCreated }) => {
 
     const requestData = {
       id: 0,
-      nameProduct,
-      descriptionProduct,
+      "name-product": nameProduct,
+      "description-product": descriptionProduct,
       price: parseFloat(price),
       quantity: parseInt(quantity, 10),
-      categoryId: getCategoryID(categoryId),
-      materialId: getMaterialID(materialId),
-      genderId: getGenderID(genderId),
+      "category-id": getCategoryID(categoryId),
+      "material-id": getMaterialID(materialId),
+      "gender-id": getGenderID(genderId),
     };
     const zodiacIdValue = getZodiacID(zodiacId);
 
@@ -81,7 +81,7 @@ const CreateProductModal = ({ isOpen, onClose, onProductCreated }) => {
       }
 
       const response = await axios.post(
-        `https://zodiacjewerly.azurewebsites.net/api/Product/CreateProduct?zodiacId=${zodiacIdValue}`,
+        `https://zodiacjewerly.azurewebsites.net/api/products/product-new?zodiacId=${zodiacIdValue}`,
         requestData,
         {
           headers: {

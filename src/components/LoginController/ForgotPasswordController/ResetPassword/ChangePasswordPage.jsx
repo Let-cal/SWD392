@@ -7,27 +7,27 @@ import Input from "./Input";
 const ChangePasswordPage = () => {
   const [newPassword, setNewPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
-  const [isLoading, setIsLoading] = useState(false); // State để xác định trạng thái loading
+  const [isLoading, setIsLoading] = useState(false);
   const userEmail = localStorage.getItem("email");
   const navigate = useNavigate();
   const { enqueueSnackbar } = useSnackbar();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setIsLoading(true); // Bắt đầu loading khi gửi request
+    setIsLoading(true);
 
     if (newPassword !== confirmPassword) {
       enqueueSnackbar("The new password and confirm password do not match.", {
         anchorOrigin: { horizontal: "right", vertical: "top" },
         variant: "error",
       });
-      setIsLoading(false); // Dừng loading nếu có lỗi
+      setIsLoading(false);
       return;
     }
 
     try {
       const response = await fetch(
-        "https://zodiacjewerly.azurewebsites.net/api/Authen/ResetPassWord",
+        "https://zodiacjewerly.azurewebsites.net/api/authentication/pass-new",
         {
           method: "POST",
           headers: {
@@ -37,7 +37,7 @@ const ChangePasswordPage = () => {
           body: JSON.stringify({
             email: userEmail,
             password: newPassword,
-            confirmPassword: confirmPassword,
+            "confirm-password": confirmPassword, // Use "confirm-password" as the field name
           }),
         }
       );
@@ -63,7 +63,7 @@ const ChangePasswordPage = () => {
         variant: "error",
       });
     } finally {
-      setIsLoading(false); // Dừng loading sau khi nhận được phản hồi từ API
+      setIsLoading(false);
     }
   };
 

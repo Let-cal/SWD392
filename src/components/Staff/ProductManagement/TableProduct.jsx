@@ -7,7 +7,7 @@ import PropTypes from "prop-types";
 import { useState } from "react";
 import InforProduct from "./InfoProduct";
 
-const TableProduct = ({ data, onUpdate, onDelete }) => {
+const TableProduct = ({ data, onUpdate, onDelete,onGetAll }) => {
   const [anchorEl, setAnchorEl] = useState(null);
   const [selectedProductId, setSelectedProductId] = useState(null);
 
@@ -43,6 +43,7 @@ const TableProduct = ({ data, onUpdate, onDelete }) => {
         <div className="w-1/12 px-1 py-2">Material</div>
         <div className="w-1/12 px-1 py-2">Gender</div>
         <div className="w-1/12 px-1 py-2">Zodiac</div>
+        <div className="w-1/12 px-1 py-2">ImgURL</div>
         <div className="w-1/12 px-1 py-2">Action</div>
       </div>
       <div className="h-[500px] overflow-auto">
@@ -51,6 +52,7 @@ const TableProduct = ({ data, onUpdate, onDelete }) => {
             key={product.id}
             product={product}
             onUpdate={onUpdate}
+            onGetAll={onGetAll}
             Action={
               <>
                 <Button
@@ -99,6 +101,7 @@ TableProduct.propTypes = {
   ).isRequired,
   onUpdate: PropTypes.func.isRequired,
   onDelete: PropTypes.func.isRequired,
+  onGetAll: PropTypes.func.isRequired,
 };
 
 export default TableProduct;

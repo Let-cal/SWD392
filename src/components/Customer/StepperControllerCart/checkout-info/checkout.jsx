@@ -73,44 +73,45 @@ function Checkout() {
               </div>
             ))}
         </div>
-
-        <div className="checkout-summary">
-          BILL TOTAL: $
-          {selectedItems
-            .reduce((total, item) => {
-              return total + item.itemPrice * item.itemQty;
-            }, 0)
-            .toFixed(2)}
+        <div>
+          <div className="checkout-summary">
+            BILL TOTAL: $
+            {selectedItems
+              .reduce((total, item) => {
+                return total + item.itemPrice * item.itemQty;
+              }, 0)
+              .toFixed(2)}
+          </div>
+          <form onSubmit={(e) => e.preventDefault()} className="checkout-form">
+            <h2>Delivery Infomation</h2>
+            <input
+              type="text"
+              name="name"
+              placeholder="Name"
+              value={orderInfo.name}
+              onChange={handleChange}
+              required
+            />
+            <input
+              type="text"
+              name="phone"
+              placeholder="Phone number"
+              value={orderInfo.phone}
+              onChange={handleChange}
+              required
+            />
+            <textarea
+              name="address"
+              placeholder="Address"
+              value={orderInfo.address}
+              onChange={handleChange}
+              required
+            ></textarea>
+            <button type="submit" onClick={handleCheckout}>
+              PLACE TO ORDER
+            </button>
+          </form>
         </div>
-        <form onSubmit={(e) => e.preventDefault()} className="checkout-form">
-          <h2>Delivery Infomation</h2>
-          <input
-            type="text"
-            name="name"
-            placeholder="Name"
-            value={orderInfo.name}
-            onChange={handleChange}
-            required
-          />
-          <input
-            type="text"
-            name="phone"
-            placeholder="Phone number"
-            value={orderInfo.phone}
-            onChange={handleChange}
-            required
-          />
-          <textarea
-            name="address"
-            placeholder="Address"
-            value={orderInfo.address}
-            onChange={handleChange}
-            required
-          ></textarea>
-          <button type="submit" onClick={handleCheckout}>
-            PLACE TO ORDER
-          </button>
-        </form>
       </div>
     </>
   );

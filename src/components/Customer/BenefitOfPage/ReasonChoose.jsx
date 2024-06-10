@@ -1,7 +1,7 @@
 import PropTypes from "prop-types";
 import ListItem from "./ListItem";
 
-const ReasonChoose = ({ className = "" }) => {
+const ReasonChoose = ({ className = "", scrollToTrustedCompanies }) => {
   return (
     <section
       className={`self-stretch bg-white overflow-hidden flex flex-row items-start justify-center py-28  box-border gap-[80px] max-w-full text-left text-29xl text-black font-text-small-link md:gap-[40px] md:box-border mq1125:pt-[73px] mq1125:pb-[73px] mq1125:box-border sm:gap-[20px] sm:pt-[47px] sm:pb-[47px] sm:box-border lg:flex-wrap max-sm:hidden ${className}`}
@@ -25,7 +25,10 @@ const ReasonChoose = ({ className = "" }) => {
           </div>
         </div>
         <div className="flex flex-row items-center justify-start pt-4 px-0 pb-0">
-          <button className="cursor-pointer py-2.5 px-[23px] bg-black rounded-8xs flex flex-row items-center justify-center whitespace-nowrap border-[1px] border-solid border-black hover:bg-darkslategray-100 hover:box-border hover:border-[1px] hover:border-solid hover:border-darkslategray-100">
+          <button
+            className="cursor-pointer py-2.5 px-[23px] bg-black rounded-8xs flex flex-row items-center justify-center whitespace-nowrap border-[1px] border-solid border-black hover:bg-darkslategray-100 hover:box-border hover:border-[1px] hover:border-solid hover:border-darkslategray-100"
+            onClick={scrollToTrustedCompanies}
+          >
             <div className="relative text-base leading-[150%] font-text-small-link text-white text-left inline-block min-w-[73px]">
               Shop Now
             </div>
@@ -73,5 +76,7 @@ const ReasonChoose = ({ className = "" }) => {
 
 ReasonChoose.propTypes = {
   className: PropTypes.string,
+  scrollToTrustedCompanies: PropTypes.func.isRequired,
 };
+
 export default ReasonChoose;

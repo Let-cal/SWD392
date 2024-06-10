@@ -29,9 +29,21 @@ const ProductPage = () => {
     setLoading(true);
     try {
       const response = await axios.get(
-        "https://zodiacjewerly.azurewebsites.net/api/Product/GetAllProducts"
+        "https://zodiacjewerly.azurewebsites.net/api/products/all-products"
       );
-      const fetchedProducts = response.data.data;
+      const fetchedProducts = response.data.data.map((product) => ({
+        id: product.id,
+        nameProduct: product["name-product"],
+        descriptionProduct: product["description-product"],
+        price: product.price,
+        quantity: product.quantity,
+        categoryId: product["category-id"],
+        materialId: product["material-id"],
+        genderId: product["gender-id"],
+        imageURLs: product["image-urls"],
+        zodiacId: product["zodiac-id"],
+      }));
+
       setProducts(fetchedProducts);
       setFilteredProducts(fetchedProducts);
 
@@ -102,30 +114,28 @@ const ProductPage = () => {
 
       const payload = {
         id: product.id,
-        nameProduct: product.nameProduct || "",
-        descriptionProduct: product.descriptionProduct || "",
+        "name-product": product.nameProduct || "",
+        "description-product": product.descriptionProduct || "",
         price: product.price || 0,
         quantity: product.quantity || 0,
-        categoryId: product.categoryId || 0,
-        materialId: product.materialId || 0,
-        genderId: product.genderId || 0,
-        zodiacId: product.zodiacId || 0,
+        "category-id": product.categoryId || 0,
+        "material-id": product.materialId || 0,
+        "gender-id": product.genderId || 0,
+        "zodiac-id": product.zodiacId || 0,
       };
 
       const response = await axios.put(
-        `https://zodiacjewerly.azurewebsites.net/api/Product/UpdateProduct/${product.id}?zodiacId=${product.zodiacId}`,
+        `https://zodiacjewerly.azurewebsites.net/api/products/product-update?id=${product.id}&zodiacId=${product.zodiacId}`,
         payload,
         { headers: { "Content-Type": "application/json" } }
       );
       const updatedProduct = response.data;
-
+      enqueueSnackbar("Product updated successfully", { variant: "success" });
       setProducts((prev) =>
         prev.map((p) => (p.id === updatedProduct.id ? updatedProduct : p))
       );
 
       await fetchProducts();
-
-      enqueueSnackbar("Product updated successfully", { variant: "success" });
     } catch (error) {
       console.error("Error updating product:", error);
       enqueueSnackbar("Error updating product", { variant: "error" });
@@ -138,7 +148,7 @@ const ProductPage = () => {
     setUpdating(true);
     try {
       await axios.delete(
-        `https://zodiacjewerly.azurewebsites.net/api/Product/DeleteProduct/${productId}`
+        `https://zodiacjewerly.azurewebsites.net/api/products/product-remove/${productId}`
       );
 
       setProducts((prev) => prev.filter((product) => product.id !== productId));

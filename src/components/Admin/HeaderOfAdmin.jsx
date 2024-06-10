@@ -8,10 +8,10 @@ function Header() {
         alt=""
       />
       <div className="title-header text-3xl font-semibold relative">
-        <span className="font-bold bg-gradient-custom-header-title bg-clip-text text-transparent">
+        <span className="font-bold bg-gradient-custom-header-title font-serif bg-clip-text text-transparent">
           Z
         </span>
-        <span className="bg-gradient-custom-header-title bg-clip-text text-transparent">
+        <span className="bg-gradient-custom-header-title font-serif bg-clip-text text-transparent">
           odiacGems
         </span>
       </div>
