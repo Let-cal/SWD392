@@ -1,5 +1,11 @@
 import PropTypes from "prop-types";
-import { createContext, useContext, useEffect, useState } from "react";
+import {
+  createContext,
+  useCallback,
+  useContext,
+  useEffect,
+  useState,
+} from "react";
 
 const AuthContext = createContext();
 
@@ -9,18 +15,23 @@ export const AuthProvider = ({ children }) => {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [userRole, setUserRole] = useState(null);
   const [loading, setLoading] = useState(true);
-  const handleLogout = () => {
-    localStorage.removeItem("token");
-    localStorage.removeItem("role");
-    localStorage.removeItem("userName");
-    localStorage.removeItem("email");
-    localStorage.removeItem("password"); // Xóa mật khẩu khi đăng xuất
-    setIsAuthenticated(false);
-  };
+
+  const handleLogout = useCallback(() => {
+    setTimeout(() => {
+      localStorage.removeItem("token");
+      localStorage.removeItem("role");
+      localStorage.removeItem("userName");
+      localStorage.removeItem("email");
+      localStorage.removeItem("password"); // Remove password on logout
+      setIsAuthenticated(false);
+      setUserRole(null);
+    }, 0); // Delay the state update to the next event loop iteration
+  }, []);
+
   useEffect(() => {
     const token = localStorage.getItem("token");
     const role = localStorage.getItem("role");
-    
+
     if (token) {
       setIsAuthenticated(true);
     }
@@ -29,14 +40,21 @@ export const AuthProvider = ({ children }) => {
       setUserRole(role);
     }
 
-    setLoading(false); // Đánh dấu quá trình tải hoàn tất
+    setLoading(false); // Mark loading as complete
   }, []);
 
   return (
     <AuthContext.Provider
-      value={{ isAuthenticated, setIsAuthenticated, userRole, setUserRole, loading ,handleLogout}}
+      value={{
+        isAuthenticated,
+        setIsAuthenticated,
+        userRole,
+        setUserRole,
+        loading,
+        handleLogout,
+      }}
     >
-      {!loading && children} {/* Chỉ render children khi không loading */}
+      {!loading && children} {/* Only render children when not loading */}
     </AuthContext.Provider>
   );
 };

@@ -1,12 +1,15 @@
+import { Backdrop, CircularProgress } from "@mui/material";
 import axios from "axios";
 import { useSnackbar } from "notistack";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import "../../Customer/Header/header.css";
 import Input from "./InputForm";
+
 const RegisterPage = () => {
   const { enqueueSnackbar } = useSnackbar();
   const navigate = useNavigate();
+  const [loading, setLoading] = useState(false);
   const [formData, setFormData] = useState({
     email: "",
     password: "",
@@ -28,6 +31,14 @@ const RegisterPage = () => {
     return re.test(String(email).toLowerCase());
   };
 
+  const validatePassword = (password) => {
+    const hasUpperCase = /[A-Z]/.test(password);
+    const hasSpecialChar = /[^A-Za-z0-9]/.test(password);
+    const lengthValid = password.length >= 6 && password.length <= 15;
+
+    return hasUpperCase && hasSpecialChar && lengthValid;
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (!validateEmail(formData.email)) {
@@ -36,7 +47,6 @@ const RegisterPage = () => {
         anchorOrigin: { horizontal: "right", vertical: "top" },
         preventDuplicate: true,
       });
-      console.log(formData.email);
       return;
     }
     if (formData.password !== formData.confirmPassword) {
@@ -47,7 +57,19 @@ const RegisterPage = () => {
       });
       return;
     }
+    if (!validatePassword(formData.password)) {
+      enqueueSnackbar(
+        "Password must contain at least one uppercase letter, one special character, and be between 6 to 15 characters long.",
+        {
+          variant: "warning",
+          anchorOrigin: { horizontal: "right", vertical: "top" },
+          preventDuplicate: true,
+        }
+      );
+      return;
+    }
 
+    setLoading(true);
     try {
       const response = await axios.post(
         "https://zodiacjewerly.azurewebsites.net/api/Authen/Register",
@@ -69,19 +91,40 @@ const RegisterPage = () => {
     } catch (error) {
       console.error("There was an error registering!", error);
       if (error.response) {
-        console.error("Server responded with:", error.response.data);
+        const errorMessage = error.response.data.message;
+        if (errorMessage) {
+          enqueueSnackbar(errorMessage, {
+            variant: "error",
+            anchorOrigin: { horizontal: "right", vertical: "top" },
+            preventDuplicate: true,
+          });
+        } else {
+          enqueueSnackbar("An unknown error occurred during registration.", {
+            variant: "error",
+            anchorOrigin: { horizontal: "right", vertical: "top" },
+            preventDuplicate: true,
+          });
+        }
+      } else {
+        enqueueSnackbar("Registration failed due to a server error.", {
+          variant: "error",
+          anchorOrigin: { horizontal: "right", vertical: "top" },
+          preventDuplicate: true,
+        });
       }
-
-      enqueueSnackbar("Registration failed!", {
-        variant: "error",
-        anchorOrigin: { horizontal: "right", vertical: "top" },
-        preventDuplicate: true,
-      });
+    } finally {
+      setLoading(false);
     }
   };
 
   return (
     <div className="w-full h-[960px] relative bg-light-colors-white-light overflow-hidden flex flex-col items-center justify-start pt-[50px] px-0 pb-0 box-border gap-[50px] leading-[normal] tracking-[normal] text-left text-[38px] text-slate-900 font-body-medium mq675:gap-[25px]">
+      <Backdrop
+        sx={{ color: "#fff", zIndex: (theme) => theme.zIndex.drawer + 1 }}
+        open={loading}
+      >
+        <CircularProgress color="inherit" />
+      </Backdrop>
       <div className="w-[535px] flex flex-col items-center justify-start py-0 px-5 box-border gap-[32px] max-w-full mq675:gap-[16px]">
         <div className="title-header flex-auto text-6xl leading-10">
           <span className="font-bold bg-gradient-custom-header-title bg-clip-text text-transparent">
@@ -112,7 +155,7 @@ const RegisterPage = () => {
                 Placeholder="Enter your Email"
                 propMinWidth="66px"
                 name="email"
-                inputType="email" // Đảm bảo input type là email
+                inputType="email"
                 onChange={handleChange}
               />
               <Input
@@ -139,7 +182,7 @@ const RegisterPage = () => {
                 Placeholder="Enter your Fullname"
                 propMinWidth="200px"
                 name="fullname"
-                inputType="text" // Đảm bảo input type là text
+                inputType="text"
                 onChange={handleChange}
               />
               <Input
@@ -148,7 +191,7 @@ const RegisterPage = () => {
                 Placeholder="+84"
                 propMinWidth="200px"
                 name="phoneNumber"
-                inputType="text" // Đảm bảo input type là text
+                inputType="text"
                 onChange={handleChange}
               />
               <button

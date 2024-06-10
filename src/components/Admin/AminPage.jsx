@@ -1,22 +1,26 @@
 import { useState } from "react";
-import AdminAccountManagement from "./AdminAccountManagement.jsx";
-
 import UserManagement from "../Admin/UserManagement/UserController.jsx";
+import { useAuth } from "../LoginController/AuthContext.jsx";
 import Header from "./HeaderOfAdmin.jsx";
+import AdminAccountManagement from "./HomePage/AdminAccountManagement.jsx";
+import OrdersManagement from "./OrderManagement/OrderManagement.jsx";
+import ProductsManagement from "./ProductManagement/ProductManagement.jsx";
+import "./adminpage.css"; // Add this import for the new CSS styles
 import Sidebar from "./sidebar.jsx";
-
 function AdminPage() {
+  const { handleLogout } = useAuth();
   const [selectedContent, setSelectedContent] = useState(
     "AdminAccountManagement"
   );
+  const [isSidebarCollapsed, setIsSidebarCollapsed] = useState(true);
 
   let ContentComponent;
   switch (selectedContent) {
     case "OrdersManagement":
-      // ContentComponent = OrdersManagement;
+      ContentComponent = OrdersManagement;
       break;
     case "ProductsManagement":
-      // ContentComponent = ProductsManagement;
+      ContentComponent = ProductsManagement;
       break;
     case "CollectionsManagement":
       // ContentComponent = CollectionsManagement;
@@ -26,6 +30,9 @@ function AdminPage() {
       break;
     case "UsersManagement":
       ContentComponent = UserManagement;
+      break;
+    case "Logout":
+      ContentComponent = handleLogout;
       break;
     case "AdminAccountManagement":
       ContentComponent = AdminAccountManagement;
@@ -37,17 +44,23 @@ function AdminPage() {
 
   return (
     <div className="flex flex-row justify-between">
-      <div className="w-1/5">
-        <Sidebar setSelectedContent={setSelectedContent} />
+      <div
+        className={`sidebar-container ${isSidebarCollapsed ? "collapsed" : ""}`}
+      >
+        <Sidebar
+          setSelectedContent={setSelectedContent}
+          setIsSidebarCollapsed={setIsSidebarCollapsed}
+        />
       </div>
-      <div className="w-4/5">
+      <div
+        className={`content-container ${isSidebarCollapsed ? "expanded" : ""}`}
+      >
         <Header />
         <div className="p-5">
           <ContentComponent />
         </div>
       </div>
     </div>
-
   );
 }
 

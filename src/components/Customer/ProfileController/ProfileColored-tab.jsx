@@ -1,11 +1,9 @@
 import { Box, Tab, Tabs, Typography } from "@mui/material";
 import PropTypes from "prop-types";
-import { useEffect, useState } from "react";
-import { useLocation } from "react-router-dom"; // Import useLocation
-import AccountOrders from "./MyOrderedData";
-import Profile from "../profile/profile";
-
-
+import { useState } from "react";
+import { useAuth } from "../../LoginController/AuthContext";
+import AccountOrders from "./MyOrdered/MyOrderedData";
+import Profile from "./profile/profile";
 function CustomTabPanel(props) {
   const { children, value, index, ...other } = props;
 
@@ -40,14 +38,8 @@ function a11yProps(index) {
 }
 
 export default function ProfileColorTabs() {
-  const location = useLocation(); // Use useLocation to get the state
+  const { handleLogout } = useAuth();
   const [value, setValue] = useState(0);
-
-  useEffect(() => {
-    if (location.state && location.state.index !== undefined) {
-      setValue(location.state.index);
-    }
-  }, [location.state]);
 
   const handleChange = (event, newValue) => {
     setValue(newValue);
@@ -60,11 +52,13 @@ export default function ProfileColorTabs() {
           value={value}
           onChange={handleChange}
           aria-label="basic tabs example"
+          textColor="secondary"
+          indicatorColor="secondary"
         >
           <Tab label="MY ORDERS" {...a11yProps(0)} />
           <Tab label="ADDRESSES" {...a11yProps(1)} />
           <Tab label="ACCOUNT DETAIL" {...a11yProps(2)} />
-          <Tab label="LOGOUT" {...a11yProps(3)} />
+          <Tab label="LOGOUT" {...a11yProps(3)} onClick={handleLogout} />
         </Tabs>
       </Box>
       <CustomTabPanel value={value} index={0}>
@@ -74,7 +68,7 @@ export default function ProfileColorTabs() {
         Item Two
       </CustomTabPanel>
       <CustomTabPanel value={value} index={2}>
-        <Profile/>
+        <Profile />
       </CustomTabPanel>
     </Box>
   );

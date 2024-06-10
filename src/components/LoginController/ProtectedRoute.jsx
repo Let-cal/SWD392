@@ -27,6 +27,8 @@ const ProtectedRoute = ({ element, roles }) => {
           navigate("/AdminPage");
         } else if (userRole.includes("Customer")) {
           navigate("/customer-page");
+        } else {
+          navigate("/StaffPage");
         }
       }
     }

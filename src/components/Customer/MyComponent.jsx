@@ -1,7 +1,9 @@
 import { defineElement } from "@lordicon/element";
 import lottie from "lottie-web";
 import PropTypes from "prop-types";
-import { useState } from "react";
+import { useRef, useState } from "react";
+import { Link } from "react-router-dom";
+import ReasonChoose from "./BenefitOfPage/ReasonChoose.jsx";
 import CardStack from "./CollectionCard/CardStack.jsx";
 import "./CollectionCard/CollectionCard.css";
 import Footer from "./Footer/Footer.jsx";
@@ -103,12 +105,12 @@ const MonthlyDeals = () => (
 
 function Hero() {
   const images = [
-    "src/components/Customer/images/gabrielle-henderson-XTp4ZzD76Xw-unsplash.jpg",
-    "src/components/Customer/images/jasmin-chew-MIyo2hqbAzk-unsplash.jpg",
-    "src/components/Customer/images/jasmin-chew-WKD2vIe8Rb0-unsplash.jpg",
-    "src/components/Customer/images/juan-burgos-3_XeNGVbTQA-unsplash.jpg",
-    "src/components/Customer/images/kateryna-hliznitsova-ceSCZzjTReg-unsplash.jpg",
-    "src/components/Customer/images/mike-von-qsJ5itg93WY-unsplash.jpg",
+    "public/images/gabrielle-henderson-XTp4ZzD76Xw-unsplash.jpg",
+    "public/images/jasmin-chew-MIyo2hqbAzk-unsplash.jpg",
+    "public/images/jasmin-chew-WKD2vIe8Rb0-unsplash.jpg",
+    "public/images/juan-burgos-3_XeNGVbTQA-unsplash.jpg",
+    "public/images/kateryna-hliznitsova-ceSCZzjTReg-unsplash.jpg",
+    "public/images/mike-von-qsJ5itg93WY-unsplash.jpg",
   ];
   return (
     <section className="bg-custom-gradient flex absolute overflow-hidden relative flex-col items-start pt-20 pr-20 pb-6 pl-10 mt-6 w-full text-white max-w-[1249px] min-h-[646px] max-md:px-5 max-md:max-w-full">
@@ -131,10 +133,12 @@ function Hero() {
             electronic payments and access via our mobile app. Start your
             celestial shopping journey with us today!
           </h1>
-          <button className="coolBeans">
-            <span className="uppercase">E</span>PLORE{" "}
-            <span className="uppercase">M</span>ORE
-          </button>
+          <Link to="/AboutPage">
+            <button className="coolBeans">
+              <span className="uppercase">E</span>PLORE{" "}
+              <span className="uppercase">M</span>ORE
+            </button>
+          </Link>
         </div>
         <CardStack images={images} />
       </div>
@@ -143,14 +147,23 @@ function Hero() {
 }
 
 function MyComponent() {
+  const trustedCompaniesRef = useRef(null);
+
+  const scrollToTrustedCompanies = () => {
+    trustedCompaniesRef.current?.scrollIntoView({ behavior: "smooth" });
+  };
+
   return (
     <div>
-      <Header />
-      <div className="flex flex-col items-center px-20 pb-0 bg-white max-md:px-5">
+      <Header scrollToTrustedCompanies={scrollToTrustedCompanies} />
+      <div className="flex flex-col items-center px-20 pb-0 bg-white max-md:px-5 max-sm:mt-[130px]">
         <Hero />
         <Zodiac />
         <MonthlyDeals />
-        <TrustedCompanies />
+        <ReasonChoose />
+        <div ref={trustedCompaniesRef}>
+          <TrustedCompanies />
+        </div>
         <Footer />
       </div>
     </div>

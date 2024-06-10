@@ -2,10 +2,12 @@ import axios from "axios";
 import { useSnackbar } from "notistack";
 import { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
+import { Backdrop, CircularProgress } from "@mui/material";
 
 function ForgotPassword() {
   const [email, setEmail] = useState(localStorage.getItem("email") || "");
   const [counter, setCounter] = useState(0);
+  const [loading, setLoading] = useState(false);
   const { enqueueSnackbar } = useSnackbar();
   const navigate = useNavigate();
 
@@ -40,6 +42,7 @@ function ForgotPassword() {
       return;
     }
 
+    setLoading(true);
     try {
       const response = await axios.post(
         `https://zodiacjewerly.azurewebsites.net/api/Authen/ForgotPassword/${encodeURIComponent(
@@ -64,11 +67,19 @@ function ForgotPassword() {
           variant: "warning",
         }
       );
+    } finally {
+      setLoading(false);
     }
   };
 
   return (
     <div className="flex flex-col bg-white">
+      <Backdrop
+        sx={{ color: "#fff", zIndex: (theme) => theme.zIndex.drawer + 1 }}
+        open={loading}
+      >
+        <CircularProgress color="inherit" />
+      </Backdrop>
       <div className="flex flex-col self-center px-5 mt-16 max-w-full w-[495px] max-md:mt-10">
         <div className="title-header flex-auto text-6xl leading-10 text-center">
           <span className="font-bold bg-gradient-custom-header-title bg-clip-text text-transparent">
@@ -110,12 +121,14 @@ function ForgotPassword() {
               <button
                 onClick={handleResetPassword}
                 className="flex justify-center items-center px-4 py-2 mt-4 text-sm font-medium leading-6 text-white rounded-md bg-slate-900 max-md:px-5 max-md:max-w-full"
-                disabled={counter > 0}
+                disabled={counter > 0 || loading}
               >
                 {counter > 0
                   ? `Can resend OTP in 00:${
                       counter < 10 ? `0${counter}` : counter
                     }`
+                  : loading
+                  ? "Sending..."
                   : "Reset password"}
               </button>
             </div>

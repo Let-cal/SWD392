@@ -1,17 +1,18 @@
+import { Collections, Home, Info, Shop } from "@mui/icons-material";
 import MenuIcon from "@mui/icons-material/Menu";
+import { List, ListItem, ListItemIcon, ListItemText } from "@mui/material";
 import Box from "@mui/material/Box";
 import Drawer from "@mui/material/Drawer";
 import IconButton from "@mui/material/IconButton";
-import List from "@mui/material/List";
-import ListItem from "@mui/material/ListItem";
-import ListItemText from "@mui/material/ListItemText";
 import Tab from "@mui/material/Tab";
 import Tabs from "@mui/material/Tabs";
 import { useTheme } from "@mui/material/styles";
 import useMediaQuery from "@mui/material/useMediaQuery";
+import PropTypes from "prop-types";
 import { useEffect, useState } from "react";
 import { useLocation } from "react-router-dom";
-export default function ColorTabs() {
+
+function ColorTabs({ scrollToTrustedCompanies }) {
   const [value, setValue] = useState("one");
   const [drawerOpen, setDrawerOpen] = useState(false);
   const theme = useTheme();
@@ -25,6 +26,8 @@ export default function ColorTabs() {
       setValue("two");
     } else if (location.pathname.includes("/AboutPage")) {
       setValue("three");
+    } else if (location.pathname.includes("/")) {
+      setValue("three");
     } else {
       setValue(false);
     }
@@ -32,6 +35,9 @@ export default function ColorTabs() {
 
   const handleChange = (event, newValue) => {
     setValue(newValue);
+    if (newValue === "four") {
+      scrollToTrustedCompanies();
+    }
   };
 
   const toggleDrawer = (open) => (event) => {
@@ -53,18 +59,51 @@ export default function ColorTabs() {
     >
       <List>
         <ListItem button>
-          <a href="/customer-page" onClick={() => handleChange(null, "one")}>
+          <a
+            href="/customer-page"
+            onClick={() => handleChange(null, "one")}
+            className="flex flex-row items-center items-center"
+          >
+            <ListItemIcon>
+              <Home />
+            </ListItemIcon>
             <ListItemText primary="Home Page" />
           </a>
         </ListItem>
         <ListItem button>
-          <a href="#Collection" onClick={() => handleChange(null, "two")}>
+          <a
+            href="#Collection"
+            onClick={() => handleChange(null, "two")}
+            className="flex flex-row items-center"
+          >
+            <ListItemIcon>
+              <Collections />
+            </ListItemIcon>
             <ListItemText primary="Collection" />
           </a>
         </ListItem>
         <ListItem button>
-          <a href="/AboutPage" onClick={() => handleChange(null, "three")}>
+          <a
+            href="/AboutPage"
+            onClick={() => handleChange(null, "three")}
+            className="flex flex-row items-center"
+          >
+            <ListItemIcon>
+              <Info />
+            </ListItemIcon>
             <ListItemText primary="About" />
+          </a>
+        </ListItem>
+        <ListItem button>
+          <a
+            href="#"
+            onClick={() => handleChange(null, "four")}
+            className="flex flex-row items-center"
+          >
+            <ListItemIcon>
+              <Shop />
+            </ListItemIcon>
+            <ListItemText primary="Shop" />
           </a>
         </ListItem>
       </List>
@@ -108,8 +147,22 @@ export default function ColorTabs() {
             href="#Collection"
           />
           <Tab value="three" label="About" component="a" href="/AboutPage" />
+          <Tab
+            value="four"
+            label="Shop"
+            onClick={(event) => {
+              event.preventDefault();
+              handleChange(event, "four");
+            }}
+          />
         </Tabs>
       )}
     </Box>
   );
 }
+
+ColorTabs.propTypes = {
+  scrollToTrustedCompanies: PropTypes.func.isRequired,
+};
+
+export default ColorTabs;

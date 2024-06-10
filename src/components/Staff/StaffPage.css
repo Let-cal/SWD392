@@ -1,0 +1,16 @@
+.sidebar-container {
+  transition: width 0.2s ease;
+}
+
+.sidebar-container.collapsed {
+  width: 80px;
+}
+
+.content-container {
+  transition: width 0.2s ease;
+  width: 80%;
+}
+
+.content-container.expanded {
+  width: calc(100% - 80px);
+}

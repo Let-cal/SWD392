@@ -1,23 +1,28 @@
 import { Visibility, VisibilityOff } from "@mui/icons-material";
-import { IconButton, InputAdornment, TextField } from "@mui/material";
-import Checkbox from "@mui/material/Checkbox";
+import {
+  Backdrop,
+  Checkbox,
+  CircularProgress,
+  IconButton,
+  InputAdornment,
+  TextField,
+} from "@mui/material";
 import axios from "axios";
 import { useSnackbar } from "notistack";
 import { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { useAuth } from "./AuthContext";
-
 function ImageSection() {
   return (
     <div className="flex flex-col w-3/5 max-md:w-full ">
-      <div className="relative flex flex-col grow items-start px-2.5 pt-2.5 pb-2 text-lg font-bold leading-6 text-white min-h-screen">
+      <div className="relative flex flex-col grow items-start px-2.5 pt-2.5 pb-2 text-lg  leading-6 text-white min-h-screen">
         <img
           loading="lazy"
-          srcSet="src/components/Customer/images/Frame.png"
+          srcSet="public/images/Frame.png"
           className="object-cover absolute inset-0 w-full h-full "
         />
         <div className="relative flex flex-col justify-center mt-auto mb-5 w-full max-md:mt-10">
-          <div className="justify-center p-2.5 pr-[40%] max-md:pr-0 max-md:max-w-full font-serif">
+          <div className="justify-center p-2.5 pr-[20%] max-md:pr-0 max-md:max-w-full font-serif">
             &quot;Discover the beauty of destiny – Connect your love through
             each zodiac sign, made for couples! Celebrate your unique bond with
             personalized astrological jewelry.&quot;
@@ -27,12 +32,12 @@ function ImageSection() {
     </div>
   );
 }
-
 function LoginForm() {
   const { setIsAuthenticated, setUserRole } = useAuth();
   const [showPassword, setShowPassword] = useState(false);
   const [formData, setFormData] = useState({ email: "", password: "" });
   const [checked, setChecked] = useState(true);
+  const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
   const { enqueueSnackbar } = useSnackbar();
 
@@ -59,6 +64,7 @@ function LoginForm() {
 
   const handleLogin = async (e) => {
     e.preventDefault();
+    setLoading(true); // Start loading
     const requestBody = { email: formData.email, password: formData.password };
     try {
       const response = await axios.post(
@@ -83,14 +89,15 @@ function LoginForm() {
 
         enqueueSnackbar("Logged in successfully", {
           variant: "success",
-          anchorOrigin: { horizontal: "right", vertical: "top" },
           preventDuplicate: true,
         });
 
         if (response.data.role === "Admin") {
           navigate("/AdminPage");
-        } else {
+        } else if (response.data.role === "Customer") {
           navigate("/customer-page");
+        } else {
+          navigate("/StaffPage");
         }
       }
     } catch (error) {
@@ -100,11 +107,19 @@ function LoginForm() {
         anchorOrigin: { horizontal: "right", vertical: "top" },
         preventDuplicate: true,
       });
+    } finally {
+      setLoading(false); // Stop loading
     }
   };
 
   return (
     <div className="flex flex-col ml-5 w-2/5 max-md:ml-0 max-md:w-full">
+      <Backdrop
+        sx={{ color: "#fff", zIndex: (theme) => theme.zIndex.drawer + 1 }}
+        open={loading}
+      >
+        <CircularProgress color="inherit" />
+      </Backdrop>
       <div className="flex flex-col grow justify-center px-16 w-full bg-white max-md:px-5 min-h-screen">
         <div className="flex flex-col mx-8 mt-auto mb-32 max-md:mx-2.5 max-md:mt-10">
           <form onSubmit={handleLogin}>
