@@ -57,7 +57,7 @@ const InforProduct = ({ product, onUpdate, Action }) => {
     setLoading(true); // Bắt đầu loading
     try {
       await axios.post(
-        `https://zodiacjewerly.azurewebsites.net/api/productimage/${product.id}/upload`,
+        `https://zodiacjewerly.azurewebsites.net/api/products/${product.id}/images`,
         formData,
         {
           headers: {

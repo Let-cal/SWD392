@@ -23,7 +23,13 @@ ReactDOM.createRoot(document.getElementById("root")).render(
     <SnackbarProvider maxSnack={3}>
       <BrowserRouter>
         <Routes>
-          <Route exact path="/" element={<MyComponent />} />
+          <Route
+            exact
+            path="/"
+            element={
+              <ProtectedRoute element={<MyComponent />} roles={["Customer"]} />
+            }
+          />
           <Route
             exact
             path="/AdminPage"

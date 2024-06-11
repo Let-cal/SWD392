@@ -1,6 +1,3 @@
-import React, { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
-import axios from 'axios';
 import TuneIcon from "@mui/icons-material/Tune";
 import {
   Box,
@@ -15,7 +12,10 @@ import {
   RadioGroup,
   Select,
 } from "@mui/material";
+import axios from "axios";
 import PropTypes from "prop-types";
+import { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import "./productCard.css";
 
 const Card = ({ image, alt, title, price, tags, product }) => {
@@ -92,61 +92,80 @@ const TrustedCompanies = () => {
   const [cardsData, setCardsData] = useState([]);
 
   useEffect(() => {
-    axios.get('https://zodiacjewerly.azurewebsites.net/api/products/all-products')
-      .then(response => {
-        console.log('API response:', response.data); // Kiểm tra phản hồi từ API
+    axios
+      .get("https://zodiacjewerly.azurewebsites.net/api/products/all-products")
+      .then((response) => {
+        console.log("API response:", response.data); // Kiểm tra phản hồi từ API
 
         const apiData = response.data.data;
         const categoryMap = {
-          1: 'Necklaces',
-          2: 'Bracelets',
-          3: 'Earrings',
-          4: 'Rings',
-          5: 'T-shirt',
-
+          1: "Necklaces",
+          2: "Bracelets",
+          3: "Earrings",
+          4: "Rings",
+          5: "T-shirt",
         };
         const materialMap = {
-          1: 'Gold',
-          2: 'Emeral',
-          3: 'Diamond',
+          1: "Gold",
+          2: "Emeral",
+          3: "Diamond",
         };
         const genderMap = {
-          1: 'Male',
-          2: 'Female',
-          3: 'Other'
+          1: "Male",
+          2: "Female",
+          3: "Other",
         };
         const zodiacMap = {
-          1: 'Aries',
-          2: 'Taurus',
-          3: 'Gemini',
-          4: 'Cancer',
-          5: 'Leo',
-          6: 'Virgo',
-          7: 'Libra',
-          8: 'Scropio',
-          9: 'Sagittarius',
-          10: 'Capricorn',
-          11: 'Aquarius',
-          12: 'Pisces',
+          1: "Aries",
+          2: "Taurus",
+          3: "Gemini",
+          4: "Cancer",
+          5: "Leo",
+          6: "Virgo",
+          7: "Libra",
+          8: "Scropio",
+          9: "Sagittarius",
+          10: "Capricorn",
+          11: "Aquarius",
+          12: "Pisces",
         };
 
-        const formattedData = apiData.map(product => ({
-          image: product["image-urls"] && product["image-urls"][0] ? product["image-urls"][0] : 'default-image-url',
+        const formattedData = apiData.map((product) => ({
+          image:
+            product["image-urls"] && product["image-urls"][0]
+              ? product["image-urls"][0]
+              : "default-image-url",
           alt: product["name-product"],
           title: product["name-product"],
           price: product.price,
           product, // pass the whole product object
           tags: [
-            { name: categoryMap[product["category-id"]], color: '#ff5733', className: 'tag-category' },
-            { name: materialMap[product["material-id"]], color: '#33ff57', className: 'tag-material' },
-            { name: genderMap[product["gender-id"]], color: '#3357ff', className: 'tag-gender' },
-            { name: zodiacMap[product["zodiac-id"]], color: '#ff33a8', className: 'tag-zodiac' },
-          ]
+            {
+              name: categoryMap[product["category-id"]],
+              color: "#ff5733",
+              className: "tag-category",
+            },
+            {
+              name: materialMap[product["material-id"]],
+              color: "#33ff57",
+              className: "tag-material",
+            },
+            {
+              name: genderMap[product["gender-id"]],
+              color: "#3357ff",
+              className: "tag-gender",
+            },
+            {
+              name: zodiacMap[product["zodiac-id"]],
+              color: "#ff33a8",
+              className: "tag-zodiac",
+            },
+          ],
         }));
         setCardsData(formattedData);
       })
-      .catch(error => {
-        console.error('There was an error fetching the data!', error);
+      .catch((error) => {
+        console.error("There was an error fetching the data!", error);
       });
   }, []);
 

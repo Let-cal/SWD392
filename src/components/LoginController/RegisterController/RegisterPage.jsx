@@ -72,7 +72,7 @@ const RegisterPage = () => {
     setLoading(true);
     try {
       const response = await axios.post(
-        "https://zodiacjewerly.azurewebsites.net/api/Authen/Register",
+        "https://zodiacjewerly.azurewebsites.net/api/authentication/register",
         {
           email: formData.email,
           password: formData.password,

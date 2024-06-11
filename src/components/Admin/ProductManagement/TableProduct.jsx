@@ -56,7 +56,14 @@ const TableProduct = ({ data, onUpdate, onDelete }) => {
               <>
                 <Button
                   id={`edit-button-${product.id}`}
-                  variant="outlined"
+                  variant="contained"
+                  sx={{
+                    backgroundColor: "black",
+                    color: "white",
+                    "&:hover": {
+                      backgroundColor: "gray",
+                    },
+                  }}
                   size="large"
                   startIcon={<UpdateIcon />}
                   onClick={(event) => handleMenuOpen(event, product.id)}
