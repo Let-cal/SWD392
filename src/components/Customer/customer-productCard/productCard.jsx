@@ -93,7 +93,7 @@ const TrustedCompanies = () => {
 
   useEffect(() => {
     axios
-      .get("https://zodiacjewerly.azurewebsites.net/api/products/all-products")
+      .get("https://zodiacjewerly.azurewebsites.net/api/products")
       .then((response) => {
         console.log("API response:", response.data); // Kiểm tra phản hồi từ API
 
