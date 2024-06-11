@@ -21,63 +21,51 @@ function ZodiacSignList() {
   const zodiacSigns = [
     {
       name: "Aries",
-      imageSrc:
-        "./src/components/Customer/Zodiac controller/zodiac/Icon/Icon-1.svg",
+      imageSrc: "/images/Icon/Icon-1.svg",
     },
     {
       name: "Taurus",
-      imageSrc:
-        "./src/components/Customer/Zodiac controller/zodiac/Icon/Icon-2.svg",
+      imageSrc: "/images/Icon/Icon-2.svg",
     },
     {
       name: "Gemini",
-      imageSrc:
-        "./src/components/Customer/Zodiac controller/zodiac/Icon/Icon-3.svg",
+      imageSrc: "/images/Icon/Icon-3.svg",
     },
     {
       name: "Cancer",
-      imageSrc:
-        "./src/components/Customer/Zodiac controller/zodiac/Icon/Icon-4.svg",
+      imageSrc: "/images/Icon/Icon-4.svg",
     },
     {
       name: "Leo",
-      imageSrc:
-        "./src/components/Customer/Zodiac controller/zodiac/Icon/Icon-5.svg",
+      imageSrc: "/images/Icon/Icon-5.svg",
     },
     {
       name: "Virgo",
-      imageSrc:
-        "./src/components/Customer/Zodiac controller/zodiac/Icon/Icon-6.svg",
+      imageSrc: "/images/Icon/Icon-6.svg",
     },
     {
       name: "Libra",
-      imageSrc:
-        "./src/components/Customer/Zodiac controller/zodiac/Icon/Icon-7.svg",
+      imageSrc: "/images/Icon/Icon-7.svg",
     },
     {
       name: "Scorpio",
-      imageSrc:
-        "./src/components/Customer/Zodiac controller/zodiac/Icon/Icon-8.svg",
+      imageSrc: "/images/Icon/Icon-8.svg",
     },
     {
       name: "Sagittarius",
-      imageSrc:
-        "./src/components/Customer/Zodiac controller/zodiac/Icon/Icon-9.svg",
+      imageSrc: "/images/Icon/Icon-9.svg",
     },
     {
       name: "Capricorn",
-      imageSrc:
-        "./src/components/Customer/Zodiac controller/zodiac/Icon/Icon-10.svg",
+      imageSrc: "/images/Icon/Icon-10.svg",
     },
     {
       name: "Aquarius",
-      imageSrc:
-        "./src/components/Customer/Zodiac controller/zodiac/Icon/Icon-11.svg",
+      imageSrc: "/images/Icon/Icon-11.svg",
     },
     {
       name: "Pisces",
-      imageSrc:
-        "./src/components/Customer/Zodiac controller/zodiac/Icon/Icon-12.svg",
+      imageSrc: "/images/Icon/Icon-12.svg",
     },
   ];
 
