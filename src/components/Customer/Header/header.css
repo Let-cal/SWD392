@@ -33,15 +33,3 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
-.header-container {
-  transition: all 0.3s ease-in-out;
-  background-color: white;
-}
-
-.header-container.sticky {
-  position: fixed;
-  top: 0;
-  z-index: 50;
-  background-color: white;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-}

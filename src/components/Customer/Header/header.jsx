@@ -7,36 +7,52 @@ import { useAuth } from "../../LoginController/AuthContext.jsx";
 import AvatarProfile from "./Avatar-profile.jsx";
 import CartIcon from "./Cart-Icon.jsx";
 import ColorTabs from "./Colored-tab.jsx";
+
 function Header({ scrollToTrustedCompanies }) {
   const [isSearchOpen, setSearchOpen] = useState(false);
   const { isAuthenticated, setIsAuthenticated } = useAuth();
-  // const { enqueueSnackbar } = useSnackbar();
-  // const Navigate = useNavigate();
+  const [isHeaderVisible, setHeaderVisible] = useState(true);
+  const [lastScrollY, setLastScrollY] = useState(0);
+
   const toggleSearch = (event) => {
     event.preventDefault();
     setSearchOpen((prev) => !prev);
   };
-  // const handleCartIconClick = () => {
-  //   const email = localStorage.getItem("email");
-  //   if (!email) {
-  //     enqueueSnackbar("You must login before view cart!", {
-  //       variant: "warning",
-  //       preventDuplicate: true,
-  //     });
-  //     return;
-  //   }
-  //   // Redirect to viewcart page
-  //   Navigate("/viewcart");
-  // };
+
   useEffect(() => {
     const token = localStorage.getItem("token");
     if (token) {
       setIsAuthenticated(true);
     }
-  }, []);
+  }, [setIsAuthenticated]);
+
+  useEffect(() => {
+    const handleScroll = () => {
+      if (window.scrollY > lastScrollY && window.scrollY > 100) {
+        // Scroll down
+        setHeaderVisible(false);
+      } else {
+        // Scroll up
+        setHeaderVisible(true);
+      }
+      setLastScrollY(window.scrollY);
+    };
+
+    window.addEventListener("scroll", handleScroll);
+
+    return () => {
+      window.removeEventListener("scroll", handleScroll);
+    };
+  }, [lastScrollY]);
 
   return (
-    <header className="header-container sticky top-0 z-50 bg-white shadow flex gap-5 w-full text-black max-md:flex-wrap max-md:max-w-full items-end">
+    <header
+      className={`header-container ${
+        isHeaderVisible
+          ? "translate-y-0 opacity-100"
+          : "-translate-y-full opacity-50"
+      } sticky top-0 z-50 bg-white shadow flex gap-5 w-full text-black max-md:flex-wrap max-md:max-w-full items-end transition-transform duration-300 ease-in-out`}
+    >
       <img
         loading="lazy"
         src="https://cdn.builder.io/api/v1/image/assets/TEMP/761a3e35369fc6c259c389bd4b678d676da11023c4860c23c48806e300fd51ea?apiKey=2cf111b7142f4a06bfb2b5c186f14037&"
@@ -83,7 +99,7 @@ function Header({ scrollToTrustedCompanies }) {
             </Button>
           </Link>
         ) : (
-          <AvatarProfile /> // Hiển thị AvatarProfile khi người dùng đã đăng nhập
+          <AvatarProfile />
         )}
       </nav>
     </header>
@@ -91,7 +107,7 @@ function Header({ scrollToTrustedCompanies }) {
 }
 
 Header.propTypes = {
-  scrollToTrustedCompanies: PropTypes.func.isRequired,
+  scrollToTrustedCompanies: PropTypes.func,
 };
 
 export default Header;

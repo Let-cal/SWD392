@@ -2,7 +2,7 @@ import { defineElement } from "@lordicon/element";
 import lottie from "lottie-web";
 import PropTypes from "prop-types";
 import { useEffect, useRef, useState } from "react";
-import { Link, useLocation } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import ReasonChoose from "./BenefitOfPage/ReasonChoose.jsx";
 import CardStack from "./CollectionCard/CardStack.jsx";
 import "./CollectionCard/CollectionCard.css";
@@ -12,11 +12,12 @@ import Zodiac from "./Zodiac controller/Zodiac.jsx";
 import TrustedCompanies from "./customer-productCard/productCard.jsx";
 // define "lord-icon" custom element with default properties
 defineElement(lottie.loadAnimation);
+
 const ProductsMonthly = ({ imgSrc, title, subtitle, price, oldPrice }) => {
   const [isHovered, setIsHovered] = useState(false);
   return (
     <article
-      className={`group relative flex flex-col px-4 pb-8 bg-white text-2xl leading-8 text-zinc-800 w-full max-w-xs md:max-w-sm overflow-hidden ${
+      className={`group relative flex flex-col px-4 pb-8 bg-white text-2xl leading-8 text-zinc-800 w-full max-w-xs md:max-w-sm overflow-hidden  ${
         isHovered ? "grayed" : ""
       }`}
       onMouseEnter={() => setIsHovered(true)}
@@ -54,13 +55,13 @@ const ProductsMonthly = ({ imgSrc, title, subtitle, price, oldPrice }) => {
 };
 
 const MonthlyDeals = () => (
-  <section className="bg-white mt-24 w-full ">
-    <h2 className="text-2xl md:text-4xl font-medium tracking-wider leading-10 text-zinc-800 font-serif">
+  <div className="bg-white w-full">
+    <h2 className="text-2xl md:text-4xl font-medium tracking-wider leading-10 text-zinc-800 font-serif ">
       Monthly Deals
     </h2>
     <div className="shrink-0 mt-2.5 h-px bg-black border border-black border-solid"></div>
     <div className="flex flex-wrap gap-5 mt-10 justify-center bg-stone-200 p-4">
-      <div className="w-full sm:w-2/5 lg:w-1/5 flex justify-center items-center ">
+      <div className="w-full sm:w-2/5 lg:w-1/5 flex justify-center items-center">
         <ProductsMonthly
           imgSrc="https://cdn.builder.io/api/v1/image/assets/TEMP/49522e66aa2f836f8703bf2eae56c2df0df907d4a6e1b45517e8100998d25032?apiKey=2cf111b7142f4a06bfb2b5c186f14037&"
           title="Singo Maple"
@@ -101,7 +102,7 @@ const MonthlyDeals = () => (
         />
       </div>
     </div>
-  </section>
+  </div>
 );
 
 function Hero() {
@@ -114,11 +115,11 @@ function Hero() {
     "public/images/mike-von-qsJ5itg93WY-unsplash.jpg",
   ];
   return (
-    <section className="bg-custom-gradient flex absolute overflow-hidden relative flex-col items-start pt-20 pr-20 pb-6 pl-10 mt-6 w-full text-white max-w-[1249px] min-h-[646px] max-md:px-5 max-md:max-w-full">
+    <section className="bg-custom-gradient flex overflow-hidden flex-col items-start pt-20 pr-20 pb-6 pl-10 mt-6 w-full text-white max-w-[1249px] min-h-[646px] max-md:px-5 max-md:max-w-full ">
       <div className="Collection__content flex flex-row justify-between w-full">
         <div>
           <div className="relative mt-6 max-md:max-w-full text-6xl">
-            <span className="font-bold bg-white font-serif  bg-clip-text text-transparent">
+            <span className="font-bold bg-white font-serif bg-clip-text text-transparent">
               Z
             </span>
             <span className=" bg-clip-text bg-white font-serif text-transparent">
@@ -147,9 +148,43 @@ function Hero() {
   );
 }
 
+function useIntersectionObserver(ref, options) {
+  useEffect(() => {
+    const observer = new IntersectionObserver((entries, observer) => {
+      entries.forEach((entry) => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add("is-visible");
+          observer.unobserve(entry.target);
+        }
+      });
+    }, options);
+
+    if (ref.current) {
+      observer.observe(ref.current);
+    }
+
+    return () => {
+      if (ref.current) {
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+        observer.unobserve(ref.current);
+      }
+    };
+  }, [ref, options]);
+}
+
 function MyComponent() {
+  const zodiacRef = useRef(null);
+  const monthlyDealsRef = useRef(null);
+  const reasonChooseRef = useRef(null);
   const trustedCompaniesRef = useRef(null);
+
+  useIntersectionObserver(zodiacRef, { threshold: 0.1 });
+  useIntersectionObserver(monthlyDealsRef, { threshold: 0.1 });
+  useIntersectionObserver(reasonChooseRef, { threshold: 0.1 });
+  useIntersectionObserver(trustedCompaniesRef, { threshold: 0.1 });
+
   const location = useLocation();
+  const navigate = useNavigate();
 
   const scrollToTrustedCompanies = () => {
     trustedCompaniesRef.current?.scrollIntoView({ behavior: "smooth" });
@@ -163,20 +198,34 @@ function MyComponent() {
 
   return (
     <div>
-      <Header scrollToTrustedCompanies={scrollToTrustedCompanies} />
+      <Header
+        scrollToTrustedCompanies={() =>
+          navigate("/customer-page", {
+            state: { scrollTo: "TrustedCompanies" },
+          })
+        }
+      />
       <div className="flex flex-col items-center px-20 pb-0 bg-white max-md:px-5 max-sm:mt-[130px]">
         <Hero />
-        <Zodiac />
-        <MonthlyDeals />
-        <ReasonChoose scrollToTrustedCompanies={scrollToTrustedCompanies} />
-        <div ref={trustedCompaniesRef}>
+
+        <section ref={zodiacRef} className="fade-in-section">
+          <Zodiac />
+        </section>
+        <section ref={monthlyDealsRef} className="fade-in-section">
+          <MonthlyDeals />
+        </section>
+        <section ref={reasonChooseRef} className="fade-in-section">
+          <ReasonChoose scrollToTrustedCompanies={scrollToTrustedCompanies} />
+        </section>
+        <section ref={trustedCompaniesRef} className="fade-in-section">
           <TrustedCompanies />
-        </div>
+        </section>
         <Footer />
       </div>
     </div>
   );
 }
+
 ProductsMonthly.propTypes = {
   imgSrc: PropTypes.string.isRequired,
   title: PropTypes.string.isRequired,

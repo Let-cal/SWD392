@@ -77,7 +77,9 @@ function LoginForm() {
         localStorage.setItem("role", response.data.role);
         localStorage.setItem("userName", response.data.fullName);
         localStorage.setItem("email", formData.email);
-
+        localStorage.setItem("hint", response.data.hint);
+        const userHint = localStorage.getItem("hint");
+        console.log(userHint);
         if (checked) {
           localStorage.setItem("password", formData.password);
         } else {

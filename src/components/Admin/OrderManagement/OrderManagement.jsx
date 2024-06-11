@@ -42,6 +42,7 @@ function OrdersManagement() {
 
           const transformedData = filteredData.map((order) => ({
             OrderNumber: order.id.toString(),
+            UserID: order["user-id"],
             Date: new Date(order["payment-date"]).toLocaleDateString(),
             Status: getStatusText(order.status),
             TotalPrice: "$0.00",

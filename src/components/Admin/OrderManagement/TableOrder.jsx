@@ -8,6 +8,7 @@ const Table = ({ data }) => {
     <div className="mx-auto bg-white shadow-lg rounded-lg overflow-hidden">
       <div className="flex bg-gray-100 text-xs  uppercase font-semibold text-gray-600">
         <div className="w-1/5 px-4 text-center py-2">Order Number</div>
+        <div className="w-1/5 px-4 text-center py-2">User ID</div>
         <div className="w-1/5 px-4 text-center py-2">Date</div>
         <div className="w-1/5 px-4 text-center py-2">Status</div>
         <div className="w-1/5 px-4 text-center py-2">Total</div>
@@ -18,6 +19,7 @@ const Table = ({ data }) => {
           <InforOrder
             key={Orders.OrderNumber}
             OrderNumber={Orders.OrderNumber}
+            UserID={Orders.UserID}
             Date={Orders.Date}
             Status={Orders.Status}
             TotalPrice={Orders.TotalPrice}

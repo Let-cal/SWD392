@@ -4,6 +4,7 @@ import { useState } from "react";
 import { useAuth } from "../../LoginController/AuthContext";
 import AccountOrders from "./MyOrdered/MyOrderedData";
 import Profile from "./profile/profile";
+
 function CustomTabPanel(props) {
   const { children, value, index, ...other } = props;
 
@@ -55,19 +56,24 @@ export default function ProfileColorTabs() {
           textColor="secondary"
           indicatorColor="secondary"
         >
-          <Tab label="MY ORDERS" {...a11yProps(0)} />
-          <Tab label="ADDRESSES" {...a11yProps(1)} />
-          <Tab label="ACCOUNT DETAIL" {...a11yProps(2)} />
-          <Tab label="LOGOUT" {...a11yProps(3)} onClick={handleLogout} />
+          <Tab label="COMPLETED" {...a11yProps(0)} />
+          <Tab label="PROCESSING" {...a11yProps(1)} />
+          <Tab label="CANCELLED" {...a11yProps(2)} />
+          <Tab label="ACCOUNT DETAIL" {...a11yProps(3)} />
+          <Tab label="LOGOUT" {...a11yProps(4)} onClick={handleLogout} />
         </Tabs>
       </Box>
+
       <CustomTabPanel value={value} index={0}>
-        <AccountOrders />
+        <AccountOrders status="COMPLETED" />
       </CustomTabPanel>
       <CustomTabPanel value={value} index={1}>
-        Item Two
+        <AccountOrders status="PROCESSING" />
       </CustomTabPanel>
       <CustomTabPanel value={value} index={2}>
+        <AccountOrders status="CANCELLED" />
+      </CustomTabPanel>
+      <CustomTabPanel value={value} index={3}>
         <Profile />
       </CustomTabPanel>
     </Box>
