@@ -136,7 +136,7 @@ function Hero() {
           </h1>
           <Link to="/AboutPage">
             <button className="coolBeans">
-              <span className="uppercase">E</span>PLORE{" "}
+              <span className="uppercase">E</span>XPLORE{" "}
               <span className="uppercase">M</span>ORE
             </button>
           </Link>
@@ -170,7 +170,7 @@ function MyComponent() {
         <MonthlyDeals />
         <ReasonChoose scrollToTrustedCompanies={scrollToTrustedCompanies} />
         <div ref={trustedCompaniesRef}>
-          <TrustedCompanies />
+          {/* <TrustedCompanies /> */}
         </div>
         <Footer />
       </div>

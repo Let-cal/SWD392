@@ -73,7 +73,7 @@ Card.propTypes = {
   product: PropTypes.object.isRequired,
 };
 
-const TrustedCompanies = () => {
+const TrustedCompanies = ({ selectedZodiacId }) => {
   const [anchorEl, setAnchorEl] = useState(null);
   const open = Boolean(anchorEl);
   const handleClick = (event) => {
@@ -83,18 +83,29 @@ const TrustedCompanies = () => {
     setAnchorEl(null);
   };
   const [category, setCategory] = useState("");
+  const [material, setMaterial] = useState("");
+  const [zodiac, setZodiac] = useState("");
 
-  const handleChange = (event) => {
+  const handleChangeCategory = (event) => {
     setCategory(event.target.value);
+  };
+
+  const handleChangeMaterial = (event) => {
     setMaterial(event.target.value);
   };
-  const [Material, setMaterial] = useState("");
+
+  const handleChangeZodiac = (event) => {
+    const value = event.target.value;
+    setSelectedZodiacId(value === "" ? null : value);
+  };
+
   const [cardsData, setCardsData] = useState([]);
+  const [zodiacDetail, setZodiacDetail] = useState(null);
 
   useEffect(() => {
-    axios.get('https://zodiacjewerly.azurewebsites.net/api/products/all-products')
+    axios.get('https://zodiacjewerly.azurewebsites.net/api/products')
       .then(response => {
-        console.log('API response:', response.data); // Kiểm tra phản hồi từ API
+        console.log('API response:', response.data);
 
         const apiData = response.data.data;
         const categoryMap = {
@@ -103,17 +114,16 @@ const TrustedCompanies = () => {
           3: 'Earrings',
           4: 'Rings',
           5: 'T-shirt',
-
         };
         const materialMap = {
           1: 'Gold',
-          2: 'Emeral',
+          2: 'Emerald',
           3: 'Diamond',
         };
         const genderMap = {
           1: 'Male',
           2: 'Female',
-          3: 'Other'
+          3: 'Other',
         };
         const zodiacMap = {
           1: 'Aries',
@@ -123,19 +133,37 @@ const TrustedCompanies = () => {
           5: 'Leo',
           6: 'Virgo',
           7: 'Libra',
-          8: 'Scropio',
+          8: 'Scorpio',
           9: 'Sagittarius',
           10: 'Capricorn',
           11: 'Aquarius',
           12: 'Pisces',
         };
 
-        const formattedData = apiData.map(product => ({
+        let filteredData = apiData;
+
+        if (selectedZodiacId) {
+          filteredData = apiData.filter(product => product["zodiac-id"] === selectedZodiacId);
+        }
+
+        if (category) {
+          filteredData = filteredData.filter(product => product["category-id"] === parseInt(category));
+        }
+
+        if (material) {
+          filteredData = filteredData.filter(product => product["material-id"] === parseInt(material));
+        }
+
+        if (zodiac) {
+          filteredData = filteredData.filter(product => product["zodiac-id"] === parseInt(zodiac));
+        }
+
+        const formattedData = filteredData.map(product => ({
           image: product["image-urls"] && product["image-urls"][0] ? product["image-urls"][0] : 'default-image-url',
           alt: product["name-product"],
           title: product["name-product"],
           price: product.price,
-          product, // pass the whole product object
+          product,
           tags: [
             { name: categoryMap[product["category-id"]], color: '#ff5733', className: 'tag-category' },
             { name: materialMap[product["material-id"]], color: '#33ff57', className: 'tag-material' },
@@ -143,12 +171,26 @@ const TrustedCompanies = () => {
             { name: zodiacMap[product["zodiac-id"]], color: '#ff33a8', className: 'tag-zodiac' },
           ]
         }));
+
         setCardsData(formattedData);
       })
       .catch(error => {
         console.error('There was an error fetching the data!', error);
       });
-  }, []);
+  }, [selectedZodiacId, category, material, zodiac]);
+
+  useEffect(() => {
+    if (selectedZodiacId) {
+      axios.get(`https://zodiacjewerly.azurewebsites.net/api/zodiacs/${selectedZodiacId}`)
+        .then(response => {
+          console.log('Zodiac detail:', response.data);
+          setZodiacDetail(response.data);
+        })
+        .catch(error => {
+          console.error('Error fetching zodiac detail:', error);
+        });
+    }
+  }, [selectedZodiacId]);
 
   return (
     <section>
@@ -159,7 +201,7 @@ const TrustedCompanies = () => {
 
       <h2>
         <span className="flex justify-between items-end font-serif">
-          leading companies
+          Leading Companies
           <div>
             <Button
               id="basic-button"
@@ -222,16 +264,17 @@ const TrustedCompanies = () => {
                       labelId="demo-simple-select-standard-label"
                       id="demo-simple-select-standard"
                       value={category}
-                      onChange={handleChange}
-                      label="Age"
+                      onChange={handleChangeCategory}
+                      label="Category"
                     >
                       <MenuItem value="">
                         <em>None</em>
                       </MenuItem>
-                      <MenuItem value={10}>Ring</MenuItem>
-                      <MenuItem value={20}>Bracelet</MenuItem>
-                      <MenuItem value={30}>Necklace</MenuItem>
-                      <MenuItem value={40}>Earrings</MenuItem>
+                      <MenuItem value={1}>Necklaces</MenuItem>
+                      <MenuItem value={2}>Bracelets</MenuItem>
+                      <MenuItem value={3}>Earrings</MenuItem>
+                      <MenuItem value={4}>Rings</MenuItem>
+                      <MenuItem value={5}>T-shirt</MenuItem>
                     </Select>
                   </FormControl>
                   <FormControl variant="standard" sx={{ m: 1, minWidth: 120 }}>
@@ -241,18 +284,46 @@ const TrustedCompanies = () => {
                     <Select
                       labelId="demo-simple-select-standard-label"
                       id="demo-simple-select-standard"
-                      value={Material}
-                      onChange={handleChange}
-                      label="Age"
+                      value={material}
+                      onChange={handleChangeMaterial}
+                      label="Material"
                     >
                       <MenuItem value="">
                         <em>None</em>
                       </MenuItem>
-                      <MenuItem value={10}>Gold</MenuItem>
-                      <MenuItem value={20}>Silver</MenuItem>
-                      <MenuItem value={30}>Platinum</MenuItem>
+                      <MenuItem value={1}>Gold</MenuItem>
+                      <MenuItem value={2}>Emerald</MenuItem>
+                      <MenuItem value={3}>Diamond</MenuItem>
                     </Select>
                   </FormControl>
+                  {/* <FormControl variant="standard" sx={{ m: 1, minWidth: 120 }}>
+                    <InputLabel id="demo-simple-select-standard-label">
+                      Zodiac
+                    </InputLabel>
+                    <Select
+                      labelId="demo-simple-select-standard-label"
+                      id="demo-simple-select-standard"
+                      value={zodiac}
+                      onChange={handleChangeZodiac}
+                      label="Zodiac"
+                    >
+                      <MenuItem value="">
+                        <em>None</em>
+                      </MenuItem>
+                      <MenuItem value={1}>Aries</MenuItem>
+                      <MenuItem value={2}>Taurus</MenuItem>
+                      <MenuItem value={3}>Gemini</MenuItem>
+                      <MenuItem value={4}>Cancer</MenuItem>
+                      <MenuItem value={5}>Leo</MenuItem>
+                      <MenuItem value={6}>Virgo</MenuItem>
+                      <MenuItem value={7}>Libra</MenuItem>
+                      <MenuItem value={8}>Scorpio</MenuItem>
+                      <MenuItem value={9}>Sagittarius</MenuItem>
+                      <MenuItem value={10}>Capricorn</MenuItem>
+                      <MenuItem value={11}>Aquarius</MenuItem>
+                      <MenuItem value={12}>Pisces</MenuItem>
+                    </Select>
+                  </FormControl> */}
                 </div>
                 <button
                   className="coolBeans w-full h-10 flex items-center justify-center"
@@ -269,20 +340,35 @@ const TrustedCompanies = () => {
       </h2>
 
       <div className="container-product-card">
-        {cardsData.map((card, index) => (
-          <Card
-            key={index}
-            image={card.image}
-            alt={card.alt}
-            title={card.title}
-            price={card.price}
-            tags={card.tags}
-            product={card.product} // pass the product object
-          />
-        ))}
+        {cardsData.length > 0 ? (
+          cardsData.map((card, index) => (
+            <Card
+              key={index}
+              image={card.image}
+              alt={card.alt}
+              title={card.title}
+              price={card.price}
+              tags={card.tags}
+              product={card.product}
+            />
+          ))
+        ) : (
+          <p>There is no corresponding product.</p>
+        )}
       </div>
+
+      {zodiacDetail && (
+        <div>
+          <h2 className="font-serif md:text-2xl">{zodiacDetail["name-zodiac"]}</h2>
+          <p>{zodiacDetail["des-zodiac"]}</p>
+        </div>
+      )}
     </section>
   );
+};
+
+TrustedCompanies.propTypes = {
+  selectedZodiacId: PropTypes.number,
 };
 
 export default TrustedCompanies;

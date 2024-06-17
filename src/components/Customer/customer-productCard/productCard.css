@@ -42,6 +42,11 @@ section {
     margin-top: 5em;
     display: grid;
 
+    p {
+      font-size: 20px;
+      width: 500px;
+    }
+
     @media (max-width: 768px) {
       grid-template-columns: repeat(2, minmax(0, 1fr));
     }
@@ -186,6 +191,7 @@ section {
             box-shadow: 0.313rem 0.313rem 0 0.313rem var(--clr);
           }
 
+          
           .iconBox {
             position: absolute;
             inset: 0.625rem;

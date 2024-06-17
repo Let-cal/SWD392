@@ -8,12 +8,14 @@ const ProductImage = ({ src, alt, index, onClick, isSelected }) => (
   <img className={`product-image ${isSelected ? 'selected' : ''}`} src={src} alt={alt} onClick={() => onClick(index)} />
 );
 
-
 const SimilarProduct = ({ imageSrc, name, price }) => (
   <div className="similar-product">
     <img className="similar-product-image" src={imageSrc} alt={name} />
     <div className="similar-product-name">{name}</div>
-    <div className="similar-product-price">{price} đ</div>
+    <div className="similar-product-price">
+      <span className='price'>{price}</span> 
+      <span className="currency">đ</span>
+    </div>
   </div>
 );
 
@@ -119,7 +121,7 @@ const DetailProduct = () => {
   }, [id, product.id]);
 
   useEffect(() => {
-    axios.get('https://zodiacjewerly.azurewebsites.net/api/products/all-products')
+    axios.get('https://zodiacjewerly.azurewebsites.net/api/products')
       .then(response => {
         console.log("API Response:", response.data); // Kiểm tra phản hồi từ API
         if (response.data && Array.isArray(response.data.data)) {
@@ -165,10 +167,12 @@ const DetailProduct = () => {
         </div>
         <div className="product-details">
           <h1 className="product-name">{product["name-product"]}</h1>
+
           <p className="product-price">
             <span className="price">{product.price}</span>
             <span className="currency">đ</span>
           </p>
+
           <div className="quantity-and-cart">
             <div className="quantity-selector">
               <button onClick={() => setQuantity(quantity > 1 ? quantity - 1 : 1)}>-</button>
@@ -181,17 +185,17 @@ const DetailProduct = () => {
         </div>
       </div>
 
-      
       <div className="similar-products">
         <h2>Similar Products</h2>
         <div className="similar-products-list">
           {similarProducts.length > 0 ? (
-            similarProducts.map((product) => (
+            similarProducts.filter(similarProduct => similarProduct.id !== product.id).map((product) => (
               <SimilarProduct
                 key={product.id}
                 imageSrc={product["image-urls"][0]}
                 name={product["name-product"]}
                 price={product.price}
+              // tags={product.tags || []}
               />
             ))
           ) : (
@@ -199,8 +203,6 @@ const DetailProduct = () => {
           )}
         </div>
       </div>
-
-
     </div>
   );
 };
