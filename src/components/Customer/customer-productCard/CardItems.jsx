@@ -1,6 +1,7 @@
+import CallMadeIcon from "@mui/icons-material/CallMade";
 import PropTypes from "prop-types";
 import { useNavigate } from "react-router-dom";
-
+import "./productCard.css";
 const Card = ({ image, alt, title, price, tags, product }) => {
   const navigate = useNavigate();
 
@@ -17,10 +18,13 @@ const Card = ({ image, alt, title, price, tags, product }) => {
           <div className="imgBox">
             <img src={image} alt={alt} />
           </div>
-
           <div className="icon">
             <button className="iconBox" onClick={handleDetailClick}>
-              <span className="material-symbols-outlined">arrow_outward</span>
+              <CallMadeIcon
+                sx={{
+                  color: "white",
+                }}
+              />
             </button>
           </div>
         </div>
@@ -55,4 +59,5 @@ Card.propTypes = {
   tags: PropTypes.arrayOf(PropTypes.object),
   product: PropTypes.object.isRequired,
 };
+
 export default Card;

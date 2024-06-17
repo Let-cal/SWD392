@@ -145,9 +145,17 @@ function ColorTabs() {
         <Tabs
           value={value}
           onChange={handleChange}
-          textColor="secondary"
-          indicatorColor="secondary"
+          textColor="secondary" // Set initial text color to secondary theme color
+          indicatorColor="secondary" // Set initial indicator color to secondary theme color
           aria-label="secondary tabs example"
+          sx={{
+            "& .MuiTabs-indicator": {
+              backgroundColor: "#b2b251", // Customize indicator color here
+            },
+            "& .Mui-selected": {
+              color: "#b2b251 !important", // Customize text color for selected tab
+            },
+          }}
         >
           <Tab
             value="one"

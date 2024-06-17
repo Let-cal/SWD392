@@ -41,6 +41,7 @@ section {
   .container-product-card {
     margin-top: 5em;
     display: grid;
+    overflow-x: hidden; /* Ngăn chặn tràn ngang */
 
     p {
       font-size: 20px;
@@ -191,7 +192,6 @@ section {
             box-shadow: 0.313rem 0.313rem 0 0.313rem var(--clr);
           }
 
-          
           .iconBox {
             position: absolute;
             inset: 0.625rem;

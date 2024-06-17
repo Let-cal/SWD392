@@ -9,7 +9,6 @@ import "./CollectionCard/CollectionCard.css";
 import Footer from "./Footer/Footer.jsx";
 import Header from "./Header/header.jsx";
 import Zodiac from "./Zodiac controller/Zodiac.jsx";
-import TrustedCompanies from "./customer-productCard/productCard.jsx";
 // define "lord-icon" custom element with default properties
 defineElement(lottie.loadAnimation);
 
@@ -208,8 +207,7 @@ function MyComponent() {
       <div className="flex flex-col items-center px-20 pb-0 bg-white max-md:px-5 max-sm:mt-[130px]">
         <Hero />
 
-
-        <section ref={zodiacRef} className="fade-in-section">
+        <section ref={trustedCompaniesRef} className="fade-in-section">
           <Zodiac />
         </section>
         <section ref={monthlyDealsRef} className="fade-in-section">
@@ -221,13 +219,6 @@ function MyComponent() {
         >
           <ReasonChoose scrollToTrustedCompanies={scrollToTrustedCompanies} />
         </section>
-        <section
-          ref={trustedCompaniesRef}
-          className="fade-in-section mb-[50px]"
-        >
-       
-        </section>
-
       </div>
 
       <Footer />

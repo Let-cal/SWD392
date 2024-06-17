@@ -1,7 +1,7 @@
-import React, { useState, useEffect } from "react";
 import PropTypes from "prop-types";
+import { useEffect, useState } from "react";
+import TrustedCompanies from "../customer-productCard/productCard";
 import "./zodiac.css";
-import TrustedCompanies from '../customer-productCard/productCard';
 
 function ZodiacSignCard({ name, imageSrc, isSelected, onClick }) {
   const [isClicked, setIsClicked] = useState(isSelected);
@@ -16,7 +16,9 @@ function ZodiacSignCard({ name, imageSrc, isSelected, onClick }) {
 
   return (
     <button
-      className={`button-zodiac flex flex-col items-center px-4 py-6 bg-white rounded-lg shadow-md ${isClicked ? 'clicked' : ''}`}
+      className={`button-zodiac flex flex-col items-center px-4 py-6 bg-white rounded-lg shadow-md ${
+        isClicked ? "clicked" : ""
+      }`}
       onClick={handleClick}
     >
       <img
@@ -39,18 +41,18 @@ ZodiacSignCard.propTypes = {
 
 function ZodiacSignList({ selectedZodiacId, onZodiacClick }) {
   const zodiacSigns = [
-    { name: "Aries", imageSrc: "public/images/Icon/Icon-1.svg", id: 1 },
-    { name: "Taurus", imageSrc: "public/images/Icon/Icon-2.svg", id: 2 },
-    { name: "Gemini", imageSrc: "public/images/Icon/Icon-3.svg", id: 3 },
-    { name: "Cancer", imageSrc: "public/images/Icon/Icon-4.svg", id: 4 },
-    { name: "Leo", imageSrc: "public/images/Icon/Icon-5.svg", id: 5 },
-    { name: "Virgo", imageSrc: "public/images/Icon/Icon-6.svg", id: 6 },
-    { name: "Libra", imageSrc: "public/images/Icon/Icon-7.svg", id: 7 },
-    { name: "Scorpio", imageSrc: "public/images/Icon/Icon-8.svg", id: 8 },
-    { name: "Sagittarius", imageSrc: "public/images/Icon/Icon-9.svg", id: 9 },
-    { name: "Capricorn", imageSrc: "public/images/Icon/Icon-10.svg", id: 10 },
-    { name: "Aquarius", imageSrc: "public/images/Icon/Icon-11.svg", id: 11 },
-    { name: "Pisces", imageSrc: "public/images/Icon/Icon-12.svg", id: 12 },
+    { name: "Aries", imageSrc: "/images/Icon/Icon-1.svg", id: 1 },
+    { name: "Taurus", imageSrc: "/images/Icon/Icon-2.svg", id: 2 },
+    { name: "Gemini", imageSrc: "/images/Icon/Icon-3.svg", id: 3 },
+    { name: "Cancer", imageSrc: "/images/Icon/Icon-4.svg", id: 4 },
+    { name: "Leo", imageSrc: "/images/Icon/Icon-5.svg", id: 5 },
+    { name: "Virgo", imageSrc: "/images/Icon/Icon-6.svg", id: 6 },
+    { name: "Libra", imageSrc: "/images/Icon/Icon-7.svg", id: 7 },
+    { name: "Scorpio", imageSrc: "/images/Icon/Icon-8.svg", id: 8 },
+    { name: "Sagittarius", imageSrc: "/images/Icon/Icon-9.svg", id: 9 },
+    { name: "Capricorn", imageSrc: "/images/Icon/Icon-10.svg", id: 10 },
+    { name: "Aquarius", imageSrc: "/images/Icon/Icon-11.svg", id: 11 },
+    { name: "Pisces", imageSrc: "/images/Icon/Icon-12.svg", id: 12 },
   ];
 
   return (
@@ -87,7 +89,9 @@ export default function App() {
 
       // Fetch zodiac details
       try {
-        const response = await fetch(`https://zodiacjewerly.azurewebsites.net/api/zodiacs/${newSelectedZodiacId}`);
+        const response = await fetch(
+          `https://zodiacjewerly.azurewebsites.net/api/zodiacs/${newSelectedZodiacId}`
+        );
         if (!response.ok) {
           throw new Error("Network response was not ok");
         }
@@ -99,7 +103,9 @@ export default function App() {
 
       // Fetch products for the selected zodiac sign
       try {
-        const response = await fetch(`https://zodiacjewerly.azurewebsites.net/api/products?zodiacId=${newSelectedZodiacId}`);
+        const response = await fetch(
+          `https://zodiacjewerly.azurewebsites.net/api/products?zodiacId=${newSelectedZodiacId}`
+        );
         if (!response.ok) {
           throw new Error("Network response was not ok");
         }
@@ -118,14 +124,22 @@ export default function App() {
     <div className="container mx-auto px-0 py-8">
       <h1 className="font-serif md:text-4xl">Zodiac Signs</h1>
       <div className="shrink-0 mb-8 h-px bg-black border border-black border-solid"></div>
-      <ZodiacSignList selectedZodiacId={selectedZodiacId} onZodiacClick={handleZodiacClick} />
+      <ZodiacSignList
+        selectedZodiacId={selectedZodiacId}
+        onZodiacClick={handleZodiacClick}
+      />
       {zodiacDetail && (
         <div>
-          <h2 className="font-serif md:text-2xl">{zodiacDetail["name-zodiac"]}</h2>
+          <h2 className="font-serif md:text-2xl">
+            {zodiacDetail["name-zodiac"]}
+          </h2>
           <p>{zodiacDetail["des-zodiac"]}</p>
         </div>
       )}
-      <TrustedCompanies selectedZodiacId={selectedZodiacId} products={products} />
+      <TrustedCompanies
+        selectedZodiacId={selectedZodiacId}
+        products={products}
+      />
     </div>
   );
 }
