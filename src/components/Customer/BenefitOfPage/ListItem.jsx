@@ -28,21 +28,21 @@ const ListItem = ({
 
   return (
     <div
-      className={`flex-1 flex flex-col items-start justify-start gap-[24px] min-w-[261px] max-w-full text-left text-base text-black font-text-small-link ${className}`}
+      className={`flex-1 p-2 flex flex-col items-start justify-start gap-[24px] min-w-[261px] max-w-full text-left text-base text-black font-text-small-link transform transition-transform duration-300 hover:scale-105${className}`}
     >
       <b
-        className={`relative text-center w-[11%] hover:text-white hover:bg-black text-[38px] leading-[58px] font-bold lg:text-19xl lg:leading-[46px] sm:text-10xl sm:leading-[35px] rounded-full`} // Thêm class rounded-full ở đây
+        className={`relative text-center w-[11%] text-[38px] leading-[58px] font-bold lg:text-19xl lg:leading-[46px] sm:text-10xl sm:leading-[35px] rounded-full `} // Thêm lớp Tailwind cho hiệu ứng hover
         style={emptyBenefitMarkersStyle}
       >
         {emptyBenefitMarkers}
       </b>
       <b
-        className="self-stretch relative font-serif text-[35px] leading-[34px] font-bold sm:text-lgi sm:leading-[27px]"
+        className="self-stretch relative font-serif text-[35px] leading-[34px] font-bold sm:text-lgi sm:leading-[27px] " // Thêm lớp Tailwind cho hiệu ứng hover
         style={affordablePricesStyle}
       >
         {affordablePrices}
       </b>
-      <div className="self-stretch relative leading-[150%]">{content}</div>
+      <div className="self-stretch relative leading-[150%] ">{content}</div>
       <div className="flex flex-row items-center justify-center gap-[8px]"></div>
     </div>
   );

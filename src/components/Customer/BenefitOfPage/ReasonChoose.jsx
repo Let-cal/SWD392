@@ -4,11 +4,11 @@ import ListItem from "./ListItem";
 const ReasonChoose = ({ className = "", scrollToTrustedCompanies }) => {
   return (
     <section
-      className={`self-stretch bg-white overflow-hidden flex flex-row items-start justify-center py-28  box-border gap-[80px] max-w-full text-left text-29xl text-black font-text-small-link md:gap-[40px] md:box-border mq1125:pt-[73px] mq1125:pb-[73px] mq1125:box-border sm:gap-[20px] sm:pt-[47px] sm:pb-[47px] sm:box-border lg:flex-wrap max-sm:hidden ${className}`}
+      className={`self-stretch bg-white overflow-hidden flex flex-row items-start justify-center box-border gap-[80px] max-w-full text-left text-29xl text-black font-text-small-link md:gap-[40px] md:box-border  mq1125:box-border sm:gap-[20px]  sm:box-border lg:flex-wrap max-sm:hidden ${className}`}
     >
-      <div className="flex-1 flex flex-col items-start justify-start gap-[24px] min-w-[247px] max-w-full">
+      <div className="h-[560px] p-5 bg-[#fff7f7] rounded-lg flex-1 flex flex-col items-start justify-start gap-[24px] bg-[url('public/images/zodiacImagePage.png')] bg-cover bg-no-repeat bg-[top] min-w-[247px] max-w-full transform transition-transform duration-300 hover:scale-105 ">
         <div className="self-stretch flex flex-col items-start justify-start">
-          <div className="self-stretch flex flex-col items-start justify-start gap-[24px] lg:self-stretch lg:w-auto">
+          <div className="self-stretch flex flex-col items-start justify-start gap-[24px] lg:self-stretch lg:w-auto ">
             <h1 className="m-0 font-serif text-[35px] self-stretch relative text-inherit leading-[58px] font-bold font-inherit md:text-19xl md:leading-[46px] sm:text-10xl sm:leading-[35px]">
               Why Choose Us
             </h1>
@@ -26,10 +26,10 @@ const ReasonChoose = ({ className = "", scrollToTrustedCompanies }) => {
         </div>
         <div className="flex flex-row items-center justify-start pt-4 px-0 pb-0">
           <button
-            className="cursor-pointer py-2.5 px-[23px] bg-black rounded-8xs flex flex-row items-center justify-center whitespace-nowrap border-[1px] border-solid border-black hover:bg-darkslategray-100 hover:box-border hover:border-[1px] hover:border-solid hover:border-darkslategray-100"
+            className="cursor-pointer py-2.5 hover:opacity-85 px-[23px] bg-black rounded-8xs flex flex-row items-center justify-center whitespace-nowrap border-[1px] border-solid border-black hover:bg-darkslategray-100 hover:box-border hover:border-[1px] hover:border-solid hover:border-darkslategray-100"
             onClick={scrollToTrustedCompanies}
           >
-            <div className="relative text-base leading-[150%] font-text-small-link text-white text-left inline-block min-w-[73px]">
+            <div className="relative  text-base leading-[150%] font-text-small-link text-white text-left inline-block min-w-[73px]">
               Shop Now
             </div>
           </button>

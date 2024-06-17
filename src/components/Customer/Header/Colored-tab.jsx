@@ -1,23 +1,28 @@
 import { Collections, Home, Info, Shop } from "@mui/icons-material";
 import MenuIcon from "@mui/icons-material/Menu";
-import { List, ListItem, ListItemIcon, ListItemText } from "@mui/material";
-import Box from "@mui/material/Box";
-import Drawer from "@mui/material/Drawer";
-import IconButton from "@mui/material/IconButton";
-import Tab from "@mui/material/Tab";
-import Tabs from "@mui/material/Tabs";
+import {
+  Box,
+  Drawer,
+  IconButton,
+  List,
+  ListItem,
+  ListItemIcon,
+  ListItemText,
+  Tab,
+  Tabs,
+} from "@mui/material";
 import { useTheme } from "@mui/material/styles";
 import useMediaQuery from "@mui/material/useMediaQuery";
 import PropTypes from "prop-types";
 import { useEffect, useState } from "react";
-import { useLocation } from "react-router-dom";
-
-function ColorTabs({ scrollToTrustedCompanies }) {
+import { useLocation, useNavigate } from "react-router-dom";
+function ColorTabs() {
   const [value, setValue] = useState("one");
   const [drawerOpen, setDrawerOpen] = useState(false);
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
   const location = useLocation();
+  const navigate = useNavigate();
 
   useEffect(() => {
     if (location.pathname === "/customer-page") {
@@ -25,8 +30,6 @@ function ColorTabs({ scrollToTrustedCompanies }) {
     } else if (location.pathname.includes("#Collection")) {
       setValue("two");
     } else if (location.pathname.includes("/AboutPage")) {
-      setValue("three");
-    } else if (location.pathname.includes("/")) {
       setValue("three");
     } else {
       setValue(false);
@@ -36,7 +39,7 @@ function ColorTabs({ scrollToTrustedCompanies }) {
   const handleChange = (event, newValue) => {
     setValue(newValue);
     if (newValue === "four") {
-      scrollToTrustedCompanies();
+      navigate("/customer-page", { state: { scrollTo: "TrustedCompanies" } });
     }
   };
 
@@ -61,8 +64,11 @@ function ColorTabs({ scrollToTrustedCompanies }) {
         <ListItem button>
           <a
             href="/customer-page"
-            onClick={() => handleChange(null, "one")}
-            className="flex flex-row items-center items-center"
+            onClick={(e) => {
+              e.preventDefault();
+              handleChange(null, "one");
+            }}
+            className="flex flex-row items-center"
           >
             <ListItemIcon>
               <Home />
@@ -73,7 +79,10 @@ function ColorTabs({ scrollToTrustedCompanies }) {
         <ListItem button>
           <a
             href="#Collection"
-            onClick={() => handleChange(null, "two")}
+            onClick={(e) => {
+              e.preventDefault();
+              handleChange(null, "two");
+            }}
             className="flex flex-row items-center"
           >
             <ListItemIcon>
@@ -85,7 +94,10 @@ function ColorTabs({ scrollToTrustedCompanies }) {
         <ListItem button>
           <a
             href="/AboutPage"
-            onClick={() => handleChange(null, "three")}
+            onClick={(e) => {
+              e.preventDefault();
+              handleChange(null, "three");
+            }}
             className="flex flex-row items-center"
           >
             <ListItemIcon>
@@ -97,7 +109,10 @@ function ColorTabs({ scrollToTrustedCompanies }) {
         <ListItem button>
           <a
             href="#"
-            onClick={() => handleChange(null, "four")}
+            onClick={(e) => {
+              e.preventDefault();
+              handleChange(null, "four");
+            }}
             className="flex flex-row items-center"
           >
             <ListItemIcon>
@@ -162,7 +177,7 @@ function ColorTabs({ scrollToTrustedCompanies }) {
 }
 
 ColorTabs.propTypes = {
-  scrollToTrustedCompanies: PropTypes.func.isRequired,
+  scrollToTrustedCompanies: PropTypes.func,
 };
 
 export default ColorTabs;

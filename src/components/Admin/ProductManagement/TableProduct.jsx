@@ -7,7 +7,7 @@ import PropTypes from "prop-types";
 import { useState } from "react";
 import InforProduct from "./InfoProduct";
 
-const TableProduct = ({ data, onUpdate, onDelete }) => {
+const TableProduct = ({ data, onUpdate, onDelete, onGetAll }) => {
   const [anchorEl, setAnchorEl] = useState(null);
   const [selectedProductId, setSelectedProductId] = useState(null);
 
@@ -33,18 +33,18 @@ const TableProduct = ({ data, onUpdate, onDelete }) => {
 
   return (
     <div className="mx-auto bg-white shadow-lg rounded-lg overflow-hidden">
-      <div className="flex justify-between items-center bg-gray-100 text-xs uppercase font-semibold text-gray-600">
-        <div className="w-1/12 px-1  py-2">ID</div>
-        <div className="w-1/12 px-1 py-2">Product name</div>
-        <div className="w-1/12 px-1 py-2">Description</div>
-        <div className="w-1/12 px-1 py-2">Price</div>
-        <div className="w-1/12 px-1 py-2">Quantity</div>
-        <div className="w-1/12 px-1 py-2">Category</div>
-        <div className="w-1/12 px-1 py-2">Material</div>
-        <div className="w-1/12 px-1 py-2">Gender</div>
-        <div className="w-1/12 px-1 py-2">Zodiac</div>
-        <div className="w-1/12 px-1 py-2">ImgURL</div>
-        <div className="w-1/12 px-1 py-2">Action</div>
+      <div className="flex justify-between items-center  bg-gray-100 text-xs uppercase font-semibold text-gray-600">
+        <div className="w-1/12 text-center px-1  py-2">ID</div>
+        <div className="w-1/12 text-center px-1 py-2">Name</div>
+        <div className="w-1/12 text-center px-1 py-2">Description</div>
+        <div className="w-1/12 text-center px-1 py-2">Price</div>
+        <div className="w-1/12 text-center px-1 py-2">Quantity</div>
+        <div className="w-1/12 text-center px-1 py-2">Category</div>
+        <div className="w-1/12 text-center px-1 py-2">Material</div>
+        <div className="w-1/12 text-center px-1 py-2">Gender</div>
+        <div className="w-1/12 text-center px-1 py-2">Zodiac</div>
+        <div className="w-1/12 text-center px-1 py-2">ImgURL</div>
+        <div className="w-1/12 text-center px-1 py-2">Action</div>
       </div>
       <div className="h-[500px] overflow-auto">
         {data.map((product) => (
@@ -52,11 +52,19 @@ const TableProduct = ({ data, onUpdate, onDelete }) => {
             key={product.id}
             product={product}
             onUpdate={onUpdate}
+            onGetAll={onGetAll}
             Action={
               <>
                 <Button
                   id={`edit-button-${product.id}`}
-                  variant="outlined"
+                  variant="contained"
+                  sx={{
+                    backgroundColor: "black",
+                    color: "white",
+                    "&:hover": {
+                      backgroundColor: "gray",
+                    },
+                  }}
                   size="large"
                   startIcon={<UpdateIcon />}
                   onClick={(event) => handleMenuOpen(event, product.id)}
@@ -100,6 +108,7 @@ TableProduct.propTypes = {
   ).isRequired,
   onUpdate: PropTypes.func.isRequired,
   onDelete: PropTypes.func.isRequired,
+  onGetAll: PropTypes.func.isRequired,
 };
 
 export default TableProduct;

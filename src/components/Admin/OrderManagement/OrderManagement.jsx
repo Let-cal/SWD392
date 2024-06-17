@@ -1,51 +1,115 @@
-import TextField from "@mui/material/TextField";
+import Backdrop from "@mui/material/Backdrop";
+import CircularProgress from "@mui/material/CircularProgress";
+import Tab from "@mui/material/Tab";
+import Tabs from "@mui/material/Tabs";
+import { useSnackbar } from "notistack";
+import { useEffect, useState } from "react";
+import DatePickerWithClearButton from "./DatePickerWithClearButton";
 import Table from "./TableOrder";
+
 function OrdersManagement() {
-  const data = [
-    {
-      OrderNumber: "12345",
-      Date: "2024-01-01",
-      Status: "Completed",
-      TotalPrice: "$100.00",
-    },
-    {
-      OrderNumber: "12346",
-      Date: "2024-02-01",
-      Status: "Pending",
-      TotalPrice: "$150.00",
-    },
-    {
-      OrderNumber: "12347",
-      Date: "2024-03-01",
-      Status: "Shipped",
-      TotalPrice: "$200.00",
-    },
-    {
-      OrderNumber: "12348",
-      Date: "2024-04-01",
-      Status: "Cancelled",
-      TotalPrice: "$250.00",
-    },
-  ];
+  const [data, setData] = useState([]);
+  const [loading, setLoading] = useState(false);
+  const [date, setDate] = useState(null);
+  const [status, setStatus] = useState("All");
+  const { enqueueSnackbar } = useSnackbar();
+
+  useEffect(() => {
+    fetchOrders();
+  }, [date, status]);
+
+  const fetchOrders = () => {
+    setLoading(true);
+    let url = "https://zodiacjewerly.azurewebsites.net/api/orders";
+    fetch(url, {
+      method: "GET",
+      headers: {
+        accept: "*/*",
+      },
+    })
+      .then((response) => response.json())
+      .then((data) => {
+        if (data.success && Array.isArray(data.data)) {
+          const filteredData = data.data.filter((order) => {
+            const matchesDate = date
+              ? new Date(order["payment-date"]).toDateString() ===
+                new Date(date).toDateString()
+              : true;
+            const matchesStatus =
+              status === "All" || getStatusText(order.status) === status;
+            return matchesDate && matchesStatus;
+          });
+
+          const transformedData = filteredData.map((order) => ({
+            OrderNumber: order.id.toString(),
+            UserID: order["user-id"],
+            Date: new Date(order["payment-date"]).toLocaleDateString(),
+            Status: getStatusText(order.status),
+            TotalPrice: "$0.00",
+          }));
+          setData(transformedData);
+        } else {
+          enqueueSnackbar("Failed to load orders", { variant: "error" });
+        }
+        setLoading(false);
+      })
+      .catch((error) => {
+        console.error("Error fetching orders:", error);
+        enqueueSnackbar("Failed to load orders", { variant: "error" });
+        setLoading(false);
+      });
+  };
+
+  const getStatusText = (status) => {
+    switch (status) {
+      case 0:
+        return "Cancelled";
+      case 1:
+        return "Pending";
+      case 2:
+        return "Completed";
+      default:
+        return "Unknown";
+    }
+  };
+
+  const handleStatusChange = (event, newValue) => {
+    setStatus(newValue);
+  };
 
   return (
     <div>
       <div className="flex flex-row justify-between w-full items-center">
-        <h1 className="font-serif  text-[30px] w-[394px] relative text-inherit leading-[48px] font-bold font-inherit inline-block shrink-0 max-w-full mq450:text-[23px] mq450:leading-[29px] mq1050:text-11xl mq1050:leading-[38px]">
+        <h1 className="font-serif text-[30px] w-[394px] relative text-inherit leading-[48px] font-bold font-inherit inline-block shrink-0 max-w-full mq450:text-[23px] mq450:leading-[29px] mq1050:text-11xl mq1050:leading-[38px]">
           Order Management
         </h1>
-        <TextField
-          id="standard-textarea"
-          label="Search"
-          placeholder="Search orders"
-          multiline
-          variant="standard"
-          sx={{ width: "30%" }}
-        />
+        <div className="datepicker-container">
+          <DatePickerWithClearButton
+            selected={date}
+            onChange={(date) => setDate(date)}
+            placeholderText="Select Payment Date"
+          />
+        </div>
       </div>
+      <Tabs
+        value={status}
+        onChange={handleStatusChange}
+        aria-label="order status tabs"
+      >
+        <Tab value="All" label="All" />
+        <Tab value="Completed" label="Completed" />
+        <Tab value="Pending" label="Pending" />
+        <Tab value="Cancelled" label="Cancelled" />
+      </Tabs>
       <section className="w-full mt-8">
         <Table data={data} />
       </section>
+      <Backdrop
+        sx={{ color: "#fff", zIndex: (theme) => theme.zIndex.drawer + 1 }}
+        open={loading}
+      >
+        <CircularProgress color="inherit" />
+      </Backdrop>
     </div>
   );
 }

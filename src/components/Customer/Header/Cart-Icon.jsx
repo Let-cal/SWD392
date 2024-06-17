@@ -2,6 +2,7 @@ import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
 import ViewIcon from "@mui/icons-material/Visibility";
 import { Box, Button, Drawer, List } from "@mui/material";
 import Badge from "@mui/material/Badge";
+import Divider from "@mui/material/Divider";
 import IconButton from "@mui/material/IconButton";
 import { styled } from "@mui/material/styles";
 import React from "react";
@@ -41,7 +42,7 @@ export default function CartIcon() {
 
   const drawerList = (
     <Box
-      sx={{ width: 400 }} // Thay đổi giá trị width ở đây
+      sx={{ width: 600 }} // Thay đổi giá trị width ở đây
       role="presentation"
       onClick={(event) => event.stopPropagation()} // Ngăn chặn sự kiện onClick lan truyền
       onKeyDown={(event) => event.stopPropagation()} // Ngăn chặn sự kiện onKeyDown lan truyền
@@ -49,10 +50,16 @@ export default function CartIcon() {
       <List>
         <ViewCart />
         <div className="mr-4 relative">
+          <Divider
+            style={{
+              backgroundColor: "black",
+            }}
+          />
           <Button
             className="checkout-button"
             onClick={handleChange}
             style={{
+              marginTop: 20,
               color: "white",
               backgroundColor: "black",
               position: "absolute",
