@@ -7,7 +7,7 @@ import PropTypes from "prop-types";
 import { useState } from "react";
 import InforProduct from "./InfoProduct";
 
-const TableProduct = ({ data, onUpdate, onDelete,onGetAll }) => {
+const TableProduct = ({ data, onUpdate, onDelete, onGetAll }) => {
   const [anchorEl, setAnchorEl] = useState(null);
   const [selectedProductId, setSelectedProductId] = useState(null);
 
@@ -57,7 +57,14 @@ const TableProduct = ({ data, onUpdate, onDelete,onGetAll }) => {
               <>
                 <Button
                   id={`edit-button-${product.id}`}
-                  variant="outlined"
+                  variant="contained"
+                  sx={{
+                    backgroundColor: "black",
+                    color: "white",
+                    "&:hover": {
+                      backgroundColor: "gray",
+                    },
+                  }}
                   size="large"
                   startIcon={<UpdateIcon />}
                   onClick={(event) => handleMenuOpen(event, product.id)}

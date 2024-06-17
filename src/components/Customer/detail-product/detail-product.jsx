@@ -1,11 +1,16 @@
-import React, { useState, useEffect } from 'react';
-import { useParams, useLocation } from 'react-router-dom';
-import axios from 'axios';
-import './detail-product.css';
-import Header from '../Header/header';
+import axios from "axios";
+import React, { useEffect, useState } from "react";
+import { useLocation, useParams } from "react-router-dom";
+import Header from "../Header/header";
+import "./detail-product.css";
 
 const ProductImage = ({ src, alt, index, onClick, isSelected }) => (
-  <img className={`product-image ${isSelected ? 'selected' : ''}`} src={src} alt={alt} onClick={() => onClick(index)} />
+  <img
+    className={`product-image ${isSelected ? "selected" : ""}`}
+    src={src}
+    alt={alt}
+    onClick={() => onClick(index)}
+  />
 );
 
 const SimilarProduct = ({ imageSrc, name, price }) => (
@@ -20,52 +25,68 @@ const SimilarProduct = ({ imageSrc, name, price }) => (
 );
 
 const categoryMap = {
-  1: 'Necklaces',
-  2: 'Bracelets',
-  3: 'Earrings',
-  4: 'Rings',
-  5: 'T-shirt',
+  1: "Necklaces",
+  2: "Bracelets",
+  3: "Earrings",
+  4: "Rings",
+  5: "T-shirt",
 };
 const materialMap = {
-  1: 'Gold',
-  2: 'Emerald',
-  3: 'Diamond',
+  1: "Gold",
+  2: "Emerald",
+  3: "Diamond",
 };
 const genderMap = {
-  1: 'Male',
-  2: 'Female',
-  3: 'Other',
+  1: "Male",
+  2: "Female",
+  3: "Other",
 };
 const zodiacMap = {
-  1: 'Aries',
-  2: 'Taurus',
-  3: 'Gemini',
-  4: 'Cancer',
-  5: 'Leo',
-  6: 'Virgo',
-  7: 'Libra',
-  8: 'Scorpio',
-  9: 'Sagittarius',
-  10: 'Capricorn',
-  11: 'Aquarius',
-  12: 'Pisces',
+  1: "Aries",
+  2: "Taurus",
+  3: "Gemini",
+  4: "Cancer",
+  5: "Leo",
+  6: "Virgo",
+  7: "Libra",
+  8: "Scorpio",
+  9: "Sagittarius",
+  10: "Capricorn",
+  11: "Aquarius",
+  12: "Pisces",
 };
 
 const ProductTabs = ({ activeTab, setActiveTab, product }) => {
   const renderContent = () => {
     switch (activeTab) {
-      case 'description':
+      case "description":
         return (
-          <div className='infomation'>
-            <p><span className="label">Material</span> <span className="content">{materialMap[product["material-id"]]}</span></p>
-            <p><span className="label">Category</span> <span className="content">{categoryMap[product["category-id"]]}</span></p>
-            <p><span className="label">Zodiac</span> <span className="content">{zodiacMap[product["zodiac-id"]]}</span></p>
-            <p><span className="label">Gender</span> <span className="content">{genderMap[product["gender-id"]]}</span></p>
+          <div className="infomation">
+            <p>
+              <span className="label">Material</span>{" "}
+              <span className="content">
+                {materialMap[product["material-id"]]}
+              </span>
+            </p>
+            <p>
+              <span className="label">Category</span>{" "}
+              <span className="content">
+                {categoryMap[product["category-id"]]}
+              </span>
+            </p>
+            <p>
+              <span className="label">Zodiac</span>{" "}
+              <span className="content">{zodiacMap[product["zodiac-id"]]}</span>
+            </p>
+            <p>
+              <span className="label">Gender</span>{" "}
+              <span className="content">{genderMap[product["gender-id"]]}</span>
+            </p>
           </div>
         );
-      case 'additional':
+      case "additional":
         return (
-          <div className='description-product'>
+          <div className="description-product">
             <p>{product["description-product"]}</p>
           </div>
         );
@@ -78,22 +99,24 @@ const ProductTabs = ({ activeTab, setActiveTab, product }) => {
     <div>
       <div className="product-tabs">
         <div
-          className={`product-tab ${activeTab === 'description' ? 'active' : ''}`}
-          onClick={() => setActiveTab('description')}
+          className={`product-tab ${
+            activeTab === "description" ? "active" : ""
+          }`}
+          onClick={() => setActiveTab("description")}
         >
           Information
         </div>
         <div
-          className={`product-tab ${activeTab === 'additional' ? 'active' : ''}`}
-          onClick={() => setActiveTab('additional')}
+          className={`product-tab ${
+            activeTab === "additional" ? "active" : ""
+          }`}
+          onClick={() => setActiveTab("additional")}
         >
           Product description
         </div>
       </div>
       <div className="product-tab-separator" />
-      <div className="product-tab-content">
-        {renderContent()}
-      </div>
+      <div className="product-tab-content">{renderContent()}</div>
     </div>
   );
 };
@@ -102,19 +125,22 @@ const DetailProduct = () => {
   const { id } = useParams();
   const location = useLocation();
   const [product, setProduct] = useState(location.state?.product || {});
-  const [mainImageSrc, setMainImageSrc] = useState(product["image-urls"] ? product["image-urls"][0] : '');
-  const [activeTab, setActiveTab] = useState('description');
+  const [mainImageSrc, setMainImageSrc] = useState(
+    product["image-urls"] ? product["image-urls"][0] : ""
+  );
+  const [activeTab, setActiveTab] = useState("description");
   const [quantity, setQuantity] = useState(1);
   const [similarProducts, setSimilarProducts] = useState([]);
 
   useEffect(() => {
     if (!product.id) {
-      axios.get(`https://zodiacjewerly.azurewebsites.net/api/products/${id}`)
-        .then(response => {
+      axios
+        .get(`https://zodiacjewerly.azurewebsites.net/api/products/${id}`)
+        .then((response) => {
           setProduct(response.data);
           setMainImageSrc(response.data["image-urls"][0]);
         })
-        .catch(error => {
+        .catch((error) => {
           console.error("There was an error fetching the product data!", error);
         });
     }
@@ -130,8 +156,11 @@ const DetailProduct = () => {
           setSimilarProducts([]);
         }
       })
-      .catch(error => {
-        console.error("There was an error fetching the similar products data!", error);
+      .catch((error) => {
+        console.error(
+          "There was an error fetching the similar products data!",
+          error
+        );
         setSimilarProducts([]);
       });
   }, []);
@@ -175,15 +204,26 @@ const DetailProduct = () => {
 
           <div className="quantity-and-cart">
             <div className="quantity-selector">
-              <button onClick={() => setQuantity(quantity > 1 ? quantity - 1 : 1)}>-</button>
+              <button
+                onClick={() => setQuantity(quantity > 1 ? quantity - 1 : 1)}
+              >
+                -
+              </button>
               <div className="quantity-value">{quantity}</div>
               <button onClick={() => setQuantity(quantity + 1)}>+</button>
             </div>
-            <button className="add-to-cart-button" onClick={handleAddToCart}>ADD TO CART</button>
+            <button className="add-to-cart-button" onClick={handleAddToCart}>
+              ADD TO CART
+            </button>
           </div>
-          <ProductTabs activeTab={activeTab} setActiveTab={setActiveTab} product={product} />
+          <ProductTabs
+            activeTab={activeTab}
+            setActiveTab={setActiveTab}
+            product={product}
+          />
         </div>
       </div>
+
 
       <div className="similar-products">
         <h2>Similar Products</h2>

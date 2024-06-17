@@ -89,3 +89,15 @@ group:hover img {
   background-color: transparent;
   opacity: 1;
 }
+/* Định nghĩa cho lớp fade-in-section */
+.fade-in-section {
+  opacity: 0;
+  transform: translateY(20px);
+  transition: opacity 0.6s ease-out, transform 0.6s ease-out;
+}
+
+/* Định nghĩa cho lớp is-visible khi phần tử xuất hiện */
+.fade-in-section.is-visible {
+  opacity: 1;
+  transform: none;
+}

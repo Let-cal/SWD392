@@ -39,18 +39,18 @@ ZodiacSignCard.propTypes = {
 
 function ZodiacSignList({ selectedZodiacId, onZodiacClick }) {
   const zodiacSigns = [
-    { name: "Aries", imageSrc: "./src/components/Customer/Zodiac controller/zodiac/Icon/Icon-1.svg", id: 1 },
-    { name: "Taurus", imageSrc: "./src/components/Customer/Zodiac controller/zodiac/Icon/Icon-2.svg", id: 2 },
-    { name: "Gemini", imageSrc: "./src/components/Customer/Zodiac controller/zodiac/Icon/Icon-3.svg", id: 3 },
-    { name: "Cancer", imageSrc: "./src/components/Customer/Zodiac controller/zodiac/Icon/Icon-4.svg", id: 4 },
-    { name: "Leo", imageSrc: "./src/components/Customer/Zodiac controller/zodiac/Icon/Icon-5.svg", id: 5 },
-    { name: "Virgo", imageSrc: "./src/components/Customer/Zodiac controller/zodiac/Icon/Icon-6.svg", id: 6 },
-    { name: "Libra", imageSrc: "./src/components/Customer/Zodiac controller/zodiac/Icon/Icon-7.svg", id: 7 },
-    { name: "Scorpio", imageSrc: "./src/components/Customer/Zodiac controller/zodiac/Icon/Icon-8.svg", id: 8 },
-    { name: "Sagittarius", imageSrc: "./src/components/Customer/Zodiac controller/zodiac/Icon/Icon-9.svg", id: 9 },
-    { name: "Capricorn", imageSrc: "./src/components/Customer/Zodiac controller/zodiac/Icon/Icon-10.svg", id: 10 },
-    { name: "Aquarius", imageSrc: "./src/components/Customer/Zodiac controller/zodiac/Icon/Icon-11.svg", id: 11 },
-    { name: "Pisces", imageSrc: "./src/components/Customer/Zodiac controller/zodiac/Icon/Icon-12.svg", id: 12 },
+    { name: "Aries", imageSrc: "public/images/Icon/Icon-1.svg", id: 1 },
+    { name: "Taurus", imageSrc: "public/images/Icon/Icon-2.svg", id: 2 },
+    { name: "Gemini", imageSrc: "public/images/Icon/Icon-3.svg", id: 3 },
+    { name: "Cancer", imageSrc: "public/images/Icon/Icon-4.svg", id: 4 },
+    { name: "Leo", imageSrc: "public/images/Icon/Icon-5.svg", id: 5 },
+    { name: "Virgo", imageSrc: "public/images/Icon/Icon-6.svg", id: 6 },
+    { name: "Libra", imageSrc: "public/images/Icon/Icon-7.svg", id: 7 },
+    { name: "Scorpio", imageSrc: "public/images/Icon/Icon-8.svg", id: 8 },
+    { name: "Sagittarius", imageSrc: "public/images/Icon/Icon-9.svg", id: 9 },
+    { name: "Capricorn", imageSrc: "public/images/Icon/Icon-10.svg", id: 10 },
+    { name: "Aquarius", imageSrc: "public/images/Icon/Icon-11.svg", id: 11 },
+    { name: "Pisces", imageSrc: "public/images/Icon/Icon-12.svg", id: 12 },
   ];
 
   return (

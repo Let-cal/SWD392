@@ -1,7 +1,8 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import AddCircleIcon from "@mui/icons-material/AddCircle";
 import { Backdrop, Button, CircularProgress } from "@mui/material";
 import axios from "axios";
-import { enqueueSnackbar } from "notistack";
+import { useSnackbar } from "notistack";
 import { useEffect, useState } from "react";
 import CreateProductModal from "./CreateProductController/CreateProductModal";
 import FilterComponent from "./FilterManagement/FilterComponent";
@@ -18,20 +19,21 @@ const ProductPage = () => {
   const [gender, setGender] = useState("");
   const [zodiac, setZodiac] = useState("");
   const [price, setPrice] = useState([0, 0]);
-
+  const { enqueueSnackbar } = useSnackbar();
   useEffect(() => {
     fetchProducts();
   }, []);
 
   useEffect(() => {
     filterProducts();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [search, category, material, gender, zodiac, price]);
 
   const fetchProducts = async () => {
     setLoading(true);
     try {
       const response = await axios.get(
-        "https://zodiacjewerly.azurewebsites.net/api/products/all-products"
+        "https://zodiacjewerly.azurewebsites.net/api/products"
       );
       const fetchedProducts = response.data.data.map((product) => ({
         id: product.id,
@@ -127,7 +129,7 @@ const ProductPage = () => {
       };
 
       const response = await axios.put(
-        `https://zodiacjewerly.azurewebsites.net/api/products/product-update?id=${product.id}&zodiacId=${product.zodiacId}`,
+        `https://zodiacjewerly.azurewebsites.net/api/products/${product.id}/zodiac/${product.zodiacId}`,
         payload,
         { headers: { "Content-Type": "application/json" } }
       );
@@ -150,7 +152,7 @@ const ProductPage = () => {
     setUpdating(true);
     try {
       await axios.delete(
-        `https://zodiacjewerly.azurewebsites.net/api/products/product-remove/${productId}`
+        `https://zodiacjewerly.azurewebsites.net/api/products/${productId}`
       );
 
       setProducts((prev) => prev.filter((product) => product.id !== productId));

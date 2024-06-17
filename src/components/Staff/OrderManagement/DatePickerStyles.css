@@ -1,0 +1,20 @@
+/* Thêm hiệu ứng hover */
+.react-datepicker__day:hover {
+  background-color: #f0f0f0;
+}
+
+/* Thêm animation cho hiệu ứng hover */
+.react-datepicker__day {
+  transition: background-color 0.3s ease;
+}
+
+/* Tùy chỉnh CSS cho datepicker container */
+.datepicker-container {
+  position: relative;
+  display: inline-block;
+}
+
+/* Z-index để đảm bảo date picker xuất hiện trên các phần tử khác */
+.react-datepicker-popper {
+  z-index: 2;
+}

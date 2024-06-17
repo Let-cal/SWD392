@@ -18,7 +18,7 @@ function ImageSection() {
       <div className="relative flex flex-col grow items-start px-2.5 pt-2.5 pb-2 text-lg  leading-6 text-white min-h-screen">
         <img
           loading="lazy"
-          srcSet="public/images/Frame.png"
+          srcSet="/images/Frame.png"
           className="object-cover absolute inset-0 w-full h-full "
         />
         <div className="relative flex flex-col justify-center mt-auto mb-5 w-full max-md:mt-10">
@@ -68,7 +68,7 @@ function LoginForm() {
     const requestBody = { email: formData.email, password: formData.password };
     try {
       const response = await axios.post(
-        "https://zodiacjewerly.azurewebsites.net/api/authentication/users",
+        "https://zodiacjewerly.azurewebsites.net/api/authentication/login",
         requestBody
       );
 
@@ -77,7 +77,9 @@ function LoginForm() {
         localStorage.setItem("role", response.data.role);
         localStorage.setItem("userName", response.data.fullName);
         localStorage.setItem("email", formData.email);
-
+        localStorage.setItem("hint", response.data.hint);
+        const userHint = localStorage.getItem("hint");
+        console.log(userHint);
         if (checked) {
           localStorage.setItem("password", formData.password);
         } else {

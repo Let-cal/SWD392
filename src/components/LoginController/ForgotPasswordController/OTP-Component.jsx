@@ -39,7 +39,7 @@ const OTPComponent = ({ className = "" }) => {
 
     try {
       const response = await axios.post(
-        "https://zodiacjewerly.azurewebsites.net/api/authentication/email-otp-pass",
+        "https://zodiacjewerly.azurewebsites.net/api/authentication/verify-otp",
         {
           email,
           "code-otp": codeOTP,

@@ -1,7 +1,9 @@
 import { Backdrop, CircularProgress } from "@mui/material";
 import axios from "axios";
+import { useSnackbar } from "notistack";
 import PropTypes from "prop-types";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import Swal from "sweetalert2";
 import {
   Material,
   categories,
@@ -13,11 +15,30 @@ import {
   zodiacs,
 } from "./ChangeIDtoName";
 
-const InforProduct = ({ product, onUpdate, Action }) => {
+const InforProduct = ({ product, onUpdate, Action, onGetAll }) => {
   const [isEditing, setIsEditing] = useState(false);
   const [editedProduct, setEditedProduct] = useState({ ...product });
   const [showImages, setShowImages] = useState(false);
   const [loading, setLoading] = useState(false);
+  const { enqueueSnackbar } = useSnackbar();
+
+  useEffect(() => {
+    fetchImageInfo();
+  }, []);
+
+  const fetchImageInfo = async () => {
+    try {
+      const response = await axios.get(
+        "https://zodiacjewerly.azurewebsites.net/api/image"
+      );
+      const imageData = response.data.data; // Ensure the correct data structure
+      console.log("Fetched image data:", imageData); // Log image data
+      localStorage.setItem("imageData", JSON.stringify(imageData));
+    } catch (error) {
+      console.error("Error fetching image info:", error);
+      enqueueSnackbar("Failed to fetch image info.", { variant: "error" });
+    }
+  };
 
   const handleEdit = () => {
     setIsEditing(true);
@@ -33,7 +54,7 @@ const InforProduct = ({ product, onUpdate, Action }) => {
   };
 
   const handleCancel = () => {
-    setEditedProduct({ ...product }); // Reset lại dữ liệu đã chỉnh sửa
+    setEditedProduct({ ...product }); // Reset edited data
     setIsEditing(false);
   };
 
@@ -51,13 +72,13 @@ const InforProduct = ({ product, onUpdate, Action }) => {
 
     const formData = new FormData();
     for (let i = 0; i < files.length; i++) {
-      formData.append("images", files[i]);
+      formData.append("files", files[i]);
     }
 
-    setLoading(true); // Bắt đầu loading
+    setLoading(true);
     try {
-      await axios.post(
-        `https://zodiacjewerly.azurewebsites.net/api/productimage/${product.id}/upload`,
+      const uploadResponse = await axios.post(
+        `https://zodiacjewerly.azurewebsites.net/api/products/${product.id}/images`,
         formData,
         {
           headers: {
@@ -66,14 +87,70 @@ const InforProduct = ({ product, onUpdate, Action }) => {
         }
       );
 
-      // Gửi yêu cầu cập nhật sản phẩm sau khi upload hình ảnh thành công
-      await onUpdate(product);
-      alert("Images uploaded successfully!");
+      const newImageURLs = uploadResponse.data["image-urls"] || [];
+      if (!Array.isArray(newImageURLs)) {
+        throw new Error("Image URLs are not in an array format");
+      }
+
+      setEditedProduct((prev) => ({
+        ...prev,
+        imageURLs: [...prev.imageURLs, ...newImageURLs],
+      }));
+
+      await onGetAll();
+
+      Swal.fire("Success", "Images uploaded successfully!", "success");
     } catch (error) {
       console.error("Error uploading images:", error);
-      alert("Failed to upload images.");
+      enqueueSnackbar("Failed to upload images.", { variant: "error" });
     } finally {
-      setLoading(false); // Kết thúc loading
+      setLoading(false);
+    }
+  };
+
+  const handleImageUpdate = async (imageURL, newFile) => {
+    const imageData = JSON.parse(localStorage.getItem("imageData")) || [];
+    console.log("Loaded image data:", imageData); // Log loaded image data
+
+    if (!Array.isArray(imageData)) {
+      enqueueSnackbar("Failed to find image info for the URL.", {
+        variant: "error",
+      });
+      return;
+    }
+
+    const imageInfo = imageData.find((img) => img["image-url"] === imageURL);
+    console.log("Image info found:", imageInfo); // Log found image info
+
+    if (!imageInfo) {
+      enqueueSnackbar("Failed to find image info for the URL.", {
+        variant: "error",
+      });
+      return;
+    }
+
+    const formData = new FormData();
+    formData.append("file", newFile);
+
+    setLoading(true);
+    try {
+      await axios.put(
+        `https://zodiacjewerly.azurewebsites.net/api/products/${product.id}/images/${imageInfo.id}`,
+        formData,
+        {
+          headers: {
+            "Content-Type": "multipart/form-data",
+          },
+        }
+      );
+
+      await onGetAll();
+      Swal.fire("Success", "Image updated successfully!", "success");
+    } catch (error) {
+      console.error("Error updating image:", error);
+      enqueueSnackbar("Failed to update image.", { variant: "error" });
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -219,28 +296,52 @@ const InforProduct = ({ product, onUpdate, Action }) => {
                 View Images
               </button>
               {showImages && (
-                <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center">
-                  <div className="bg-white p-5 rounded">
-                    <h2 className="text-xl mb-4">Product Images</h2>
-                    <div className="grid grid-cols-2 gap-2">
-                      {product.imageURLs.map((url, index) => (
-                        <img
+                <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50">
+                  <div className="bg-white p-4 rounded max-w-sm w-full">
+                    <h2 className="text-lg font-semibold ">Product Images</h2>
+                    <p className="mb-4 text-gray-400">
+                      (Click to image to update the image)
+                    </p>
+                    <div className="grid grid-cols-2 w-full p-5  gap-4 border border-gray-300 rounded-lg  shadow-md">
+                      {editedProduct.imageURLs.map((url, index) => (
+                        <div
                           key={index}
-                          src={url}
-                          alt={`Product Image ${index + 1}`}
-                          className="w-48 h-48 object-cover"
-                        />
+                          className=" relative overflow-hidden border border-gray-200 rounded-md shadow-sm transition-transform duration-300 ease-in-out transform hover:shadow-lg hover:scale-105 "
+                        >
+                          <img
+                            src={url}
+                            alt={`Product ${index}`}
+                            className="w-36 h-36 object-cover rounded-md"
+                          />
+                          <input
+                            type="file"
+                            accept="image/*"
+                            onChange={(e) =>
+                              handleImageUpdate(url, e.target.files[0])
+                            }
+                            className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
+                          />
+                        </div>
                       ))}
                     </div>
-                    <div className="mt-4 flex justify-between">
-                      <input
-                        type="file"
-                        multiple
-                        onChange={handleImageUpload}
-                      />
+
+                    <div className="flex flex-row justify-end gap-1 mt-4">
+                      <label
+                        className="bg-blue-500 text-white px-4 py-2 rounded cursor-pointer"
+                        title="Upload images here"
+                      >
+                        Upload Image
+                        <input
+                          type="file"
+                          accept="image/*"
+                          multiple
+                          onChange={handleImageUpload}
+                          className="hidden"
+                        />
+                      </label>
                       <button
                         onClick={() => setShowImages(false)}
-                        className="text-red-500"
+                        className="bg-red-500 text-white px-4 py-2 rounded"
                       >
                         Close
                       </button>
@@ -252,15 +353,11 @@ const InforProduct = ({ product, onUpdate, Action }) => {
           ),
         },
       ].map((item, index) => (
-        <div
-          key={index}
-          className="w-1/12 px-1 text-left text-xs uppercase text-gray-500 font-medium"
-        >
+        <div key={index} className="w-1/12 text-gray-500 font-medium">
           {item.content}
         </div>
       ))}
-
-      <div className="w-1/12 px-1 text-left text-xs uppercase text-gray-500 font-medium">
+      <div className="text-xs uppercase text-gray-500 font-medium">
         {isEditing ? (
           <div className="flex w-full">
             <button onClick={handleSave} className="text-blue-500 w-1/2">
@@ -279,7 +376,6 @@ const InforProduct = ({ product, onUpdate, Action }) => {
         )}
         {Action}
       </div>
-
       <Backdrop open={loading} style={{ color: "#fff", zIndex: 9999 }}>
         <CircularProgress color="inherit" />
       </Backdrop>
@@ -301,6 +397,7 @@ InforProduct.propTypes = {
     imageURLs: PropTypes.arrayOf(PropTypes.string).isRequired,
   }).isRequired,
   onUpdate: PropTypes.func.isRequired,
+  onGetAll: PropTypes.func.isRequired,
   Action: PropTypes.node.isRequired,
 };
 

@@ -1,12 +1,13 @@
 import CancelIcon from "@mui/icons-material/Cancel";
 import CheckCircleOutlineIcon from "@mui/icons-material/CheckCircleOutline";
+import ClearIcon from "@mui/icons-material/Clear";
 import Button from "@mui/material/Button";
 import Checkbox from "@mui/material/Checkbox";
 import PropTypes from "prop-types";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-
 import "./ViewCart.css";
+
 const CartItem = ({
   imageSrc,
   itemName,
@@ -16,6 +17,7 @@ const CartItem = ({
   onCheck,
   isChecked,
   onQtyChange,
+  onRemove,
 }) => (
   <div className="cart-item">
     <div className="item-details">
@@ -48,6 +50,17 @@ const CartItem = ({
           +
         </button>
       </div>
+      <Button
+        onClick={() => onRemove(itemName)}
+        startIcon={<ClearIcon />}
+        sx={{
+          color: "black",
+          "&:hover": {
+            color: "gray",
+            scale: "1.2",
+          },
+        }}
+      ></Button>
     </div>
   </div>
 );
@@ -61,6 +74,7 @@ CartItem.propTypes = {
   onCheck: PropTypes.func.isRequired,
   isChecked: PropTypes.bool.isRequired,
   onQtyChange: PropTypes.func.isRequired,
+  onRemove: PropTypes.func.isRequired,
 };
 
 function ViewCart() {
@@ -116,6 +130,12 @@ function ViewCart() {
     );
   };
 
+  const handleRemove = (itemName) => {
+    setItems((prevItems) =>
+      prevItems.filter((item) => item.itemName !== itemName)
+    );
+  };
+
   const calculateTotal = () => {
     return selectedItems
       .reduce((total, index) => {
@@ -146,8 +166,6 @@ function ViewCart() {
 
   return (
     <>
-
-
       <div className="shopping-cart-container mt-5">
         <section className="shopping-cart">
           {items.map((item, index) => (
@@ -157,6 +175,7 @@ function ViewCart() {
               isChecked={selectedItems.includes(index)}
               onCheck={() => handleCheck(index)}
               onQtyChange={handleQtyChange}
+              onRemove={handleRemove}
             />
           ))}
         </section>

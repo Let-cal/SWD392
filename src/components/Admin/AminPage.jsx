@@ -5,6 +5,7 @@ import Header from "./HeaderOfAdmin.jsx";
 import AdminAccountManagement from "./HomePage/AdminAccountManagement.jsx";
 import OrdersManagement from "./OrderManagement/OrderManagement.jsx";
 import ProductsManagement from "./ProductManagement/ProductManagement.jsx";
+import ZodiacManagement from "./ZodiacController/ZodiacManagement.jsx";
 import "./adminpage.css"; // Add this import for the new CSS styles
 import Sidebar from "./sidebar.jsx";
 function AdminPage() {
@@ -25,8 +26,8 @@ function AdminPage() {
     case "CollectionsManagement":
       // ContentComponent = CollectionsManagement;
       break;
-    case "ZodiacsManagement":
-      // ContentComponent = ZodiacsManagement;
+    case "ZodiacManagement":
+      ContentComponent = ZodiacManagement;
       break;
     case "UsersManagement":
       ContentComponent = UserManagement;
