@@ -62,14 +62,12 @@ function OrdersManagement() {
 
   const getStatusText = (status) => {
     switch (status) {
-      case 1:
-        return "Completed";
-      case 2:
-        return "Pending";
-      case 3:
-        return "Shipped";
-      case 4:
+      case 0:
         return "Cancelled";
+      case 1:
+        return "Pending";
+      case 2:
+        return "Completed";
       default:
         return "Unknown";
     }
@@ -101,7 +99,6 @@ function OrdersManagement() {
         <Tab value="All" label="All" />
         <Tab value="Completed" label="Completed" />
         <Tab value="Pending" label="Pending" />
-        <Tab value="Shipped" label="Shipped" />
         <Tab value="Cancelled" label="Cancelled" />
       </Tabs>
       <section className="w-full mt-8">

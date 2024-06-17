@@ -23,7 +23,7 @@ const InforOrder = ({
     }
   };
   return (
-    <div className="flex items-center justify-between py-2 border-b border-gray-200 hover:bg-gray-100 transition duration-300">
+    <div className="flex items-center justify-between text-center py-2 border-b border-gray-200 hover:bg-gray-100 transition duration-300">
       <div className="w-1/5 px-4 text-center text-xs uppercase text-gray-500 font-medium">
         {OrderNumber}
       </div>

@@ -6,7 +6,7 @@ import InforOrder from "./InfoOrder";
 const Table = ({ data }) => {
   return (
     <div className="mx-auto bg-white shadow-lg rounded-lg overflow-hidden">
-      <div className="flex bg-gray-100 text-xs  uppercase font-semibold text-gray-600">
+      <div className="flex justify-between items-center  bg-gray-100 text-xs uppercase font-semibold text-gray-600">
         <div className="w-1/5 px-4 text-center py-2">Order Number</div>
         <div className="w-1/5 px-4 text-center py-2">User ID</div>
         <div className="w-1/5 px-4 text-center py-2">Date</div>
@@ -28,6 +28,8 @@ const Table = ({ data }) => {
                 variant="contained"
                 endIcon={<VisibilityIcon />}
                 sx={{
+                  height: "20%",
+                  fontSize: "13px",
                   backgroundColor: "black",
                   color: "white",
                   "&:hover": {

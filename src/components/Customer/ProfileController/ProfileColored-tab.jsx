@@ -57,7 +57,7 @@ export default function ProfileColorTabs() {
           indicatorColor="secondary"
         >
           <Tab label="COMPLETED" {...a11yProps(0)} />
-          <Tab label="PROCESSING" {...a11yProps(1)} />
+          <Tab label="PENDING" {...a11yProps(1)} />
           <Tab label="CANCELLED" {...a11yProps(2)} />
           <Tab label="ACCOUNT DETAIL" {...a11yProps(3)} />
           <Tab label="LOGOUT" {...a11yProps(4)} onClick={handleLogout} />
@@ -68,7 +68,7 @@ export default function ProfileColorTabs() {
         <AccountOrders status="COMPLETED" />
       </CustomTabPanel>
       <CustomTabPanel value={value} index={1}>
-        <AccountOrders status="PROCESSING" />
+        <AccountOrders status="PENDING" />
       </CustomTabPanel>
       <CustomTabPanel value={value} index={2}>
         <AccountOrders status="CANCELLED" />

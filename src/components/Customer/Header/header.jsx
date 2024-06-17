@@ -59,14 +59,18 @@ function Header({ scrollToTrustedCompanies }) {
         className="shrink-0 max-w-full aspect-[0.88] w-[76px]"
         alt=""
       />
-      <div className="title-header-Customer flex-auto text-4xl leading-10">
-        <span className="font-bold bg-gradient-custom-header-title bg-clip-text text-transparent">
-          Z
-        </span>
-        <span className="bg-gradient-custom-header-title bg-clip-text text-transparent">
-          odiacGems
-        </span>
+
+      <div className="title-header-Customer flex-auto text-4xl leading-10 cursor-pointer">
+        <Link to="/customer-page">
+          <span className="font-bold bg-gradient-custom-header-title bg-clip-text text-transparent">
+            Z
+          </span>
+          <span className="bg-gradient-custom-header-title bg-clip-text text-transparent">
+            odiacGems
+          </span>
+        </Link>
       </div>
+
       <nav className="flex gap-5 max-md:gap-2 items-center justify-between text-base leading-7 max-md:max-w-full">
         <ColorTabs scrollToTrustedCompanies={scrollToTrustedCompanies} />
         <div className="shrink-0 w-px border border-solid bg-neutral-500 border-neutral-500 h-[22px]" />

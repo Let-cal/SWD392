@@ -225,6 +225,7 @@ const ProductPage = () => {
             data={filteredProducts}
             onUpdate={updateProduct}
             onDelete={deleteProduct}
+            onGetAll={fetchProducts}
           />
         )}
       </section>

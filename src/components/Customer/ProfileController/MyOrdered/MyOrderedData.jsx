@@ -48,11 +48,11 @@ const AccountOrders = ({ status }) => {
   const getStatusText = (status) => {
     switch (status) {
       case 0:
-        return "COMPLETED";
-      case 1:
-        return "PROCESSING";
-      case 2:
         return "CANCELLED";
+      case 1:
+        return "PENDING";
+      case 2:
+        return "COMPLETED";
       default:
         return "UNKNOWN";
     }

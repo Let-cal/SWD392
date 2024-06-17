@@ -214,14 +214,21 @@ function MyComponent() {
         <section ref={monthlyDealsRef} className="fade-in-section">
           <MonthlyDeals />
         </section>
-        <section ref={reasonChooseRef} className="fade-in-section">
+        <section
+          ref={reasonChooseRef}
+          className="fade-in-section max-md:hidden max-sm:hidden"
+        >
           <ReasonChoose scrollToTrustedCompanies={scrollToTrustedCompanies} />
         </section>
-        <section ref={trustedCompaniesRef} className="fade-in-section">
+        <section
+          ref={trustedCompaniesRef}
+          className="fade-in-section mb-[50px]"
+        >
           <TrustedCompanies />
         </section>
-        <Footer />
       </div>
+
+      <Footer />
     </div>
   );
 }
