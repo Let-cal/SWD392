@@ -17,6 +17,8 @@ import ProtectedRoute from "./components/LoginController/ProtectedRoute.jsx";
 import RegisterPage from "./components/LoginController/RegisterController/RegisterPage.jsx";
 import Login from "./components/LoginController/login.jsx";
 import StaffPage from "./components/Staff/StaffPage.jsx";
+import TrustedCompanies from "./components/Customer/customer-productCard/productCard.jsx";
+
 import "./index.css";
 ReactDOM.createRoot(document.getElementById("root")).render(
   <AuthProvider>

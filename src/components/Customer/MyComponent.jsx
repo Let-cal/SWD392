@@ -137,7 +137,7 @@ function Hero() {
           </h1>
           <Link to="/AboutPage">
             <button className="coolBeans">
-              <span className="uppercase">E</span>PLORE{" "}
+              <span className="uppercase">E</span>XPLORE{" "}
               <span className="uppercase">M</span>ORE
             </button>
           </Link>
@@ -208,6 +208,7 @@ function MyComponent() {
       <div className="flex flex-col items-center px-20 pb-0 bg-white max-md:px-5 max-sm:mt-[130px]">
         <Hero />
 
+
         <section ref={zodiacRef} className="fade-in-section">
           <Zodiac />
         </section>
@@ -224,8 +225,9 @@ function MyComponent() {
           ref={trustedCompaniesRef}
           className="fade-in-section mb-[50px]"
         >
-          <TrustedCompanies />
+       
         </section>
+
       </div>
 
       <Footer />

@@ -33,7 +33,7 @@
 .button-zodiac:hover {
   box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3), 0 0 10px rgba(255, 255, 255, 0.5); /* Glowing effect */
   background-color: white;
-  transition: all 0.5s ease, left 0.5s ease;
+  transition: all 0.5s ease;
 }
 
 .button-zodiac .text {
@@ -45,3 +45,36 @@
   text-shadow: 0 0 1.5px rgba(118, 118, 118, 0.954); /* Glowing text effect */
   color: rgb(0, 0, 0); /* Ensure text color is maintained */
 }
+
+.button-zodiac.clicked {
+  transform: translateY(3px) scale(1.1);
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3), 0 0 10px rgba(255, 255, 255, 0.5);
+  background-color: #f9f9f9;
+  /* border: 2px solid #1a2a4a; */
+  transition: all 0.5s ease;
+}
+
+.button-zodiac.clicked::after {
+  width: 100%;
+  left: 0;
+}
+
+.button-zodiac.clicked:hover {
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3), 0 0 10px rgba(255, 255, 255, 0.5);
+  background-color: white;
+}
+
+.button-zodiac.clicked:active,
+.button-zodiac.clicked:focus {
+  transform: translateY(3px) scale(1.1);
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3), 0 0 10px rgba(255, 255, 255, 0.5);
+  background-color: #f9f9f9;
+  /* border: 2px solid #1a2a4a; */
+}
+
+.button-zodiac.clicked:active .text,
+.button-zodiac.clicked:focus .text {
+  text-shadow: 0 0 2.5px rgba(118, 118, 118, 0.954);
+  color: rgb(0, 0, 0);
+}
+
