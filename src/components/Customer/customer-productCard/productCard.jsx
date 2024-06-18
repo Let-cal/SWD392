@@ -12,6 +12,7 @@ const TrustedCompanies = ({ selectedZodiacId }) => {
   const [cardsData, setCardsData] = useState([]);
   const [zodiacDetail, setZodiacDetail] = useState(null);
   const [currentPage, setCurrentPage] = useState(1);
+  const [loading, setLoading] = useState(true);
 
   const handleChangeCategory = (event) => {
     setCategory(event.target.value);
@@ -30,6 +31,7 @@ const TrustedCompanies = ({ selectedZodiacId }) => {
     if (filterType === "material") setMaterial("");
     if (filterType === "gender") setGender("");
   };
+
   const categoryMap = {
     1: "Necklaces",
     2: "Bracelets",
@@ -61,7 +63,9 @@ const TrustedCompanies = ({ selectedZodiacId }) => {
     11: "Aquarius",
     12: "Pisces",
   };
+
   useEffect(() => {
+    setLoading(true);
     axios
       .get("https://zodiacjewerly.azurewebsites.net/api/products")
       .then((response) => {
@@ -127,9 +131,11 @@ const TrustedCompanies = ({ selectedZodiacId }) => {
         }));
 
         setCardsData(formattedData);
+        setLoading(false);
       })
       .catch((error) => {
         console.error("There was an error fetching the data!", error);
+        setLoading(false);
       });
   }, [selectedZodiacId, category, material, gender]);
 
@@ -183,7 +189,9 @@ const TrustedCompanies = ({ selectedZodiacId }) => {
       </h2>
 
       <div className="container-product-card">
-        {displayedCards.length > 0 ? (
+        {loading ? (
+          <p>Loading...</p>
+        ) : displayedCards.length > 0 ? (
           displayedCards.map((card, index) => (
             <Card
               key={index}

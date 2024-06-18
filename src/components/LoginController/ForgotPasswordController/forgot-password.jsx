@@ -1,9 +1,9 @@
-import { Backdrop, CircularProgress } from "@mui/material";
 import axios from "axios";
 import { useSnackbar } from "notistack";
 import { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-
+import "../../Customer/Header/header.css";
+import LoadingBackdrop from "../../Loading/LoadingBackdrop";
 function ForgotPassword() {
   const [email, setEmail] = useState(localStorage.getItem("email") || "");
   const [counter, setCounter] = useState(0);
@@ -74,12 +74,7 @@ function ForgotPassword() {
 
   return (
     <div className="flex flex-col bg-white">
-      <Backdrop
-        sx={{ color: "#fff", zIndex: (theme) => theme.zIndex.drawer + 1 }}
-        open={loading}
-      >
-        <CircularProgress color="inherit" />
-      </Backdrop>
+      <LoadingBackdrop open={loading} />
       <div className="flex flex-col self-center px-5 mt-16 max-w-full w-[495px] max-md:mt-10">
         <div className="title-header flex-auto text-6xl leading-10 text-center">
           <span className="font-bold bg-gradient-custom-header-title bg-clip-text text-transparent">

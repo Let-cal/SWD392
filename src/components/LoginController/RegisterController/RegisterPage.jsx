@@ -1,9 +1,9 @@
-import { Backdrop, CircularProgress } from "@mui/material";
 import axios from "axios";
 import { useSnackbar } from "notistack";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import "../../Customer/Header/header.css";
+import LoadingBackdrop from "../../Loading/LoadingBackdrop";
 import Input from "./InputForm";
 
 const RegisterPage = () => {
@@ -119,12 +119,7 @@ const RegisterPage = () => {
 
   return (
     <div className="w-full h-[960px] relative bg-light-colors-white-light overflow-hidden flex flex-col items-center justify-start pt-[50px] px-0 pb-0 box-border gap-[50px] leading-[normal] tracking-[normal] text-left text-[38px] text-slate-900 font-body-medium mq675:gap-[25px]">
-      <Backdrop
-        sx={{ color: "#fff", zIndex: (theme) => theme.zIndex.drawer + 1 }}
-        open={loading}
-      >
-        <CircularProgress color="inherit" />
-      </Backdrop>
+      <LoadingBackdrop open={loading} />
       <div className="w-[535px] flex flex-col items-center justify-start py-0 px-5 box-border gap-[32px] max-w-full mq675:gap-[16px]">
         <div className="title-header flex-auto text-6xl leading-10">
           <span className="font-bold bg-gradient-custom-header-title bg-clip-text text-transparent">

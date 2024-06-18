@@ -15,6 +15,11 @@ import {
   zodiacs,
 } from "./ChangeIDtoName";
 
+// Utility function to format price
+const formatPrice = (price) => {
+  return price.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+};
+
 const InforProduct = ({ product, onUpdate, Action, onGetAll }) => {
   const [isEditing, setIsEditing] = useState(false);
   const [editedProduct, setEditedProduct] = useState({ ...product });
@@ -194,7 +199,7 @@ const InforProduct = ({ product, onUpdate, Action, onGetAll }) => {
               className="border px-1 py-1 rounded w-full"
             />
           ) : (
-            product.price
+            formatPrice(product.price) // Format the price here
           ),
         },
         {
@@ -353,7 +358,10 @@ const InforProduct = ({ product, onUpdate, Action, onGetAll }) => {
           ),
         },
       ].map((item, index) => (
-        <div key={index} className="w-1/12 text-gray-500 font-medium">
+        <div
+          key={index}
+          className="w-[10%] text-xs uppercase text-gray-500 font-medium"
+        >
           {item.content}
         </div>
       ))}
