@@ -1,13 +1,19 @@
 import {
   Backdrop,
+  Button,
   CircularProgress,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogTitle,
   FormControl,
   InputLabel,
   MenuItem,
   Select,
+  TextField,
 } from "@mui/material";
 import axios from "axios";
-import { enqueueSnackbar } from "notistack";
+import { useSnackbar } from "notistack";
 import PropTypes from "prop-types";
 import { useState } from "react";
 import {
@@ -20,7 +26,6 @@ import {
   getMaterialID,
   getZodiacID,
 } from "../ChangeIDtoName";
-import Input from "./InputForm";
 
 const CreateProductModal = ({ isOpen, onClose, onProductCreated }) => {
   const [formData, setFormData] = useState({
@@ -35,12 +40,9 @@ const CreateProductModal = ({ isOpen, onClose, onProductCreated }) => {
   });
 
   const [loading, setLoading] = useState(false);
+  const { enqueueSnackbar } = useSnackbar();
 
   const handleChange = (e) => {
-    setFormData({ ...formData, [e.target.name]: e.target.value });
-  };
-
-  const handleSelectChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
@@ -107,52 +109,67 @@ const CreateProductModal = ({ isOpen, onClose, onProductCreated }) => {
     }
   };
 
-  if (!isOpen) return null;
-
   return (
-    <div style={modalStyles.overlay}>
-      <div style={modalStyles.modal}>
-        <button onClick={onClose} style={modalStyles.closeButton}>
-          X
-        </button>
-        <h2 className="font-bold mb-4 text-2xl font-serif">Create Product</h2>
-        <form onSubmit={handleSubmit}>
-          <Input
-            Content="Product Name"
-            Placeholder="Enter the product name"
-            propMinWidth="200px"
+    <Dialog open={isOpen} onClose={onClose}>
+      <DialogTitle>Create Product</DialogTitle>
+      <form onSubmit={handleSubmit}>
+        <DialogContent>
+          <TextField
+            autoFocus
+            margin="dense"
+            id="nameProduct"
+            label="Product Name"
+            type="text"
+            fullWidth
+            required
+            variant="outlined"
             name="nameProduct"
+            value={formData.nameProduct}
             onChange={handleChange}
           />
-          <Input
-            Content="Description"
-            Placeholder="Enter the product description"
-            propMinWidth="200px"
+          <TextField
+            margin="dense"
+            id="descriptionProduct"
+            label="Description"
+            type="text"
+            fullWidth
+            required
+            variant="outlined"
             name="descriptionProduct"
+            value={formData.descriptionProduct}
             onChange={handleChange}
           />
-          <Input
-            Content="Price"
-            Placeholder="Enter the product price"
-            propMinWidth="200px"
+          <TextField
+            margin="dense"
+            id="price"
+            label="Price"
+            type="number"
+            fullWidth
+            required
+            variant="outlined"
             name="price"
-            inputType="number"
+            value={formData.price}
             onChange={handleChange}
           />
-          <Input
-            Content="Quantity"
-            Placeholder="Enter the product quantity"
-            propMinWidth="200px"
+          <TextField
+            margin="dense"
+            id="quantity"
+            label="Quantity"
+            type="number"
+            fullWidth
+            required
+            variant="outlined"
             name="quantity"
-            inputType="number"
+            value={formData.quantity}
             onChange={handleChange}
           />
-          <FormControl fullWidth margin="normal">
+          <FormControl fullWidth margin="dense" variant="outlined" required>
             <InputLabel>Category</InputLabel>
             <Select
+              label="Category"
               value={formData.categoryId}
+              onChange={handleChange}
               name="categoryId"
-              onChange={handleSelectChange}
             >
               {Object.keys(NameCategories).map((key) => (
                 <MenuItem key={key} value={key}>
@@ -161,12 +178,13 @@ const CreateProductModal = ({ isOpen, onClose, onProductCreated }) => {
               ))}
             </Select>
           </FormControl>
-          <FormControl fullWidth margin="normal">
+          <FormControl fullWidth margin="dense" variant="outlined" required>
             <InputLabel>Material</InputLabel>
             <Select
+              label="Material"
               value={formData.materialId}
+              onChange={handleChange}
               name="materialId"
-              onChange={handleSelectChange}
             >
               {Object.keys(NameMaterials).map((key) => (
                 <MenuItem key={key} value={key}>
@@ -175,12 +193,13 @@ const CreateProductModal = ({ isOpen, onClose, onProductCreated }) => {
               ))}
             </Select>
           </FormControl>
-          <FormControl fullWidth margin="normal">
+          <FormControl fullWidth margin="dense" variant="outlined" required>
             <InputLabel>Gender</InputLabel>
             <Select
+              label="Gender"
               value={formData.genderId}
+              onChange={handleChange}
               name="genderId"
-              onChange={handleSelectChange}
             >
               {Object.keys(NameGenders).map((key) => (
                 <MenuItem key={key} value={key}>
@@ -189,12 +208,13 @@ const CreateProductModal = ({ isOpen, onClose, onProductCreated }) => {
               ))}
             </Select>
           </FormControl>
-          <FormControl fullWidth margin="normal">
+          <FormControl fullWidth margin="dense" variant="outlined" required>
             <InputLabel>Zodiac</InputLabel>
             <Select
+              label="Zodiac"
               value={formData.zodiacId}
+              onChange={handleChange}
               name="zodiacId"
-              onChange={handleSelectChange}
             >
               {Object.keys(NameZodiacs).map((key) => (
                 <MenuItem key={key} value={key}>
@@ -203,15 +223,20 @@ const CreateProductModal = ({ isOpen, onClose, onProductCreated }) => {
               ))}
             </Select>
           </FormControl>
-          <button type="submit" style={modalStyles.submitButton}>
-            Create Product
-          </button>
-        </form>
-        <Backdrop style={{ color: "#fff", zIndex: 1000 }} open={loading}>
-          <CircularProgress color="inherit" />
-        </Backdrop>
-      </div>
-    </div>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={onClose} color="secondary">
+            Cancel
+          </Button>
+          <Button type="submit" color="primary" disabled={loading}>
+            {loading ? <CircularProgress size={24} /> : "Create Product"}
+          </Button>
+        </DialogActions>
+      </form>
+      <Backdrop style={{ zIndex: 1000, color: "#fff" }} open={loading}>
+        <CircularProgress color="inherit" />
+      </Backdrop>
+    </Dialog>
   );
 };
 
@@ -219,46 +244,6 @@ CreateProductModal.propTypes = {
   isOpen: PropTypes.bool.isRequired,
   onClose: PropTypes.func.isRequired,
   onProductCreated: PropTypes.func.isRequired,
-};
-
-const modalStyles = {
-  overlay: {
-    position: "fixed",
-    top: 0,
-    left: 0,
-    right: 0,
-    bottom: 0,
-    backgroundColor: "rgba(0, 0, 0, 0.5)",
-    display: "flex",
-    justifyContent: "center",
-    alignItems: "center",
-  },
-  modal: {
-    background: "white",
-    padding: "20px",
-    borderRadius: "8px",
-    maxWidth: "500px",
-    width: "100%",
-    position: "relative",
-  },
-  closeButton: {
-    position: "absolute",
-    top: "10px",
-    right: "10px",
-    background: "transparent",
-    border: "none",
-    fontSize: "20px",
-    cursor: "pointer",
-  },
-  submitButton: {
-    background: "#000",
-    color: "#fff",
-    padding: "10px 20px",
-    border: "none",
-    borderRadius: "4px",
-    cursor: "pointer",
-    marginTop: "10px",
-  },
 };
 
 export default CreateProductModal;
