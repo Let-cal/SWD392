@@ -221,12 +221,7 @@ function MyComponent() {
         >
           <ReasonChoose scrollToTrustedCompanies={scrollToTrustedCompanies} />
         </section>
-        <section
-          ref={trustedCompaniesRef}
-          className="fade-in-section mb-[50px]"
-        >
-       
-        </section>
+        
       </div>
 
       <Footer />

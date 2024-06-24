@@ -1,8 +1,9 @@
 import axios from "axios";
 import React, { useEffect, useState } from "react";
-import { useLocation, useParams } from "react-router-dom";
+import { useLocation, useNavigate, useParams } from "react-router-dom";
 import Header from "../Header/header";
 import "./detail-product.css";
+import AddShoppingCartIcon from '@mui/icons-material/AddShoppingCart';
 
 const ProductImage = ({ src, alt, index, onClick, isSelected }) => (
   <img
@@ -13,16 +14,24 @@ const ProductImage = ({ src, alt, index, onClick, isSelected }) => (
   />
 );
 
-const SimilarProduct = ({ imageSrc, name, price }) => (
-  <div className="similar-product">
-    <img className="similar-product-image" src={imageSrc} alt={name} />
-    <div className="similar-product-name">{name}</div>
-    <div className="similar-product-price">
-      <span className='price'>{price}</span> 
-      <span className="currency">đ</span>
+const SimilarProduct = ({ imageSrc, name, price, product }) => {
+  const navigate = useNavigate();
+
+  const handleClick = () => {
+    navigate(`/DetailProduct/${product.id}`, { state: { product } });
+  };
+
+  return (
+    <div className="similar-product" onClick={handleClick}>
+      <img className="similar-product-image" src={imageSrc} alt={name} />
+      <div className="similar-product-name">{name}</div>
+      <div className="similar-product-price">
+        <span className="price">{price}</span>
+        <span className="currency">đ</span>
+      </div>
     </div>
-  </div>
-);
+  );
+};
 
 const categoryMap = {
   1: "Necklaces",
@@ -99,17 +108,15 @@ const ProductTabs = ({ activeTab, setActiveTab, product }) => {
     <div>
       <div className="product-tabs">
         <div
-          className={`product-tab ${
-            activeTab === "description" ? "active" : ""
-          }`}
+          className={`product-tab ${activeTab === "description" ? "active" : ""
+            }`}
           onClick={() => setActiveTab("description")}
         >
           Information
         </div>
         <div
-          className={`product-tab ${
-            activeTab === "additional" ? "active" : ""
-          }`}
+          className={`product-tab ${activeTab === "additional" ? "active" : ""
+            }`}
           onClick={() => setActiveTab("additional")}
         >
           Product description
@@ -124,6 +131,7 @@ const ProductTabs = ({ activeTab, setActiveTab, product }) => {
 const DetailProduct = () => {
   const { id } = useParams();
   const location = useLocation();
+  const navigate = useNavigate();
   const [product, setProduct] = useState(location.state?.product || {});
   const [mainImageSrc, setMainImageSrc] = useState(
     product["image-urls"] ? product["image-urls"][0] : ""
@@ -132,25 +140,30 @@ const DetailProduct = () => {
   const [quantity, setQuantity] = useState(1);
   const [similarProducts, setSimilarProducts] = useState([]);
 
-  useEffect(() => {
-    if (!product.id) {
-      axios
-        .get(`https://zodiacjewerly.azurewebsites.net/api/products/${id}`)
-        .then((response) => {
-          setProduct(response.data);
-          setMainImageSrc(response.data["image-urls"][0]);
-        })
-        .catch((error) => {
-          console.error("There was an error fetching the product data!", error);
-        });
+  const fetchProduct = async (productId) => {
+    try {
+      const response = await axios.get(`https://zodiacjewerly.azurewebsites.net/api/products/${productId}`);
+      if (response.data && response.data.success && response.data.data) {
+        const productData = response.data.data;
+        setProduct(productData);
+        setMainImageSrc(productData["image-urls"][0]);
+      } else {
+        console.error("Dữ liệu sản phẩm không hợp lệ hoặc thiếu các thuộc tính cần thiết:", response.data);
+      }
+    } catch (error) {
+      console.error("Có lỗi xảy ra khi lấy dữ liệu sản phẩm!", error);
     }
-  }, [id, product.id]);
+  };
+
+  useEffect(() => {
+    fetchProduct(id);
+  }, [id]);
 
   useEffect(() => {
     axios.get('https://zodiacjewerly.azurewebsites.net/api/products')
       .then(response => {
-        console.log("API Response:", response.data); // Kiểm tra phản hồi từ API
-        if (response.data && Array.isArray(response.data.data)) {
+        console.log("API Response:", response.data);
+        if (response.data && response.data.success && Array.isArray(response.data.data)) {
           setSimilarProducts(response.data.data);
         } else {
           setSimilarProducts([]);
@@ -212,10 +225,15 @@ const DetailProduct = () => {
               <div className="quantity-value">{quantity}</div>
               <button onClick={() => setQuantity(quantity + 1)}>+</button>
             </div>
-            <button className="add-to-cart-button" onClick={handleAddToCart}>
-              ADD TO CART
-            </button>
+
           </div>
+          <button className="add-to-cart-button" onClick={handleAddToCart}>
+            <AddShoppingCartIcon/> ADD TO CART
+          </button>
+
+          <button className="checkout-button" onClick={handleAddToCart}>
+            PROCESS TO CHECKOUT
+          </button>
           <ProductTabs
             activeTab={activeTab}
             setActiveTab={setActiveTab}
@@ -223,7 +241,6 @@ const DetailProduct = () => {
           />
         </div>
       </div>
-
 
       <div className="similar-products">
         <h2>Similar Products</h2>
@@ -235,7 +252,7 @@ const DetailProduct = () => {
                 imageSrc={product["image-urls"][0]}
                 name={product["name-product"]}
                 price={product.price}
-              // tags={product.tags || []}
+                product={product}
               />
             ))
           ) : (

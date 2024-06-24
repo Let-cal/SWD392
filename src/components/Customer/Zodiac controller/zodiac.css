@@ -42,7 +42,6 @@
 }
 
 .button-zodiac:hover .text {
-  text-shadow: 0 0 1.5px rgba(118, 118, 118, 0.954); /* Glowing text effect */
   color: rgb(0, 0, 0); /* Ensure text color is maintained */
 }
 
@@ -74,7 +73,5 @@
 
 .button-zodiac.clicked:active .text,
 .button-zodiac.clicked:focus .text {
-  text-shadow: 0 0 2.5px rgba(118, 118, 118, 0.954);
   color: rgb(0, 0, 0);
 }
-
