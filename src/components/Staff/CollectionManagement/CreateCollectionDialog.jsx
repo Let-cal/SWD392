@@ -35,7 +35,7 @@ const CreateCollectionDialog = ({
       formData.append("DateClose", newCollection.dateClose);
 
       const response = await axios.post(
-        "https://zodiacjewerly.azurewebsites.net/api/collections",
+        "https://zodiacjewerlyswd.azurewebsites.net/api/collections",
         formData,
         {
           headers: {

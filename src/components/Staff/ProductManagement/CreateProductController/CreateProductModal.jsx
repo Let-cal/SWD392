@@ -83,7 +83,7 @@ const CreateProductModal = ({ isOpen, onClose, onProductCreated }) => {
       }
 
       const response = await axios.post(
-        `https://zodiacjewerly.azurewebsites.net/api/products?zodiacId=${zodiacIdValue}`,
+        `https://zodiacjewerlyswd.azurewebsites.net/api/products?zodiacId=${zodiacIdValue}`,
         requestData,
         {
           headers: {

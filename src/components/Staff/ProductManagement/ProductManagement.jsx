@@ -33,7 +33,7 @@ const ProductPage = () => {
     setLoading(true);
     try {
       const response = await axios.get(
-        "https://zodiacjewerly.azurewebsites.net/api/products"
+        "https://zodiacjewerlyswd.azurewebsites.net/api/products"
       );
       const fetchedProducts = response.data.data.map((product) => ({
         id: product.id,
@@ -129,7 +129,7 @@ const ProductPage = () => {
       };
 
       const response = await axios.put(
-        `https://zodiacjewerly.azurewebsites.net/api/products/${product.id}/zodiac/${product.zodiacId}`,
+        `https://zodiacjewerlyswd.azurewebsites.net/api/products/${product.id}/zodiac/${product.zodiacId}`,
         payload,
         { headers: { "Content-Type": "application/json" } }
       );
@@ -152,7 +152,7 @@ const ProductPage = () => {
     setUpdating(true);
     try {
       await axios.delete(
-        `https://zodiacjewerly.azurewebsites.net/api/products/${productId}`
+        `https://zodiacjewerlyswd.azurewebsites.net/api/products/${productId}`
       );
 
       setProducts((prev) => prev.filter((product) => product.id !== productId));

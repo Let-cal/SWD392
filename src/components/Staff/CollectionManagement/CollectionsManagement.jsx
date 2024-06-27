@@ -22,7 +22,7 @@ const CollectionsManagement = () => {
     const token = localStorage.getItem("token");
     try {
       const response = await axios.get(
-        "https://zodiacjewerly.azurewebsites.net/api/collections",
+        "https://zodiacjewerlyswd.azurewebsites.net/api/collections",
         {
           headers: {
             accept: "*/*",

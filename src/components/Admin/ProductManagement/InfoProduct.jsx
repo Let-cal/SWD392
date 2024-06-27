@@ -34,7 +34,7 @@ const InforProduct = ({ product, onUpdate, Action, onGetAll }) => {
   const fetchImageInfo = async () => {
     try {
       const response = await axios.get(
-        "https://zodiacjewerly.azurewebsites.net/api/image"
+        "https://zodiacjewerlyswd.azurewebsites.net/api/image"
       );
       const imageData = response.data.data; // Ensure the correct data structure
       console.log("Fetched image data:", imageData); // Log image data
@@ -83,7 +83,7 @@ const InforProduct = ({ product, onUpdate, Action, onGetAll }) => {
     setLoading(true);
     try {
       const uploadResponse = await axios.post(
-        `https://zodiacjewerly.azurewebsites.net/api/products/${product.id}/images`,
+        `https://zodiacjewerlyswd.azurewebsites.net/api/products/${product.id}/images`,
         formData,
         {
           headers: {
@@ -140,7 +140,7 @@ const InforProduct = ({ product, onUpdate, Action, onGetAll }) => {
     setLoading(true);
     try {
       await axios.put(
-        `https://zodiacjewerly.azurewebsites.net/api/products/${product.id}/images/${imageInfo.id}`,
+        `https://zodiacjewerlyswd.azurewebsites.net/api/products/${product.id}/images/${imageInfo.id}`,
         formData,
         {
           headers: {

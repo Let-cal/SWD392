@@ -45,7 +45,7 @@ function ForgotPassword() {
     setLoading(true);
     try {
       const response = await axios.post(
-        `https://zodiacjewerly.azurewebsites.net/api/authentication/forgot-password?email=${encodeURIComponent(
+        `https://zodiacjewerlyswd.azurewebsites.net/api/authentication/forgot-password?email=${encodeURIComponent(
           email
         )}`
       );

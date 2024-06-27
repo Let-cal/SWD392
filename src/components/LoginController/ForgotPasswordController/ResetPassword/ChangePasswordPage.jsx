@@ -27,7 +27,7 @@ const ChangePasswordPage = () => {
 
     try {
       const response = await fetch(
-        "https://zodiacjewerly.azurewebsites.net/api/authentication/pass-new",
+        "https://zodiacjewerlyswd.azurewebsites.net/api/authentication/pass-new",
         {
           method: "POST",
           headers: {
