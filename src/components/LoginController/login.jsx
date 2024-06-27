@@ -68,7 +68,7 @@ function LoginForm() {
     const requestBody = { email: formData.email, password: formData.password };
     try {
       const response = await axios.post(
-        "https://zodiacjewerly.azurewebsites.net/api/authentication/login",
+        "https://zodiacjewerlyswd.azurewebsites.net/api/authentication/login",
         requestBody
       );
 

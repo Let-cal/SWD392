@@ -142,7 +142,7 @@ const DetailProduct = () => {
 
   const fetchProduct = async (productId) => {
     try {
-      const response = await axios.get(`https://zodiacjewerly.azurewebsites.net/api/products/${productId}`);
+      const response = await axios.get(`https://zodiacjewerlyswd.azurewebsites.net/api/products/${productId}`);
       if (response.data && response.data.success && response.data.data) {
         const productData = response.data.data;
         setProduct(productData);
@@ -160,7 +160,7 @@ const DetailProduct = () => {
   }, [id]);
 
   useEffect(() => {
-    axios.get('https://zodiacjewerly.azurewebsites.net/api/products')
+    axios.get('https://zodiacjewerlyswd.azurewebsites.net/api/products')
       .then(response => {
         console.log("API Response:", response.data);
         if (response.data && response.data.success && Array.isArray(response.data.data)) {
@@ -241,6 +241,7 @@ const DetailProduct = () => {
           />
         </div>
       </div>
+
 
       <div className="similar-products">
         <h2>Similar Products</h2>

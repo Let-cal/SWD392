@@ -103,7 +103,7 @@ const TrustedCompanies = ({ selectedZodiacId }) => {
   const [zodiacDetail, setZodiacDetail] = useState(null);
 
   useEffect(() => {
-    axios.get('https://zodiacjewerly.azurewebsites.net/api/products')
+    axios.get('https://zodiacjewerlyswd.azurewebsites.net/api/products')
       .then(response => {
         console.log('API response:', response.data);
 
