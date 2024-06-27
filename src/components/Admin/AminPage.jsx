@@ -1,6 +1,7 @@
 import { useState } from "react";
 import UserManagement from "../Admin/UserManagement/UserController.jsx";
 import { useAuth } from "../LoginController/AuthContext.jsx";
+import CollectionsManagement from "./CollectionManagement/CollectionsManagement.jsx";
 import Header from "./HeaderOfAdmin.jsx";
 import AdminAccountManagement from "./HomePage/AdminAccountManagement.jsx";
 import OrdersManagement from "./OrderManagement/OrderManagement.jsx";
@@ -24,7 +25,7 @@ function AdminPage() {
       ContentComponent = ProductsManagement;
       break;
     case "CollectionsManagement":
-      // ContentComponent = CollectionsManagement;
+      ContentComponent = CollectionsManagement;
       break;
     case "ZodiacManagement":
       ContentComponent = ZodiacManagement;
