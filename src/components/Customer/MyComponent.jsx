@@ -1,3 +1,4 @@
+
 import { defineElement } from "@lordicon/element";
 import lottie from "lottie-web";
 import PropTypes from "prop-types";
@@ -136,7 +137,7 @@ function Hero() {
           </h1>
           <Link to="/AboutPage">
             <button className="coolBeans">
-              <span className="uppercase">E</span>XPLORE{" "}
+              <span className="uppercase">E</span>PLORE{" "}
               <span className="uppercase">M</span>ORE
             </button>
           </Link>
