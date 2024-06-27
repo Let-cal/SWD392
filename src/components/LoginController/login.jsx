@@ -1,16 +1,10 @@
 import { Visibility, VisibilityOff } from "@mui/icons-material";
-import {
-  Backdrop,
-  Checkbox,
-  CircularProgress,
-  IconButton,
-  InputAdornment,
-  TextField,
-} from "@mui/material";
+import { Checkbox, IconButton, InputAdornment, TextField } from "@mui/material";
 import axios from "axios";
 import { useSnackbar } from "notistack";
 import { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
+import LoadingBackdrop from "../Loading/LoadingBackdrop";
 import { useAuth } from "./AuthContext";
 function ImageSection() {
   return (
@@ -116,12 +110,7 @@ function LoginForm() {
 
   return (
     <div className="flex flex-col ml-5 w-2/5 max-md:ml-0 max-md:w-full">
-      <Backdrop
-        sx={{ color: "#fff", zIndex: (theme) => theme.zIndex.drawer + 1 }}
-        open={loading}
-      >
-        <CircularProgress color="inherit" />
-      </Backdrop>
+      <LoadingBackdrop open={loading} />
       <div className="flex flex-col grow justify-center px-16 w-full bg-white max-md:px-5 min-h-screen">
         <div className="flex flex-col mx-8 mt-auto mb-32 max-md:mx-2.5 max-md:mt-10">
           <form onSubmit={handleLogin}>

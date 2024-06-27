@@ -16,7 +16,7 @@ function ZodiacManagement() {
     const fetchData = async () => {
       try {
         const response = await axios.get(
-          "https://zodiacjewerly.azurewebsites.net/api/zodiacs"
+          "https://zodiacjewerlyswd.azurewebsites.net/api/zodiacs"
         );
         setData(response.data.data);
       } catch (error) {

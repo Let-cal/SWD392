@@ -43,7 +43,7 @@ const CreateStaffModal = ({ isOpen, onClose }) => {
       console.log("Request Data:", requestData); // Log the request payload
 
       await axios.post(
-        "https://zodiacjewerly.azurewebsites.net/api/authentication/staff",
+        "https://zodiacjewerlyswd.azurewebsites.net/api/authentication/staff",
         {
           email: email,
           password: password,

@@ -6,7 +6,7 @@ const ReasonChoose = ({ className = "", scrollToTrustedCompanies }) => {
     <section
       className={`self-stretch bg-white overflow-hidden flex flex-row items-start justify-center box-border gap-[80px] max-w-full text-left text-29xl text-black font-text-small-link md:gap-[40px] md:box-border  mq1125:box-border sm:gap-[20px]  sm:box-border lg:flex-wrap max-sm:hidden ${className}`}
     >
-      <div className="h-[560px] p-5 bg-[#fff7f7] rounded-lg flex-1 flex flex-col items-start justify-start gap-[24px] bg-[url('public/images/zodiacImagePage.png')] bg-cover bg-no-repeat bg-[top] min-w-[247px] max-w-full transform transition-transform duration-300 hover:scale-105 ">
+      <div className="h-[560px] p-5 bg-[#fff7f7] rounded-lg flex-1 flex flex-col items-start justify-start gap-[24px] bg-[url('/images/zodiacImagePage.png')] bg-cover bg-no-repeat bg-[top] min-w-[247px] max-w-full transform transition-transform duration-300 hover:scale-105 ">
         <div className="self-stretch flex flex-col items-start justify-start">
           <div className="self-stretch flex flex-col items-start justify-start gap-[24px] lg:self-stretch lg:w-auto ">
             <h1 className="m-0 font-serif text-[35px] self-stretch relative text-inherit leading-[58px] font-bold font-inherit md:text-19xl md:leading-[46px] sm:text-10xl sm:leading-[35px]">

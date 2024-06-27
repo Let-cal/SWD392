@@ -20,7 +20,7 @@ function OrdersManagement() {
 
   const fetchOrders = () => {
     setLoading(true);
-    let url = "https://zodiacjewerly.azurewebsites.net/api/orders";
+    let url = "https://zodiacjewerlyswd.azurewebsites.net/api/orders";
     fetch(url, {
       method: "GET",
       headers: {

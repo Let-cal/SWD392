@@ -1,0 +1,12 @@
+@keyframes star-move {
+  0% {
+    transform: translate(-50%, -50%) rotate(0deg);
+  }
+  100% {
+    transform: translate(-50%, -50%) rotate(360deg);
+  }
+}
+
+.star-animation {
+  animation: star-move 2s linear infinite;
+}

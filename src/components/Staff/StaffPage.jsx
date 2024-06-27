@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { useAuth } from "../LoginController/AuthContext.jsx";
+import CollectionsManagement from "./CollectionManagement/CollectionsManagement.jsx";
 import Header from "./HeaderOfStaff.jsx";
 import StaffAccountManagement from "./HomePage/StaffAccountManagement.jsx";
 import OrdersManagement from "./OrderManagement/OrderManagement.jsx";
@@ -7,7 +8,6 @@ import ProductsManagement from "./ProductManagement/ProductManagement.jsx";
 import "./StaffPage.css"; // Add this import for the new CSS styles
 import ZodiacManagement from "./ZodiacController/ZodiacManagement.jsx";
 import Sidebar from "./sidebar.jsx";
-
 function StaffPage() {
   const { handleLogout } = useAuth();
   const [selectedContent, setSelectedContent] = useState(
@@ -24,7 +24,7 @@ function StaffPage() {
       ContentComponent = ProductsManagement;
       break;
     case "CollectionsManagement":
-      // ContentComponent = CollectionsManagement;
+      ContentComponent = CollectionsManagement;
       break;
     case "ZodiacManagement":
       ContentComponent = ZodiacManagement;
