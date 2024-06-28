@@ -1,4 +1,5 @@
 import { Backdrop, CircularProgress } from "@mui/material";
+import Pagination from "@mui/material/Pagination";
 import axios from "axios";
 import { format } from "date-fns";
 import { useSnackbar } from "notistack";
@@ -12,14 +13,26 @@ const CollectionsManagement = () => {
   const [loading, setLoading] = useState(true);
   const [searchName, setSearchName] = useState("");
   const [filteredData, setFilteredData] = useState([]);
+  const [page, setPage] = useState(1);
+  // eslint-disable-next-line no-unused-vars
+  const [pageSize, setPageSize] = useState(5);
+  const [totalPages, setTotalPages] = useState(1);
   const { enqueueSnackbar } = useSnackbar();
 
-  // Function to fetch collections
+  // Function to fetch collections with pagination
   const fetchCollections = async () => {
     const token = localStorage.getItem("token");
+    console.log(token);
+    if (!token) {
+      enqueueSnackbar("Token not found, please log in again", {
+        variant: "error",
+      });
+      return;
+    }
+
     try {
       const response = await axios.get(
-        "https://zodiacjewerlyswd.azurewebsites.net/api/collections",
+        `https://zodiacjewerlyswd.azurewebsites.net/api/collections?page=${page}&pageSize=${pageSize}&sort=id`,
         {
           headers: {
             accept: "*/*",
@@ -42,8 +55,13 @@ const CollectionsManagement = () => {
       );
       setCollections(formattedData);
       setFilteredData(formattedData);
+      setTotalPages(response.data.data["total-page"]);
     } catch (error) {
       console.error("Error fetching collections:", error);
+      if (error.response) {
+        console.error("Response Data:", error.response.data);
+        console.error("Response Status:", error.response.status);
+      }
       enqueueSnackbar("Failed to load collections", { variant: "error" });
     } finally {
       setLoading(false);
@@ -52,7 +70,7 @@ const CollectionsManagement = () => {
 
   useEffect(() => {
     fetchCollections();
-  }, []);
+  }, [page, pageSize]); // Trigger fetchCollections when page or pageSize changes
 
   const handleSearch = (event) => {
     const { value } = event.target;
@@ -81,6 +99,10 @@ const CollectionsManagement = () => {
     setFilteredData(filtered);
   };
 
+  const handlePageChange = (event, newPage) => {
+    setPage(newPage);
+  };
+
   return (
     <div>
       <div className="flex justify-between items-center mb-4">
@@ -102,7 +124,18 @@ const CollectionsManagement = () => {
           <CircularProgress color="inherit" />
         </Backdrop>
       ) : (
-        <TableCollections data={filteredData} />
+        <>
+          <TableCollections data={filteredData} />
+          <div className="flex justify-center mt-6">
+            <Pagination
+              count={totalPages}
+              page={page}
+              onChange={handlePageChange}
+              showFirstButton
+              showLastButton
+            />
+          </div>
+        </>
       )}
     </div>
   );

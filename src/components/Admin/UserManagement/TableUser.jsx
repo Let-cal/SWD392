@@ -1,5 +1,3 @@
-// TableCollections.jsx
-
 import VisibilityIcon from "@mui/icons-material/Visibility";
 import Button from "@mui/material/Button";
 import Paper from "@mui/material/Paper";
@@ -11,6 +9,8 @@ import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
 import { styled } from "@mui/material/styles";
 import PropTypes from "prop-types";
+import { useState } from "react";
+import EditUserDialog from "./EditUserDialog";
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
   [`&.${tableCellClasses.head}`]: {
@@ -32,64 +32,82 @@ const StyledTableRow = styled(TableRow)(({ theme }) => ({
 }));
 
 const getStatusColor = (status) => {
-  return status === 1 ? "green" : "red";
+  switch (status) {
+    case 1:
+      return "green";
+    case 2:
+      return "red";
+    default:
+      return "gray";
+  }
 };
 
-const TableCollections = ({ data }) => {
+const TableUser = ({ data, updateUser }) => {
+  const [selectedUser, setSelectedUser] = useState(null);
+
+  const handleViewDetails = (user) => {
+    setSelectedUser(user);
+  };
+
+  const handleCloseDialog = () => {
+    setSelectedUser(null);
+  };
+
   return (
     <TableContainer component={Paper}>
       <Table sx={{ minWidth: 700 }} aria-label="customized table">
         <TableHead>
           <TableRow>
-            <StyledTableCell align="center">Collection Number</StyledTableCell>
-            <StyledTableCell align="center">Name</StyledTableCell>
+            <StyledTableCell>ID</StyledTableCell>
+            <StyledTableCell align="center">Full Name</StyledTableCell>
+            <StyledTableCell align="center">Email</StyledTableCell>
+            <StyledTableCell align="center">Address</StyledTableCell>
+            <StyledTableCell align="center">Telephone Number</StyledTableCell>
+            <StyledTableCell align="center">Role</StyledTableCell>
             <StyledTableCell align="center">Status</StyledTableCell>
-            <StyledTableCell align="center">Date Open</StyledTableCell>
-            <StyledTableCell align="center">Date Close</StyledTableCell>
-            <StyledTableCell align="center">Image</StyledTableCell>
             <StyledTableCell align="center">Action</StyledTableCell>
           </TableRow>
         </TableHead>
         <TableBody>
           {Array.isArray(data) &&
-            data.map((collection) => (
-              <StyledTableRow key={collection.id}>
-                <StyledTableCell component="th" scope="row" align="center">
-                  {collection.id}
+            data.map((user) => (
+              <StyledTableRow key={user.id}>
+                <StyledTableCell component="th" scope="row">
+                  {user.id}
                 </StyledTableCell>
                 <StyledTableCell align="center">
-                  {collection["name-collection"]}
+                  {user["full-name"]}
+                </StyledTableCell>
+                <StyledTableCell align="center">{user.email}</StyledTableCell>
+                <StyledTableCell align="center">
+                  {user.address || "N/A"}
+                </StyledTableCell>
+                <StyledTableCell align="center">
+                  {user["telephone-number"] || "N/A"}
+                </StyledTableCell>
+                <StyledTableCell align="center">
+                  {user["role-name"]}
                 </StyledTableCell>
                 <StyledTableCell
                   align="center"
-                  style={{ color: getStatusColor(collection.status) }}
+                  style={{ color: getStatusColor(user.status) }}
                 >
-                  {collection.status === 1 ? "Available" : "Unavailable"}
-                </StyledTableCell>
-                <StyledTableCell align="center">
-                  {collection["date-open"]}
-                </StyledTableCell>
-                <StyledTableCell align="center">
-                  {collection["date-close"]}
-                </StyledTableCell>
-                <StyledTableCell align="center">
-                  <img
-                    src={collection["image-collection"]}
-                    alt={collection["name-collection"]}
-                    style={{ width: "50px", height: "50px" }}
-                  />
+                  {user.status === 1 ? "Active" : "Inactive"}
                 </StyledTableCell>
                 <StyledTableCell align="center">
                   <Button
                     variant="contained"
                     endIcon={<VisibilityIcon />}
                     sx={{
+                      height: "20%",
+                      fontSize: "13px",
                       backgroundColor: "black",
                       color: "white",
                       "&:hover": {
                         backgroundColor: "gray",
                       },
                     }}
+                    onClick={() => handleViewDetails(user)}
                   >
                     View details
                   </Button>
@@ -98,12 +116,21 @@ const TableCollections = ({ data }) => {
             ))}
         </TableBody>
       </Table>
+      {selectedUser && (
+        <EditUserDialog
+          open={true}
+          handleClose={handleCloseDialog}
+          userData={selectedUser}
+          updateUser={updateUser}
+        />
+      )}
     </TableContainer>
   );
 };
 
-TableCollections.propTypes = {
+TableUser.propTypes = {
   data: PropTypes.array.isRequired,
+  updateUser: PropTypes.func.isRequired,
 };
 
-export default TableCollections;
+export default TableUser;

@@ -1,236 +1,117 @@
-import { Backdrop, CircularProgress } from "@mui/material";
+import SearchIcon from "@mui/icons-material/Search";
+import {
+  Backdrop,
+  Button,
+  CircularProgress,
+  Pagination,
+  TextField,
+} from "@mui/material";
 import axios from "axios";
-import { useSnackbar } from "notistack";
 import { useEffect, useState } from "react";
-import FilterComponent from "./FilterManagement/FilterComponent";
 import TableProduct from "./TableProduct";
-
-const ProductPage = () => {
+const ProductManagement = () => {
   const [products, setProducts] = useState([]);
-  const [filteredProducts, setFilteredProducts] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const [updating, setUpdating] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const [page, setPage] = useState(1);
+  const [totalPages, setTotalPages] = useState(1);
+  const [pageSize, setPageSize] = useState(5);
   const [search, setSearch] = useState("");
-  const [category, setCategory] = useState("");
-  const [material, setMaterial] = useState("");
-  const [gender, setGender] = useState("");
-  const [zodiac, setZodiac] = useState("");
-  const [price, setPrice] = useState([0, 0]);
-  const { enqueueSnackbar } = useSnackbar();
+  const [searchKeyword, setSearchKeyword] = useState("");
+
   useEffect(() => {
     fetchProducts();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
-
-  useEffect(() => {
-    filterProducts();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [search, category, material, gender, zodiac, price]);
+  }, [page, pageSize, searchKeyword]);
 
   const fetchProducts = async () => {
     setLoading(true);
     try {
       const response = await axios.get(
-        "https://zodiacjewerlyswd.azurewebsites.net/api/products"
+        `https://zodiacjewerlyswd.azurewebsites.net/api/products?page=${page}&pageSize=${pageSize}&search=${searchKeyword}`
       );
-      const fetchedProducts = response.data.data.map((product) => ({
-        id: product.id,
-        nameProduct: product["name-product"],
-        descriptionProduct: product["description-product"],
-        price: product.price,
-        quantity: product.quantity,
-        categoryId: product["category-id"],
-        materialId: product["material-id"],
-        genderId: product["gender-id"],
-        imageURLs: product["image-urls"],
-        zodiacId: product["zodiac-id"],
-      }));
+      const { data } = response.data;
 
-      setProducts(fetchedProducts);
-      setFilteredProducts(fetchedProducts);
-
-      const maxPrice = Math.max(...fetchedProducts.map((p) => p.price));
-      setPrice([0, maxPrice]);
+      setProducts(data["list-data"]);
+      setTotalPages(data["total-page"]);
     } catch (error) {
       console.error("Error fetching products:", error);
-
-      if (!error.response) {
-        enqueueSnackbar(
-          "Network error: Unable to connect to the server. Please check your internet connection.",
-          { variant: "error" }
-        );
-      } else {
-        enqueueSnackbar("Error fetching products", { variant: "error" });
-      }
     } finally {
       setLoading(false);
     }
   };
 
-  const filterProducts = () => {
-    let filtered = products;
-
-    if (search) {
-      filtered = filtered.filter((product) =>
-        product.nameProduct.toLowerCase().includes(search.toLowerCase())
-      );
-    }
-
-    if (category) {
-      filtered = filtered.filter(
-        (product) => product.categoryId === parseInt(category)
-      );
-    }
-
-    if (material) {
-      filtered = filtered.filter(
-        (product) => product.materialId === parseInt(material)
-      );
-    }
-
-    if (gender) {
-      filtered = filtered.filter(
-        (product) => product.genderId === parseInt(gender)
-      );
-    }
-
-    if (zodiac) {
-      filtered = filtered.filter(
-        (product) => product.zodiacId === parseInt(zodiac)
-      );
-    }
-
-    filtered = filtered.filter(
-      (product) => product.price >= price[0] && product.price <= price[1]
-    );
-
-    setFilteredProducts(filtered);
+  const handlePageChange = (event, value) => {
+    setPage(value);
   };
 
-  const updateProduct = async (product) => {
-    setUpdating(true);
-    try {
-      if (!product.id) {
-        throw new Error("Product ID is missing");
-      }
-
-      const payload = {
-        id: product.id,
-        "name-product": product.nameProduct || "",
-        "description-product": product.descriptionProduct || "",
-        price: product.price || 0,
-        quantity: product.quantity || 0,
-        "category-id": product.categoryId || 0,
-        "material-id": product.materialId || 0,
-        "gender-id": product.genderId || 0,
-        "zodiac-id": product.zodiacId || 0,
-      };
-
-      const response = await axios.put(
-        `https://zodiacjewerlyswd.azurewebsites.net/api/products/${product.id}/zodiac/${product.zodiacId}`,
-        payload,
-        { headers: { "Content-Type": "application/json" } }
-      );
-      const updatedProduct = response.data;
-      enqueueSnackbar("Product updated successfully", { variant: "success" });
-      setProducts((prev) =>
-        prev.map((p) => (p.id === updatedProduct.id ? updatedProduct : p))
-      );
-
-      await fetchProducts();
-    } catch (error) {
-      console.error("Error updating product:", error);
-      enqueueSnackbar("Error updating product", { variant: "error" });
-    } finally {
-      setUpdating(false);
-    }
+  const handlePageSizeChange = (size) => {
+    setPageSize(size);
+    setPage(1); // Reset to first page when changing page size
   };
 
-  const deleteProduct = async (productId) => {
-    setUpdating(true);
-    try {
-      await axios.delete(
-        `https://zodiacjewerlyswd.azurewebsites.net/api/products/${productId}`
-      );
-
-      setProducts((prev) => prev.filter((product) => product.id !== productId));
-      setFilteredProducts((prev) =>
-        prev.filter((product) => product.id !== productId)
-      );
-
-      enqueueSnackbar("Product deleted successfully", { variant: "success" });
-    } catch (error) {
-      console.error("Error deleting product:", error);
-      enqueueSnackbar("Error deleting product", { variant: "error" });
-    } finally {
-      setUpdating(false);
-    }
+  const handleSearchChange = (event) => {
+    setSearch(event.target.value);
   };
-  const handleDeleteChip = (chipType) => {
-    switch (chipType) {
-      case "search":
-        setSearch("");
-        break;
-      case "category":
-        setCategory("");
-        break;
-      case "material":
-        setMaterial("");
-        break;
-      case "gender":
-        setGender("");
-        break;
-      case "zodiac":
-        setZodiac("");
-        break;
-      case "price":
-        setPrice([0, Math.max(...products.map((p) => p.price))]);
-        break;
-      default:
-        break;
-    }
+
+  const handleSearchSubmit = () => {
+    setSearchKeyword(search);
+    setPage(1); // Reset to first page when submitting search
   };
+
   return (
-    <div>
-      <Backdrop
-        sx={{ color: "#fff", zIndex: (theme) => theme.zIndex.drawer + 1 }}
-        open={loading || updating}
-      >
-        <CircularProgress color="inherit" />
-      </Backdrop>
-      <div className="flex flex-row gap-4 w-full items-center justify-between">
-        <h1 className="font-serif text-[30px] relative text-inherit leading-[48px] font-bold">
-          Product Management
-        </h1>
-        <FilterComponent
-          search={search}
-          setSearch={setSearch}
-          category={category}
-          setCategory={setCategory}
-          material={material}
-          setMaterial={setMaterial}
-          gender={gender}
-          setGender={setGender}
-          zodiac={zodiac}
-          setZodiac={setZodiac}
-          price={price}
-          setPrice={setPrice}
-          products={products}
-          handleDeleteChip={handleDeleteChip}
-        />
+    <>
+      <div className="flex flex-row justify-between items-center">
+        <h1 className="font-serif text-2xl font-bold">Product Management</h1>
+        <div className="flex items-end w-[30%]">
+          <TextField
+            id="search"
+            label="Search"
+            variant="standard"
+            value={search}
+            sx={{ width: "100%" }}
+            onChange={handleSearchChange}
+          />
+          <Button
+            variant="text"
+            sx={{
+              width: "20%",
+              height: "50%",
+              "&:hover": {
+                transform: "scale(1.1)",
+                transition: "transform 0.3s ease",
+              },
+            }}
+            onClick={handleSearchSubmit}
+            style={{ marginLeft: "10px" }}
+          >
+            <SearchIcon sx={{ color: "black" }} />
+          </Button>
+        </div>
       </div>
       <section className="w-full mt-8">
-        {!loading && (
-          <TableProduct
-            data={filteredProducts}
-            onUpdate={updateProduct}
-            onDelete={deleteProduct}
-            onGetAll={fetchProducts}
+        <TableProduct products={products} onUpdate={fetchProducts} />
+        <div className="flex justify-center mt-6">
+          <Pagination
+            count={totalPages}
+            page={page}
+            onChange={handlePageChange}
+            showFirstButton
+            showLastButton
           />
-        )}
+          <select
+            value={pageSize}
+            onChange={(e) => handlePageSizeChange(Number(e.target.value))}
+          >
+            <option value={5}>5 per page</option>
+            <option value={10}>10 per page</option>
+            <option value={15}>15 per page</option>
+          </select>
+        </div>
       </section>
-    </div>
+      <Backdrop open={loading} sx={{ color: "#fff", zIndex: 9999 }}>
+        <CircularProgress color="inherit" />
+      </Backdrop>
+    </>
   );
 };
 
-export default ProductPage;
+export default ProductManagement;

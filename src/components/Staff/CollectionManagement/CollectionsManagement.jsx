@@ -1,5 +1,6 @@
 import AddCircleOutlineIcon from "@mui/icons-material/AddCircleOutline";
 import { Backdrop, Button, CircularProgress } from "@mui/material";
+import Pagination from "@mui/material/Pagination";
 import axios from "axios";
 import { format } from "date-fns";
 import { useSnackbar } from "notistack";
@@ -15,6 +16,10 @@ const CollectionsManagement = () => {
   const [searchName, setSearchName] = useState("");
   const [filteredData, setFilteredData] = useState([]);
   const [openCreateDialog, setOpenCreateDialog] = useState(false);
+  const [page, setPage] = useState(1);
+  // eslint-disable-next-line no-unused-vars
+  const [pageSize, setPageSize] = useState(5);
+  const [totalPages, setTotalPages] = useState(1);
   const { enqueueSnackbar } = useSnackbar();
 
   // Function to fetch collections
@@ -22,7 +27,7 @@ const CollectionsManagement = () => {
     const token = localStorage.getItem("token");
     try {
       const response = await axios.get(
-        "https://zodiacjewerlyswd.azurewebsites.net/api/collections",
+        `https://zodiacjewerlyswd.azurewebsites.net/api/collections?page=${page}&pageSize=${pageSize}&sort=id`,
         {
           headers: {
             accept: "*/*",
@@ -45,6 +50,7 @@ const CollectionsManagement = () => {
       );
       setCollections(formattedData);
       setFilteredData(formattedData);
+      setTotalPages(response.data.data["total-page"]);
     } catch (error) {
       console.error("Error fetching collections:", error);
       enqueueSnackbar("Failed to load collections", { variant: "error" });
@@ -55,7 +61,7 @@ const CollectionsManagement = () => {
 
   useEffect(() => {
     fetchCollections();
-  }, []);
+  }, [page, pageSize]); // Update useEffect dependencies
 
   const handleSearch = (event) => {
     const { value } = event.target;
@@ -91,6 +97,10 @@ const CollectionsManagement = () => {
   const handleCreateSuccess = () => {
     // Refresh collections or handle success action
     fetchCollections();
+  };
+
+  const handlePageChange = (event, value) => {
+    setPage(value);
   };
 
   return (
@@ -129,7 +139,18 @@ const CollectionsManagement = () => {
           <CircularProgress color="inherit" />
         </Backdrop>
       ) : (
-        <TableCollections data={filteredData} />
+        <div>
+          <TableCollections data={filteredData} />
+          <div className="flex justify-center mt-6">
+            <Pagination
+              count={totalPages}
+              page={page}
+              onChange={handlePageChange}
+              showFirstButton
+              showLastButton
+            />
+          </div>
+        </div>
       )}
 
       <CreateCollectionDialog
