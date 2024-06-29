@@ -199,12 +199,12 @@ FilterComponent.propTypes = {
   setPrice: PropTypes.func.isRequired,
   products: PropTypes.arrayOf(
     PropTypes.shape({
-      price: PropTypes.number.isRequired,
-      nameProduct: PropTypes.string.isRequired,
-      categoryId: PropTypes.number.isRequired,
-      materialId: PropTypes.number.isRequired,
-      genderId: PropTypes.number.isRequired,
-      zodiacId: PropTypes.number.isRequired,
+      price: PropTypes.number,
+      nameProduct: PropTypes.string,
+      categoryId: PropTypes.number,
+      materialId: PropTypes.number,
+      genderId: PropTypes.number,
+      zodiacId: PropTypes.number,
     })
   ).isRequired,
   handleDeleteChip: PropTypes.func.isRequired,

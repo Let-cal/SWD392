@@ -148,7 +148,7 @@ const ProductManagement = () => {
       </div>
 
       <section className="w-full mt-8">
-        <TableProduct products={filteredProducts} />
+        <TableProduct products={filteredProducts} onUpdate={fetchProducts} />
         <div className="flex justify-center mt-6">
           <Pagination
             count={totalPages}

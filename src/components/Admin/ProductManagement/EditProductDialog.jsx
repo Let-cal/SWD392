@@ -57,7 +57,7 @@ const EditProductDialog = ({ product, onUpdate }) => {
         updatedProduct
       );
       enqueueSnackbar("Update product successful!!!", { variant: "success" });
-      onUpdate();
+      await onUpdate();
       handleClose();
     } catch (error) {
       enqueueSnackbar("Error updating product", { variant: "error" });
