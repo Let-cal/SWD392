@@ -15,8 +15,8 @@ import {
   getMaterialName,
   getZodiacName,
 } from "./ChangeIDtoName";
+import UploadImage from "./EditImage";
 import EditProductDialog from "./EditProductDialog";
-import UploadImage from "./UploadImage";
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
   [`&.${tableCellClasses.head}`]: {

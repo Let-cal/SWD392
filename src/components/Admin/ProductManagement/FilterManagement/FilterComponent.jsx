@@ -41,7 +41,7 @@ const FilterComponent = ({
   };
 
   return (
-    <div className="flex flex-col items-end">
+    <div className="flex flex-row items-end w-[100%]">
       <TextField
         label="Search"
         placeholder="Search products"
@@ -64,7 +64,6 @@ const FilterComponent = ({
           }}
         >
           <TuneIcon />
-          FILTER
         </Button>
 
         <Menu

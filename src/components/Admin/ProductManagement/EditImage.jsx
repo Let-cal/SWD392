@@ -1,5 +1,6 @@
 import { CloudUpload } from "@mui/icons-material";
 import {
+  Backdrop,
   Box,
   Button,
   CircularProgress,
@@ -12,18 +13,19 @@ import {
 } from "@mui/material";
 import axios from "axios";
 import PropTypes from "prop-types";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
+import swal from "sweetalert";
 
-const UploadImage = ({ productId, onGetAll }) => {
+const EditImage = ({ productId, onGetAll }) => {
   const [open, setOpen] = useState(false);
   const [imageUrls, setImageUrls] = useState([]);
-  // eslint-disable-next-line no-unused-vars
   const [uploading, setUploading] = useState(false);
   const [page, setPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
   const [loading, setLoading] = useState(false);
 
   const pageSize = 4;
+  const fileInputRef = useRef(null); // Ref for file input
 
   const fetchImages = async () => {
     try {
@@ -35,9 +37,9 @@ const UploadImage = ({ productId, onGetAll }) => {
         response.data.data;
       setImageUrls(listData || []);
       setTotalPages(totalPages || 1);
-      setLoading(false);
     } catch (error) {
       console.error("Error fetching images:", error);
+    } finally {
       setLoading(false);
     }
   };
@@ -65,8 +67,9 @@ const UploadImage = ({ productId, onGetAll }) => {
 
     try {
       setUploading(true);
+      setLoading(true); // Set loading to true for the entire dialog
       await axios.post(
-        `https://zodiacjewerlyswd.azurewebsites.net/api/products/${productId}/upload`,
+        `https://zodiacjewerlyswd.azurewebsites.net/api/products/${productId}/images`,
         formData,
         {
           headers: {
@@ -74,12 +77,51 @@ const UploadImage = ({ productId, onGetAll }) => {
           },
         }
       );
-      setUploading(false);
+      swal("Good job!", "Image uploaded successfully!", "success");
       onGetAll();
       fetchImages();
     } catch (error) {
       console.error("Error uploading images:", error);
+      swal("Error!", "Failed to upload image.", "error");
+    } finally {
+      setLoading(false); // Set loading to false when operation completes
       setUploading(false);
+    }
+  };
+
+  const handleImageClick = (imageId) => {
+    if (!uploading) {
+      setUploading(true);
+      setLoading(true); // Set loading to true for the entire dialog
+      const fileInput = document.createElement("input");
+      fileInput.type = "file";
+      fileInput.onchange = async (event) => {
+        const file = event.target.files[0];
+        const formData = new FormData();
+        formData.append("file", file);
+
+        try {
+          await axios.put(
+            `https://zodiacjewerlyswd.azurewebsites.net/api/products/${productId}/images/${imageId}`,
+            formData,
+            {
+              headers: {
+                "Content-Type": "multipart/form-data",
+              },
+            }
+          );
+          swal("Good job!", "Image updated successfully!", "success");
+          onGetAll();
+          fetchImages();
+        } catch (error) {
+          console.error("Error updating image:", error);
+          swal("Error!", "Failed to update image.", "error");
+        } finally {
+          setLoading(false); // Set loading to false when operation completes
+          setUploading(false);
+        }
+      };
+      fileInput.click();
     }
   };
 
@@ -89,21 +131,35 @@ const UploadImage = ({ productId, onGetAll }) => {
 
   return (
     <>
-      <IconButton onClick={handleOpen} aria-label="upload image">
+      <IconButton onClick={handleOpen} aria-label="edit images">
         <CloudUpload />
       </IconButton>
       <Dialog open={open} onClose={handleClose} maxWidth="md" fullWidth>
-        <DialogTitle>Upload Image</DialogTitle>
+        <DialogTitle>
+          Edit Images
+          <IconButton
+            onClick={() => fileInputRef.current.click()}
+            aria-label="upload new image"
+            sx={{ float: "right" }}
+          >
+            <CloudUpload />
+          </IconButton>
+          <input
+            type="file"
+            multiple
+            onChange={handleUpload}
+            style={{ display: "none" }}
+            ref={fileInputRef}
+          />
+        </DialogTitle>
         <DialogContent>
           {loading ? (
-            <Box
-              display="flex"
-              justifyContent="center"
-              alignItems="center"
-              minHeight="200px"
+            <Backdrop
+              sx={{ color: "#fff", zIndex: (theme) => theme.zIndex.drawer + 1 }}
+              open={loading}
             >
-              <CircularProgress />
-            </Box>
+              <CircularProgress color="inherit" />
+            </Backdrop>
           ) : (
             <Grid container spacing={2}>
               {imageUrls.map((image, index) => (
@@ -112,10 +168,12 @@ const UploadImage = ({ productId, onGetAll }) => {
                     component="img"
                     src={image["image-url"]}
                     alt={`product-${index}`}
+                    onClick={() => handleImageClick(image.id)}
                     sx={{
                       width: "100%",
                       aspectRatio: "1 / 1",
                       objectFit: "cover",
+                      cursor: "pointer",
                     }}
                   />
                 </Grid>
@@ -134,14 +192,8 @@ const UploadImage = ({ productId, onGetAll }) => {
                       cursor: "pointer",
                       position: "relative",
                     }}
+                    onClick={() => fileInputRef.current.click()}
                   >
-                    <input
-                      type="file"
-                      multiple
-                      onChange={handleUpload}
-                      style={{ display: "none" }}
-                      id="upload-button"
-                    />
                     <label
                       htmlFor="upload-button"
                       style={{
@@ -191,9 +243,9 @@ const UploadImage = ({ productId, onGetAll }) => {
   );
 };
 
-UploadImage.propTypes = {
+EditImage.propTypes = {
   productId: PropTypes.number.isRequired,
   onGetAll: PropTypes.func.isRequired,
 };
 
-export default UploadImage;
+export default EditImage;
