@@ -19,7 +19,7 @@ import { useSnackbar } from "notistack";
 import PropTypes from "prop-types";
 import { useState } from "react";
 import swal from "sweetalert";
-import { Material, categories, genders } from "./ChangeIDtoName";
+import { categories, genders, materials } from "./ChangeIDtoName";
 
 const EditProductDialog = ({ product, onUpdate }) => {
   const [open, setOpen] = useState(false);
@@ -176,7 +176,7 @@ const EditProductDialog = ({ product, onUpdate }) => {
               onChange={(e) => setMaterialId(e.target.value)}
               label="Material"
             >
-              {Object.entries(Material).map(([id, name]) => (
+              {Object.entries(materials).map(([id, name]) => (
                 <MenuItem key={id} value={id}>
                   {name}
                 </MenuItem>
