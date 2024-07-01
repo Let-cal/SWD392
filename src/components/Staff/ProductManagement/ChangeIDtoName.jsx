@@ -67,7 +67,20 @@ export const NameZodiacs = {
   Aquarius: 11,
   Pisces: 12,
 };
+export const getCategoryName = (id) => {
+  return categories[id] || "Unknown Category";
+};
 
+export const getGenderName = (id) => {
+  return genders[id] || "Unknown Gender";
+};
+export const getMaterialName = (id) => {
+  return materials[id] || "Unknown Gender";
+};
+
+export const getZodiacName = (id) => {
+  return zodiacs[id] || "Unknown Zodiac";
+};
 export const getCategoryID = (name) => {
   return NameCategories[name] || 0;
 };

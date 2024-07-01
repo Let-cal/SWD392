@@ -7,7 +7,6 @@ import { useEffect, useState } from "react";
 import DateFilterPopover from "./FilterByDate";
 import SearchCollections from "./SearchCollections";
 import TableCollections from "./TableCollections";
-
 const CollectionsManagement = () => {
   const [collections, setCollections] = useState([]);
   const [loading, setLoading] = useState(true);

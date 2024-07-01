@@ -135,15 +135,24 @@ const EditImage = ({ productId, onGetAll }) => {
         <CloudUpload />
       </IconButton>
       <Dialog open={open} onClose={handleClose} maxWidth="md" fullWidth>
-        <DialogTitle>
+        <DialogTitle
+          sx={{
+            display: "flex",
+            flexDirection: "row",
+            justifyContent: "space-between",
+          }}
+        >
           Edit Images
-          <IconButton
-            onClick={() => fileInputRef.current.click()}
-            aria-label="upload new image"
-            sx={{ float: "right" }}
-          >
-            <CloudUpload />
-          </IconButton>
+          <div className="flex flex-row gap-2 items-center">
+            <p className="text-[12px]">(Click here to upload new image!!!)</p>
+            <IconButton
+              onClick={() => fileInputRef.current.click()}
+              aria-label="upload new image"
+              sx={{ float: "right" }}
+            >
+              <CloudUpload />
+            </IconButton>
+          </div>
           <input
             type="file"
             multiple

@@ -25,6 +25,7 @@ const StyledTableCell = styled(TableCell)(({ theme }) => ({
   },
   [`&.${tableCellClasses.body}`]: {
     fontSize: 14,
+    transition: "background-color 0.3s ease, transform 0.3s ease",
   },
 }));
 
@@ -32,14 +33,25 @@ const StyledTableRow = styled(TableRow)(({ theme }) => ({
   "&:nth-of-type(odd)": {
     backgroundColor: theme.palette.action.hover,
   },
+  "&:hover": {
+    backgroundColor: theme.palette.action.selected,
+    transform: "scale(1.01)",
+    transition: "background-color 0.3s ease, transform 0.3s ease",
+    boxShadow: "0 4px 8px rgba(0, 0, 0, 0.1)",
+  },
   "&:last-child td, &:last-child th": {
     border: 0,
   },
 }));
 
+// eslint-disable-next-line no-unused-vars
+const StyledTableContainer = styled(TableContainer)(({ theme }) => ({
+  overflowX: "hidden",
+}));
+
 const TableProduct = ({ products, onUpdate }) => {
   return (
-    <TableContainer>
+    <StyledTableContainer>
       <Table>
         <TableHead>
           <TableRow>
@@ -85,7 +97,7 @@ const TableProduct = ({ products, onUpdate }) => {
           ))}
         </TableBody>
       </Table>
-    </TableContainer>
+    </StyledTableContainer>
   );
 };
 

@@ -58,7 +58,7 @@ const EditProductDialog = ({ product, onUpdate }) => {
       };
 
       await axios.put(
-        `https://zodiacjewerlyswd.azurewebsites.net/api/products/${product.id}`,
+        `https://zodiacjewerlyswd.azurewebsites.net/api/products/${product.id}/zodiac/${product["zodiac-id"]}`,
         updatedProduct
       );
       enqueueSnackbar("Update product successful!!!", { variant: "success" });

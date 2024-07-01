@@ -19,6 +19,7 @@ const StyledTableCell = styled(TableCell)(({ theme }) => ({
   },
   [`&.${tableCellClasses.body}`]: {
     fontSize: 14,
+    transition: "background-color 0.3s ease, transform 0.3s ease",
   },
 }));
 
@@ -26,9 +27,20 @@ const StyledTableRow = styled(TableRow)(({ theme }) => ({
   "&:nth-of-type(odd)": {
     backgroundColor: theme.palette.action.hover,
   },
+  "&:hover": {
+    backgroundColor: theme.palette.action.selected,
+    transform: "scale(1.01)",
+    transition: "background-color 0.3s ease, transform 0.3s ease",
+    boxShadow: "0 4px 8px rgba(0, 0, 0, 0.1)",
+  },
   "&:last-child td, &:last-child th": {
     border: 0,
   },
+}));
+
+// eslint-disable-next-line no-unused-vars
+const StyledTableContainer = styled(TableContainer)(({ theme }) => ({
+  overflow: "hidden",
 }));
 
 const getStatusColor = (status) => {
@@ -54,7 +66,7 @@ const TableUser = ({ data, updateUser }) => {
   };
 
   return (
-    <TableContainer component={Paper}>
+    <StyledTableContainer component={Paper}>
       <Table sx={{ minWidth: 700 }} aria-label="customized table">
         <TableHead>
           <TableRow>
@@ -124,7 +136,7 @@ const TableUser = ({ data, updateUser }) => {
           updateUser={updateUser}
         />
       )}
-    </TableContainer>
+    </StyledTableContainer>
   );
 };
 

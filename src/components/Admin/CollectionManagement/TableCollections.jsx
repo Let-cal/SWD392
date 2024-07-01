@@ -1,17 +1,23 @@
-// TableCollections.jsx
-
+import ViewListIcon from "@mui/icons-material/ViewList";
 import VisibilityIcon from "@mui/icons-material/Visibility";
-import Button from "@mui/material/Button";
-import Paper from "@mui/material/Paper";
-import Table from "@mui/material/Table";
-import TableBody from "@mui/material/TableBody";
-import TableCell, { tableCellClasses } from "@mui/material/TableCell";
-import TableContainer from "@mui/material/TableContainer";
-import TableHead from "@mui/material/TableHead";
-import TableRow from "@mui/material/TableRow";
+import {
+  IconButton,
+  Paper,
+  Table,
+  TableBody,
+  TableCell,
+  TableContainer,
+  TableHead,
+  TableRow,
+  tableCellClasses,
+} from "@mui/material";
+
 import { styled } from "@mui/material/styles";
 import PropTypes from "prop-types";
-
+import { useState } from "react";
+import swal from "sweetalert";
+import ViewCollectionDialog from "./ViewAction/ViewCollectionDialog";
+import ViewProductDialog from "./ViewAction/ViewProductDialog"; // Import dialog for viewing products
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
   [`&.${tableCellClasses.head}`]: {
     backgroundColor: theme.palette.common.black,
@@ -19,6 +25,7 @@ const StyledTableCell = styled(TableCell)(({ theme }) => ({
   },
   [`&.${tableCellClasses.body}`]: {
     fontSize: 14,
+    transition: "background-color 0.3s ease, transform 0.3s ease",
   },
 }));
 
@@ -26,9 +33,19 @@ const StyledTableRow = styled(TableRow)(({ theme }) => ({
   "&:nth-of-type(odd)": {
     backgroundColor: theme.palette.action.hover,
   },
+  "&:hover": {
+    backgroundColor: theme.palette.action.selected,
+    transform: "scale(1.01)",
+    transition: "background-color 0.3s ease, transform 0.3s ease",
+    boxShadow: "0 4px 8px rgba(0, 0, 0, 0.1)",
+  },
   "&:last-child td, &:last-child th": {
     border: 0,
   },
+}));
+
+const StyledTableContainer = styled(TableContainer)(() => ({
+  overflow: "hidden",
 }));
 
 const getStatusColor = (status) => {
@@ -36,8 +53,56 @@ const getStatusColor = (status) => {
 };
 
 const TableCollections = ({ data }) => {
+  const [viewOpen, setViewOpen] = useState(false);
+  const [viewProductsOpen, setViewProductsOpen] = useState(false); // State for viewing products dialog
+  const [selectedCollection, setSelectedCollection] = useState(null);
+  const [selectedProducts, setSelectedProducts] = useState([]); // State for storing products
+
+  const handleViewDetails = (collection) => {
+    setSelectedCollection(collection);
+    setViewOpen(true);
+  };
+
+  const handleViewProducts = async (collectionId) => {
+    try {
+      const token = localStorage.getItem("token");
+      const response = await fetch(
+        `https://zodiacjewerlyswd.azurewebsites.net/api/collections/${collectionId}`,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+            accept: "*/*",
+          },
+        }
+      );
+      if (!response.ok) {
+        throw new Error("Failed to fetch products.");
+      }
+      const data = await response.json();
+      const products = data.data.products;
+      if (products.length === 0) {
+        swal("No Products", "This collection has no products.", "warning");
+      } else {
+        setSelectedProducts(products);
+        setViewProductsOpen(true);
+      }
+    } catch (error) {
+      console.error("Error fetching products:", error);
+    }
+  };
+
+  const handleCloseView = () => {
+    setViewOpen(false);
+    setSelectedCollection(null);
+  };
+
+  const handleCloseViewProducts = () => {
+    setViewProductsOpen(false);
+    setSelectedProducts([]);
+  };
+
   return (
-    <TableContainer component={Paper}>
+    <StyledTableContainer component={Paper}>
       <Table sx={{ minWidth: 700 }} aria-label="customized table">
         <TableHead>
           <TableRow>
@@ -47,7 +112,7 @@ const TableCollections = ({ data }) => {
             <StyledTableCell align="center">Date Open</StyledTableCell>
             <StyledTableCell align="center">Date Close</StyledTableCell>
             <StyledTableCell align="center">Image</StyledTableCell>
-            <StyledTableCell align="center">Action</StyledTableCell>
+            <StyledTableCell align="center">Actions</StyledTableCell>
           </TableRow>
         </TableHead>
         <TableBody>
@@ -80,25 +145,38 @@ const TableCollections = ({ data }) => {
                   />
                 </StyledTableCell>
                 <StyledTableCell align="center">
-                  <Button
-                    variant="contained"
-                    endIcon={<VisibilityIcon />}
-                    sx={{
-                      backgroundColor: "black",
-                      color: "white",
-                      "&:hover": {
-                        backgroundColor: "gray",
-                      },
-                    }}
+                  {/* IconButton for View details */}
+                  <IconButton
+                    aria-label="view details"
+                    onClick={() => handleViewDetails(collection)}
                   >
-                    View details
-                  </Button>
+                    <VisibilityIcon />
+                  </IconButton>
+                  {/* IconButton for View products */}
+                  <IconButton
+                    aria-label="view products"
+                    onClick={() => handleViewProducts(collection.id)}
+                  >
+                    <ViewListIcon />
+                  </IconButton>
                 </StyledTableCell>
               </StyledTableRow>
             ))}
         </TableBody>
       </Table>
-    </TableContainer>
+      {/* Dialog for viewing collection details */}
+      <ViewCollectionDialog
+        open={viewOpen}
+        onClose={handleCloseView}
+        collection={selectedCollection}
+      />
+      {/* Dialog for viewing products */}
+      <ViewProductDialog
+        open={viewProductsOpen}
+        onClose={handleCloseViewProducts}
+        products={selectedProducts}
+      />
+    </StyledTableContainer>
   );
 };
 

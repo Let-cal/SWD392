@@ -1,60 +1,186 @@
-// TableCollections.jsx
-import VisibilityIcon from "@mui/icons-material/Visibility";
-import Button from "@mui/material/Button";
+import {
+  Paper,
+  Table,
+  TableBody,
+  TableCell,
+  TableContainer,
+  TableHead,
+  TableRow,
+  tableCellClasses,
+} from "@mui/material";
+import { styled } from "@mui/material/styles";
+import { format } from "date-fns";
 import PropTypes from "prop-types";
-import InforCollection from "./InfoCollection";
+import { useState } from "react";
+import swal from "sweetalert";
+import EditCollectionDialog from "./EditCollectionDialog"; // Ensure the correct path
+import ListItemButtons from "./ViewAction/ListItemButtons ";
+import ViewCollectionDialog from "./ViewAction/ViewCollectionDialog";
+import ViewProductDialog from "./ViewAction/ViewProductDialog";
 
-const TableCollections = ({ data }) => {
+const StyledTableCell = styled(TableCell)(({ theme }) => ({
+  [`&.${tableCellClasses.head}`]: {
+    backgroundColor: theme.palette.common.black,
+    color: theme.palette.common.white,
+  },
+  [`&.${tableCellClasses.body}`]: {
+    fontSize: 14,
+  },
+}));
+
+const StyledTableRow = styled(TableRow)(({ theme }) => ({
+  "&:nth-of-type(odd)": {
+    backgroundColor: theme.palette.action.hover,
+  },
+  "&:last-child td, &:last-child th": {
+    border: 0,
+  },
+}));
+
+const getStatusColor = (status) => {
+  return status === 1 ? "green" : "red";
+};
+
+const TableCollections = ({ data, onUpdateCollection }) => {
+  const [editOpen, setEditOpen] = useState(false);
+  const [selectedCollection, setSelectedCollection] = useState(null);
+  const [viewOpen, setViewOpen] = useState(false);
+  const [selectedProducts, setSelectedProducts] = useState([]);
+  const [viewProductsOpen, setViewProductsOpen] = useState(false);
+
+  const handleViewDetails = (collection) => {
+    setSelectedCollection(collection);
+    setViewOpen(true);
+  };
+
+  const handleEditCollection = (collection) => {
+    setSelectedCollection(collection);
+    setEditOpen(true);
+  };
+
+  const handleViewProducts = async (collectionId) => {
+    try {
+      const token = localStorage.getItem("token");
+      const response = await fetch(
+        `https://zodiacjewerlyswd.azurewebsites.net/api/collections/${collectionId}`,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+            accept: "*/*",
+          },
+        }
+      );
+      if (!response.ok) {
+        throw new Error("Failed to fetch products.");
+      }
+      const data = await response.json();
+      const products = data.data.products;
+      if (products.length === 0) {
+        swal("No Products", "This collection has no products.", "warning");
+      } else {
+        setSelectedProducts(products);
+        setViewProductsOpen(true);
+      }
+    } catch (error) {
+      console.error("Error fetching products:", error);
+    }
+  };
+
+  const handleCloseViewProducts = () => {
+    setViewProductsOpen(false);
+    setSelectedProducts([]);
+  };
+
+  const handleCloseEdit = () => {
+    setEditOpen(false);
+    setSelectedCollection(null);
+  };
+
+  const handleCloseView = () => {
+    setViewOpen(false);
+    setSelectedCollection(null);
+  };
+
   return (
-    <div className="mx-auto bg-white shadow-lg rounded-lg overflow-hidden">
-      <div className="flex bg-gray-100 text-xs uppercase font-semibold text-gray-600">
-        <div className="w-1/5 px-4 text-center py-2">Collection Number</div>
-        <div className="w-1/5 px-4 text-center py-2">Name</div>
-        <div className="w-1/5 px-4 text-center py-2">Status</div>
-        <div className="w-1/5 px-4 text-center py-2">Date Open</div>
-        <div className="w-1/5 px-4 text-center py-2">Date Close</div>
-        <div className="w-1/5 px-4 text-center py-2">Image</div>
-        <div className="w-1/5 px-4 text-center py-2">Action</div>
-      </div>
-      {Array.isArray(data) &&
-        data.map((collection) => (
-          <InforCollection
-            key={collection.id}
-            CollectionNumber={collection.id.toString()}
-            Name={collection["name-collection"]}
-            Status={collection.status === 1 ? "Available" : "Unavailable"}
-            date_open={collection["date-open"]}
-            date_close={collection["date-close"]}
-            image={
-              <img
-                src={collection["image-collection"]}
-                alt={collection["name-collection"]}
-                style={{ width: "50px", height: "50px" }}
-              />
-            }
-            Action={
-              <Button
-                variant="contained"
-                endIcon={<VisibilityIcon />}
-                sx={{
-                  backgroundColor: "black",
-                  color: "white",
-                  "&:hover": {
-                    backgroundColor: "gray",
-                  },
-                }}
-              >
-                View details
-              </Button>
-            }
-          />
-        ))}
-    </div>
+    <TableContainer component={Paper}>
+      <Table sx={{ minWidth: 700 }} aria-label="customized table">
+        <TableHead>
+          <TableRow>
+            <StyledTableCell align="center">Collection Number</StyledTableCell>
+            <StyledTableCell align="center">Name</StyledTableCell>
+            <StyledTableCell align="center">Status</StyledTableCell>
+            <StyledTableCell align="center">Date Open</StyledTableCell>
+            <StyledTableCell align="center">Date Close</StyledTableCell>
+            <StyledTableCell align="center">Image</StyledTableCell>
+            <StyledTableCell align="center">Action</StyledTableCell>
+          </TableRow>
+        </TableHead>
+        <TableBody>
+          {Array.isArray(data) &&
+            data.map((collection) => (
+              <StyledTableRow key={collection.id}>
+                <StyledTableCell component="th" scope="row" align="center">
+                  {collection.id}
+                </StyledTableCell>
+                <StyledTableCell align="center">
+                  {collection["name-collection"]}
+                </StyledTableCell>
+                <StyledTableCell
+                  align="center"
+                  style={{ color: getStatusColor(collection.status) }}
+                >
+                  {collection.status === 1 ? "Available" : "Unavailable"}
+                </StyledTableCell>
+                <StyledTableCell align="center">
+                  {format(new Date(collection["date-open"]), "dd/MM/yyyy")}
+                </StyledTableCell>
+                <StyledTableCell align="center">
+                  {format(new Date(collection["date-close"]), "dd/MM/yyyy")}
+                </StyledTableCell>
+                <StyledTableCell align="center">
+                  <img
+                    src={collection["image-collection"]}
+                    alt={collection["name-collection"]}
+                    style={{ width: "50px", height: "50px" }}
+                  />
+                </StyledTableCell>
+                <StyledTableCell align="center">
+                  <ListItemButtons
+                    onViewDetails={() => handleViewDetails(collection)}
+                    onViewProducts={() => handleViewProducts(collection.id)}
+                    onEdit={() => handleEditCollection(collection)}
+                  />
+                </StyledTableCell>
+              </StyledTableRow>
+            ))}
+        </TableBody>
+      </Table>
+      {/* Dialogs */}
+      <ViewCollectionDialog
+        open={viewOpen}
+        onClose={handleCloseView}
+        collection={selectedCollection}
+      />
+      <ViewProductDialog
+        open={viewProductsOpen}
+        onClose={handleCloseViewProducts}
+        products={selectedProducts}
+      />
+      {selectedCollection && (
+        <EditCollectionDialog
+          open={editOpen}
+          onClose={handleCloseEdit}
+          collection={selectedCollection}
+          onSave={onUpdateCollection}
+        />
+      )}
+    </TableContainer>
   );
 };
 
 TableCollections.propTypes = {
   data: PropTypes.array.isRequired,
+  onUpdateCollection: PropTypes.func.isRequired,
 };
 
 export default TableCollections;
