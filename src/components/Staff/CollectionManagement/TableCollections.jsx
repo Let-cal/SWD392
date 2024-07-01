@@ -13,10 +13,11 @@ import { format } from "date-fns";
 import PropTypes from "prop-types";
 import { useState } from "react";
 import swal from "sweetalert";
+import deleteCollection from "./ActionOfCollection/DeleteCollection";
+import ListItemButtons from "./ActionOfCollection/ListItemButtons ";
+import ViewCollectionDialog from "./ActionOfCollection/ViewCollectionDialog";
+import ViewProductDialog from "./ActionOfCollection/ViewProductDialog";
 import EditCollectionDialog from "./EditCollectionDialog"; // Ensure the correct path
-import ListItemButtons from "./ViewAction/ListItemButtons ";
-import ViewCollectionDialog from "./ViewAction/ViewCollectionDialog";
-import ViewProductDialog from "./ViewAction/ViewProductDialog";
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
   [`&.${tableCellClasses.head}`]: {
@@ -25,6 +26,7 @@ const StyledTableCell = styled(TableCell)(({ theme }) => ({
   },
   [`&.${tableCellClasses.body}`]: {
     fontSize: 14,
+    transition: "background-color 0.3s ease, transform 0.3s ease",
   },
 }));
 
@@ -32,9 +34,20 @@ const StyledTableRow = styled(TableRow)(({ theme }) => ({
   "&:nth-of-type(odd)": {
     backgroundColor: theme.palette.action.hover,
   },
+  "&:hover": {
+    backgroundColor: theme.palette.action.selected,
+    transform: "scale(1.01)",
+    transition: "background-color 0.3s ease, transform 0.3s ease",
+    boxShadow: "0 4px 8px rgba(0, 0, 0, 0.1)",
+  },
   "&:last-child td, &:last-child th": {
     border: 0,
   },
+}));
+
+// eslint-disable-next-line no-unused-vars
+const StyledTableContainer = styled(TableContainer)(({ theme }) => ({
+  overflow: "hidden",
 }));
 
 const getStatusColor = (status) => {
@@ -86,6 +99,30 @@ const TableCollections = ({ data, onUpdateCollection }) => {
     }
   };
 
+  const handleDeleteCollection = async (collectionId) => {
+    const confirmation = await swal({
+      title: "Are you sure?",
+      text: "Once deleted, you will not be able to recover this collection!",
+      icon: "warning",
+      buttons: ["Cancel", "Delete"],
+      dangerMode: true,
+    });
+
+    if (confirmation) {
+      try {
+        await deleteCollection(collectionId);
+        swal("Poof! The collection has been deleted!", {
+          icon: "success",
+        });
+        onUpdateCollection(); // Refresh the collections data
+      } catch (error) {
+        swal("Oops! Something went wrong!", {
+          icon: "error",
+        });
+      }
+    }
+  };
+
   const handleCloseViewProducts = () => {
     setViewProductsOpen(false);
     setSelectedProducts([]);
@@ -102,7 +139,7 @@ const TableCollections = ({ data, onUpdateCollection }) => {
   };
 
   return (
-    <TableContainer component={Paper}>
+    <StyledTableContainer component={Paper}>
       <Table sx={{ minWidth: 700 }} aria-label="customized table">
         <TableHead>
           <TableRow>
@@ -137,11 +174,17 @@ const TableCollections = ({ data, onUpdateCollection }) => {
                 <StyledTableCell align="center">
                   {format(new Date(collection["date-close"]), "dd/MM/yyyy")}
                 </StyledTableCell>
-                <StyledTableCell align="center">
+                <StyledTableCell
+                  align="center"
+                  sx={{ display: "flex", justifyContent: "center" }}
+                >
                   <img
                     src={collection["image-collection"]}
                     alt={collection["name-collection"]}
-                    style={{ width: "50px", height: "50px" }}
+                    style={{
+                      width: "50px",
+                      height: "50px",
+                    }}
                   />
                 </StyledTableCell>
                 <StyledTableCell align="center">
@@ -149,6 +192,8 @@ const TableCollections = ({ data, onUpdateCollection }) => {
                     onViewDetails={() => handleViewDetails(collection)}
                     onViewProducts={() => handleViewProducts(collection.id)}
                     onEdit={() => handleEditCollection(collection)}
+                    onDelete={() => handleDeleteCollection(collection.id)}
+                    collectionId={collection.id}
                   />
                 </StyledTableCell>
               </StyledTableRow>
@@ -174,7 +219,7 @@ const TableCollections = ({ data, onUpdateCollection }) => {
           onSave={onUpdateCollection}
         />
       )}
-    </TableContainer>
+    </StyledTableContainer>
   );
 };
 

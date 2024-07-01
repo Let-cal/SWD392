@@ -9,6 +9,7 @@ import ProductsManagement from "./ProductManagement/ProductManagement.jsx";
 import ZodiacManagement from "./ZodiacController/ZodiacManagement.jsx";
 import "./adminpage.css"; // Add this import for the new CSS styles
 import Sidebar from "./sidebar.jsx";
+
 function AdminPage() {
   const { handleLogout } = useAuth();
   const [selectedContent, setSelectedContent] = useState(
@@ -33,9 +34,6 @@ function AdminPage() {
     case "UsersManagement":
       ContentComponent = UserManagement;
       break;
-    case "Logout":
-      ContentComponent = handleLogout;
-      break;
     case "AdminAccountManagement":
       ContentComponent = AdminAccountManagement;
       break;
@@ -44,13 +42,21 @@ function AdminPage() {
       break;
   }
 
+  const handleSidebarSelection = (content) => {
+    if (content === "Logout") {
+      handleLogout(); // Logout when "Logout" is selected
+    } else {
+      setSelectedContent(content); // Update selected content for other options
+    }
+  };
+
   return (
     <div className="flex flex-row justify-between">
       <div
         className={`sidebar-container ${isSidebarCollapsed ? "collapsed" : ""}`}
       >
         <Sidebar
-          setSelectedContent={setSelectedContent}
+          setSelectedContent={handleSidebarSelection}
           setIsSidebarCollapsed={setIsSidebarCollapsed}
         />
       </div>

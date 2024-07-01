@@ -1,4 +1,7 @@
+// TableProduct.jsx
+import AddIcon from "@mui/icons-material/Add";
 import {
+  IconButton,
   Table,
   TableBody,
   TableCell,
@@ -25,6 +28,7 @@ const StyledTableCell = styled(TableCell)(({ theme }) => ({
   },
   [`&.${tableCellClasses.body}`]: {
     fontSize: 14,
+    transition: "background-color 0.3s ease, transform 0.3s ease",
   },
 }));
 
@@ -32,66 +36,109 @@ const StyledTableRow = styled(TableRow)(({ theme }) => ({
   "&:nth-of-type(odd)": {
     backgroundColor: theme.palette.action.hover,
   },
+  "&:hover": {
+    backgroundColor: theme.palette.action.selected,
+    transform: "scale(1.01)",
+    transition: "background-color 0.3s ease, transform 0.3s ease",
+    boxShadow: "0 4px 8px rgba(0, 0, 0, 0.1)",
+  },
   "&:last-child td, &:last-child th": {
     border: 0,
   },
 }));
 
-const TableProduct = ({ products, onUpdate }) => {
+// eslint-disable-next-line no-unused-vars
+const StyledTableContainer = styled(TableContainer)(({ theme }) => ({
+  overflow: "hidden",
+}));
+
+const TableProduct = ({
+  products = [],
+  onUpdate,
+  onAddProduct,
+  showAddButton,
+}) => {
   return (
-    <TableContainer>
+    <StyledTableContainer>
       <Table>
         <TableHead>
           <TableRow>
-            <StyledTableCell>ID</StyledTableCell>
-            <StyledTableCell>Name</StyledTableCell>
-            <StyledTableCell>Description</StyledTableCell>
-            <StyledTableCell>Price</StyledTableCell>
-            <StyledTableCell>Quantity</StyledTableCell>
-            <StyledTableCell>Category</StyledTableCell>
-            <StyledTableCell>Material</StyledTableCell>
-            <StyledTableCell>Gender</StyledTableCell>
-            <StyledTableCell>Zodiac</StyledTableCell>
-            <StyledTableCell>Action</StyledTableCell>
+            <StyledTableCell align="center">ID</StyledTableCell>
+            <StyledTableCell align="center">Name</StyledTableCell>
+            <StyledTableCell align="center">Description</StyledTableCell>
+            <StyledTableCell align="center">Price</StyledTableCell>
+            <StyledTableCell align="center">Quantity</StyledTableCell>
+            <StyledTableCell align="center">Category</StyledTableCell>
+            <StyledTableCell align="center">Material</StyledTableCell>
+            <StyledTableCell align="center">Gender</StyledTableCell>
+            <StyledTableCell align="center">Zodiac</StyledTableCell>
+            <StyledTableCell align="center">Action</StyledTableCell>
           </TableRow>
         </TableHead>
         <TableBody>
-          {products.map((product) => (
-            <StyledTableRow key={product.id}>
-              <StyledTableCell>{product.id}</StyledTableCell>
-              <StyledTableCell>{product["name-product"]}</StyledTableCell>
-              <StyledTableCell>
-                {product["description-product"]}
-              </StyledTableCell>
-              <StyledTableCell>{product.price}</StyledTableCell>
-              <StyledTableCell>{product.quantity}</StyledTableCell>
-              <StyledTableCell>
-                {getCategoryName(product["category-id"])}
-              </StyledTableCell>
-              <StyledTableCell>
-                {getMaterialName(product["material-id"])}
-              </StyledTableCell>
-              <StyledTableCell>
-                {getGenderName(product["gender-id"])}
-              </StyledTableCell>
-              <StyledTableCell>
-                {getZodiacName(product["zodiac-id"])}
-              </StyledTableCell>
-              <StyledTableCell>
-                <EditProductDialog product={product} onUpdate={onUpdate} />
-                <UploadImage productId={product.id} onGetAll={onUpdate} />
-              </StyledTableCell>
-            </StyledTableRow>
-          ))}
+          {Array.isArray(products) &&
+            products.map((product) => (
+              <StyledTableRow key={product.id}>
+                <StyledTableCell align="center">{product.id}</StyledTableCell>
+                <StyledTableCell align="center">
+                  {product["name-product"]}
+                </StyledTableCell>
+                <StyledTableCell align="center">
+                  {product["description-product"]}
+                </StyledTableCell>
+                <StyledTableCell align="center">
+                  {product.price}
+                </StyledTableCell>
+                <StyledTableCell align="center">
+                  {product.quantity}
+                </StyledTableCell>
+                <StyledTableCell align="center">
+                  {getCategoryName(product["category-id"])}
+                </StyledTableCell>
+                <StyledTableCell align="center">
+                  {getMaterialName(product["material-id"])}
+                </StyledTableCell>
+                <StyledTableCell align="center">
+                  {getGenderName(product["gender-id"])}
+                </StyledTableCell>
+                <StyledTableCell align="center">
+                  {getZodiacName(product["zodiac-id"])}
+                </StyledTableCell>
+                <StyledTableCell align="center">
+                  {showAddButton ? (
+                    <IconButton
+                      onClick={() => onAddProduct(product.id)}
+                      color="primary"
+                    >
+                      <AddIcon />
+                    </IconButton>
+                  ) : (
+                    <>
+                      <EditProductDialog
+                        product={product}
+                        onUpdate={onUpdate}
+                      />
+                      <UploadImage productId={product.id} onGetAll={onUpdate} />
+                    </>
+                  )}
+                </StyledTableCell>
+              </StyledTableRow>
+            ))}
         </TableBody>
       </Table>
-    </TableContainer>
+    </StyledTableContainer>
   );
 };
 
 TableProduct.propTypes = {
   products: PropTypes.array.isRequired,
-  onUpdate: PropTypes.func.isRequired,
+  onUpdate: PropTypes.func,
+  onAddProduct: PropTypes.func,
+  showAddButton: PropTypes.bool,
+};
+
+TableProduct.defaultProps = {
+  showAddButton: false,
 };
 
 export default TableProduct;

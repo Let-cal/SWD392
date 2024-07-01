@@ -12,7 +12,14 @@ import PropTypes from "prop-types";
 import { useEffect, useState } from "react";
 
 const EditUserDialog = ({ open, handleClose, userData, updateUser }) => {
-  const [updatedUser, setUpdatedUser] = useState(userData);
+  const [updatedUser, setUpdatedUser] = useState(
+    userData || {
+      "full-name": "",
+      email: "",
+      address: "",
+      "telephone-number": "",
+    }
+  );
   const { enqueueSnackbar } = useSnackbar();
 
   useEffect(() => {
@@ -28,20 +35,35 @@ const EditUserDialog = ({ open, handleClose, userData, updateUser }) => {
       [name]: value,
     }));
   };
-
+  console.log(updatedUser);
   const handleSave = async () => {
-    console.log("Updated User Data:", updatedUser);
     try {
       const response = await axios.put(
         `https://zodiacjewerlyswd.azurewebsites.net/api/users`,
         updatedUser
       );
       console.log("Update Response:", response.data);
+
       await updateUser(); // Update local state or refresh data
       enqueueSnackbar("User updated successfully", { variant: "success" });
       handleClose();
     } catch (error) {
       console.error("Update Error:", error);
+      enqueueSnackbar(`Error: ${error.message}`, { variant: "error" });
+    }
+  };
+
+  const handleDelete = async () => {
+    try {
+      const response = await axios.delete(
+        `https://zodiacjewerlyswd.azurewebsites.net/api/users/${updatedUser.id}`
+      );
+      console.log("Delete Response:", response.data);
+      await updateUser(); // Update local state or refresh data
+      enqueueSnackbar("User deleted successfully", { variant: "success" });
+      handleClose();
+    } catch (error) {
+      console.error("Delete Error:", error);
       enqueueSnackbar(`Error: ${error.message}`, { variant: "error" });
     }
   };
@@ -62,7 +84,7 @@ const EditUserDialog = ({ open, handleClose, userData, updateUser }) => {
           label="Full Name"
           type="text"
           fullWidth
-          value={updatedUser["full-name"]}
+          value={updatedUser["full-name"] || ""}
           onChange={handleInputChange}
         />
         <TextField
@@ -72,7 +94,7 @@ const EditUserDialog = ({ open, handleClose, userData, updateUser }) => {
           label="Email Address"
           type="email"
           fullWidth
-          value={updatedUser.email}
+          value={updatedUser.email || ""}
           onChange={handleInputChange}
         />
         <TextField
@@ -82,7 +104,7 @@ const EditUserDialog = ({ open, handleClose, userData, updateUser }) => {
           label="Address"
           type="text"
           fullWidth
-          value={updatedUser.address}
+          value={updatedUser.address || ""}
           onChange={handleInputChange}
         />
         <TextField
@@ -92,7 +114,7 @@ const EditUserDialog = ({ open, handleClose, userData, updateUser }) => {
           label="Telephone Number"
           type="tel"
           fullWidth
-          value={updatedUser["telephone-number"]}
+          value={updatedUser["telephone-number"] || ""}
           onChange={handleInputChange}
         />
       </DialogContent>
@@ -102,6 +124,9 @@ const EditUserDialog = ({ open, handleClose, userData, updateUser }) => {
         </Button>
         <Button onClick={handleSave} color="primary">
           Save Changes
+        </Button>
+        <Button onClick={handleDelete} color="error">
+          Delete
         </Button>
       </DialogActions>
     </Dialog>

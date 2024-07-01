@@ -46,7 +46,7 @@ const StyledTableRow = styled(TableRow)(({ theme }) => ({
 
 // eslint-disable-next-line no-unused-vars
 const StyledTableContainer = styled(TableContainer)(({ theme }) => ({
-  overflowX: "hidden",
+  overflow: "hidden",
 }));
 
 const TableProduct = ({ products, onUpdate }) => {
@@ -55,41 +55,45 @@ const TableProduct = ({ products, onUpdate }) => {
       <Table>
         <TableHead>
           <TableRow>
-            <StyledTableCell>ID</StyledTableCell>
-            <StyledTableCell>Name</StyledTableCell>
-            <StyledTableCell>Description</StyledTableCell>
-            <StyledTableCell>Price</StyledTableCell>
-            <StyledTableCell>Quantity</StyledTableCell>
-            <StyledTableCell>Category</StyledTableCell>
-            <StyledTableCell>Material</StyledTableCell>
-            <StyledTableCell>Gender</StyledTableCell>
-            <StyledTableCell>Zodiac</StyledTableCell>
-            <StyledTableCell>Action</StyledTableCell>
+            <StyledTableCell align="center">ID</StyledTableCell>
+            <StyledTableCell align="center">Name</StyledTableCell>
+            <StyledTableCell align="center">Description</StyledTableCell>
+            <StyledTableCell align="center">Price</StyledTableCell>
+            <StyledTableCell align="center">Quantity</StyledTableCell>
+            <StyledTableCell align="center">Category</StyledTableCell>
+            <StyledTableCell align="center">Material</StyledTableCell>
+            <StyledTableCell align="center">Gender</StyledTableCell>
+            <StyledTableCell align="center">Zodiac</StyledTableCell>
+            <StyledTableCell align="center">Action</StyledTableCell>
           </TableRow>
         </TableHead>
         <TableBody>
           {products.map((product) => (
             <StyledTableRow key={product.id}>
-              <StyledTableCell>{product.id}</StyledTableCell>
-              <StyledTableCell>{product["name-product"]}</StyledTableCell>
-              <StyledTableCell>
+              <StyledTableCell align="center">{product.id}</StyledTableCell>
+              <StyledTableCell align="center">
+                {product["name-product"]}
+              </StyledTableCell>
+              <StyledTableCell align="center">
                 {product["description-product"]}
               </StyledTableCell>
-              <StyledTableCell>{product.price}</StyledTableCell>
-              <StyledTableCell>{product.quantity}</StyledTableCell>
-              <StyledTableCell>
+              <StyledTableCell align="center">{product.price}</StyledTableCell>
+              <StyledTableCell align="center">
+                {product.quantity}
+              </StyledTableCell>
+              <StyledTableCell align="center">
                 {getCategoryName(product["category-id"])}
               </StyledTableCell>
-              <StyledTableCell>
+              <StyledTableCell align="center">
                 {getMaterialName(product["material-id"])}
               </StyledTableCell>
-              <StyledTableCell>
+              <StyledTableCell align="center">
                 {getGenderName(product["gender-id"])}
               </StyledTableCell>
-              <StyledTableCell>
+              <StyledTableCell align="center">
                 {getZodiacName(product["zodiac-id"])}
               </StyledTableCell>
-              <StyledTableCell>
+              <StyledTableCell align="center">
                 <EditProductDialog product={product} onUpdate={onUpdate} />
                 <UploadImage productId={product.id} onGetAll={onUpdate} />
               </StyledTableCell>

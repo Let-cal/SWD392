@@ -11,8 +11,8 @@ import {
   TableRow,
   tableCellClasses,
 } from "@mui/material";
-
 import { styled } from "@mui/material/styles";
+import { format } from "date-fns";
 import PropTypes from "prop-types";
 import { useState } from "react";
 import swal from "sweetalert";
@@ -132,10 +132,10 @@ const TableCollections = ({ data }) => {
                   {collection.status === 1 ? "Available" : "Unavailable"}
                 </StyledTableCell>
                 <StyledTableCell align="center">
-                  {collection["date-open"]}
+                  {format(new Date(collection["date-open"]), "dd/MM/yyyy")}
                 </StyledTableCell>
                 <StyledTableCell align="center">
-                  {collection["date-close"]}
+                  {format(new Date(collection["date-close"]), "dd/MM/yyyy")}
                 </StyledTableCell>
                 <StyledTableCell align="center">
                   <img
@@ -165,17 +165,21 @@ const TableCollections = ({ data }) => {
         </TableBody>
       </Table>
       {/* Dialog for viewing collection details */}
-      <ViewCollectionDialog
-        open={viewOpen}
-        onClose={handleCloseView}
-        collection={selectedCollection}
-      />
+      {selectedCollection && (
+        <ViewCollectionDialog
+          open={viewOpen}
+          onClose={handleCloseView}
+          collection={selectedCollection}
+        />
+      )}
       {/* Dialog for viewing products */}
-      <ViewProductDialog
-        open={viewProductsOpen}
-        onClose={handleCloseViewProducts}
-        products={selectedProducts}
-      />
+      {selectedProducts.length > 0 && (
+        <ViewProductDialog
+          open={viewProductsOpen}
+          onClose={handleCloseViewProducts}
+          products={selectedProducts}
+        />
+      )}
     </StyledTableContainer>
   );
 };

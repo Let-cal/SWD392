@@ -1,31 +1,31 @@
 import { Backdrop, CircularProgress } from "@mui/material";
 import Pagination from "@mui/material/Pagination";
 import axios from "axios";
-import { format } from "date-fns";
+import { format, parse } from "date-fns";
 import { useSnackbar } from "notistack";
 import { useEffect, useState } from "react";
 import DateFilterPopover from "./FilterByDate";
 import SearchCollections from "./SearchCollections";
 import TableCollections from "./TableCollections";
+
 const CollectionsManagement = () => {
   const [collections, setCollections] = useState([]);
   const [loading, setLoading] = useState(true);
   const [searchName, setSearchName] = useState("");
   const [filteredData, setFilteredData] = useState([]);
   const [page, setPage] = useState(1);
-  // eslint-disable-next-line no-unused-vars
-  const [pageSize, setPageSize] = useState(5);
+  const [pageSize] = useState(5);
   const [totalPages, setTotalPages] = useState(1);
   const { enqueueSnackbar } = useSnackbar();
 
-  // Function to fetch collections with pagination
   const fetchCollections = async () => {
     const token = localStorage.getItem("token");
-    console.log(token);
+    console.log("Token:", token);
     if (!token) {
       enqueueSnackbar("Token not found, please log in again", {
         variant: "error",
       });
+      setLoading(false);
       return;
     }
 
@@ -39,28 +39,46 @@ const CollectionsManagement = () => {
           },
         }
       );
-      const formattedData = response.data.data["list-data"].map(
-        (collection) => ({
-          ...collection,
-          "date-open": format(
-            new Date(collection["date-open"]),
-            "yyyy-MM-dd HH:mm:ss"
-          ),
-          "date-close": format(
-            new Date(collection["date-close"]),
-            "yyyy-MM-dd HH:mm:ss"
-          ),
-        })
-      );
-      setCollections(formattedData);
-      setFilteredData(formattedData);
-      setTotalPages(response.data.data["total-page"]);
+
+      // Check if the response structure is as expected
+      if (response.data && response.data.data) {
+        // Update the condition to check for the correct structure
+        if (Array.isArray(response.data.data.data)) {
+          const formattedData = response.data.data.data.map((collection) => ({
+            ...collection,
+            "date-open": format(
+              parse(
+                collection["date-open"],
+                "EEEE, MMMM d, yyyy h:mm a",
+                new Date()
+              ),
+              "yyyy-MM-dd HH:mm:ss"
+            ),
+            "date-close": format(
+              parse(
+                collection["date-close"],
+                "EEEE, MMMM d, yyyy h:mm a",
+                new Date()
+              ),
+              "yyyy-MM-dd HH:mm:ss"
+            ),
+          }));
+
+          setCollections(formattedData);
+          setFilteredData(formattedData);
+          setTotalPages(response.data.data["total-page"]);
+        } else {
+          console.error("list-data is not an array:", response.data.data.data);
+          throw new Error(
+            "Unexpected response structure: list-data is not an array"
+          );
+        }
+      } else {
+        console.error("Unexpected response structure:", response.data);
+        throw new Error("Unexpected response structure");
+      }
     } catch (error) {
       console.error("Error fetching collections:", error);
-      if (error.response) {
-        console.error("Response Data:", error.response.data);
-        console.error("Response Status:", error.response.status);
-      }
       enqueueSnackbar("Failed to load collections", { variant: "error" });
     } finally {
       setLoading(false);
