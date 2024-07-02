@@ -1,4 +1,7 @@
+// TableProduct.jsx
+import AddIcon from "@mui/icons-material/Add";
 import {
+  IconButton,
   Table,
   TableBody,
   TableCell,
@@ -49,7 +52,12 @@ const StyledTableContainer = styled(TableContainer)(({ theme }) => ({
   overflow: "hidden",
 }));
 
-const TableProduct = ({ products, onUpdate }) => {
+const TableProduct = ({
+  products = [],
+  onUpdate,
+  onAddProduct,
+  showAddButton,
+}) => {
   return (
     <StyledTableContainer>
       <Table>
@@ -68,37 +76,54 @@ const TableProduct = ({ products, onUpdate }) => {
           </TableRow>
         </TableHead>
         <TableBody>
-          {products.map((product) => (
-            <StyledTableRow key={product.id}>
-              <StyledTableCell align="center">{product.id}</StyledTableCell>
-              <StyledTableCell align="center">
-                {product["name-product"]}
-              </StyledTableCell>
-              <StyledTableCell align="center">
-                {product["description-product"]}
-              </StyledTableCell>
-              <StyledTableCell align="center">{product.price}</StyledTableCell>
-              <StyledTableCell align="center">
-                {product.quantity}
-              </StyledTableCell>
-              <StyledTableCell align="center">
-                {getCategoryName(product["category-id"])}
-              </StyledTableCell>
-              <StyledTableCell align="center">
-                {getMaterialName(product["material-id"])}
-              </StyledTableCell>
-              <StyledTableCell align="center">
-                {getGenderName(product["gender-id"])}
-              </StyledTableCell>
-              <StyledTableCell align="center">
-                {getZodiacName(product["zodiac-id"])}
-              </StyledTableCell>
-              <StyledTableCell align="center">
-                <EditProductDialog product={product} onUpdate={onUpdate} />
-                <UploadImage productId={product.id} onGetAll={onUpdate} />
-              </StyledTableCell>
-            </StyledTableRow>
-          ))}
+          {Array.isArray(products) &&
+            products.map((product) => (
+              <StyledTableRow key={product.id}>
+                <StyledTableCell align="center">{product.id}</StyledTableCell>
+                <StyledTableCell align="center">
+                  {product["name-product"]}
+                </StyledTableCell>
+                <StyledTableCell align="center">
+                  {product["description-product"]}
+                </StyledTableCell>
+                <StyledTableCell align="center">
+                  {product.price}
+                </StyledTableCell>
+                <StyledTableCell align="center">
+                  {product.quantity}
+                </StyledTableCell>
+                <StyledTableCell align="center">
+                  {getCategoryName(product["category-id"])}
+                </StyledTableCell>
+                <StyledTableCell align="center">
+                  {getMaterialName(product["material-id"])}
+                </StyledTableCell>
+                <StyledTableCell align="center">
+                  {getGenderName(product["gender-id"])}
+                </StyledTableCell>
+                <StyledTableCell align="center">
+                  {getZodiacName(product["zodiac-id"])}
+                </StyledTableCell>
+                <StyledTableCell align="center">
+                  {showAddButton ? (
+                    <IconButton
+                      onClick={() => onAddProduct(product.id)}
+                      color="primary"
+                    >
+                      <AddIcon />
+                    </IconButton>
+                  ) : (
+                    <>
+                      <EditProductDialog
+                        product={product}
+                        onUpdate={onUpdate}
+                      />
+                      <UploadImage productId={product.id} onGetAll={onUpdate} />
+                    </>
+                  )}
+                </StyledTableCell>
+              </StyledTableRow>
+            ))}
         </TableBody>
       </Table>
     </StyledTableContainer>
@@ -107,7 +132,13 @@ const TableProduct = ({ products, onUpdate }) => {
 
 TableProduct.propTypes = {
   products: PropTypes.array.isRequired,
-  onUpdate: PropTypes.func.isRequired,
+  onUpdate: PropTypes.func,
+  onAddProduct: PropTypes.func,
+  showAddButton: PropTypes.bool,
+};
+
+TableProduct.defaultProps = {
+  showAddButton: false,
 };
 
 export default TableProduct;

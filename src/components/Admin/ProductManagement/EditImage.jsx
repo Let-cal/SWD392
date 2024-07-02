@@ -91,37 +91,40 @@ const EditImage = ({ productId, onGetAll }) => {
 
   const handleImageClick = (imageId) => {
     if (!uploading) {
-      setUploading(true);
-      setLoading(true); // Set loading to true for the entire dialog
-      const fileInput = document.createElement("input");
-      fileInput.type = "file";
-      fileInput.onchange = async (event) => {
-        const file = event.target.files[0];
-        const formData = new FormData();
-        formData.append("file", file);
+      const fileInput = fileInputRef.current;
+      if (fileInput) {
+        fileInput.onchange = async (event) => {
+          const file = event.target.files[0];
+          if (file) {
+            const formData = new FormData();
+            formData.append("file", file);
 
-        try {
-          await axios.put(
-            `https://zodiacjewerlyswd.azurewebsites.net/api/products/${productId}/images/${imageId}`,
-            formData,
-            {
-              headers: {
-                "Content-Type": "multipart/form-data",
-              },
+            try {
+              setUploading(true);
+              setLoading(true); // Set loading to true for the entire dialog
+              await axios.put(
+                `https://zodiacjewerlyswd.azurewebsites.net/api/products/${productId}/images/${imageId}`,
+                formData,
+                {
+                  headers: {
+                    "Content-Type": "multipart/form-data",
+                  },
+                }
+              );
+              swal("Good job!", "Image updated successfully!", "success");
+              onGetAll();
+              fetchImages();
+            } catch (error) {
+              console.error("Error updating image:", error);
+              swal("Error!", "Failed to update image.", "error");
+            } finally {
+              setLoading(false); // Set loading to false when operation completes
+              setUploading(false);
             }
-          );
-          swal("Good job!", "Image updated successfully!", "success");
-          onGetAll();
-          fetchImages();
-        } catch (error) {
-          console.error("Error updating image:", error);
-          swal("Error!", "Failed to update image.", "error");
-        } finally {
-          setLoading(false); // Set loading to false when operation completes
-          setUploading(false);
-        }
-      };
-      fileInput.click();
+          }
+        };
+        fileInput.click(); // Trigger file input dialog
+      }
     }
   };
 
@@ -161,6 +164,7 @@ const EditImage = ({ productId, onGetAll }) => {
             ref={fileInputRef}
           />
         </DialogTitle>
+
         <DialogContent>
           {loading ? (
             <Backdrop
