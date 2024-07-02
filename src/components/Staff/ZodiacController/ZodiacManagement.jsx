@@ -1,4 +1,4 @@
-import { FormControl, InputLabel, MenuItem, Select } from "@mui/material";
+import { FormControl, Grid, InputLabel, MenuItem, Select } from "@mui/material";
 import Backdrop from "@mui/material/Backdrop";
 import CircularProgress from "@mui/material/CircularProgress";
 import Pagination from "@mui/material/Pagination";
@@ -13,7 +13,7 @@ function ZodiacManagement() {
   const [selectedZodiac, setSelectedZodiac] = useState("");
   const [page, setPage] = useState(1);
   const [totalPages, setTotalPages] = useState(0);
-  const pageSize = 5; // Change as needed
+  const [pageSize, setPageSize] = useState(5);
   const { enqueueSnackbar } = useSnackbar();
 
   useEffect(() => {
@@ -52,7 +52,10 @@ function ZodiacManagement() {
       setLoading(false);
     }
   };
-
+  const handlePageSizeChange = (size) => {
+    setPageSize(size);
+    setPage(1); // Reset to first page when changing page size
+  };
   const handleZodiacChange = (event) => {
     setSelectedZodiac(event.target.value);
     setPage(1); // Reset page when filter changes
@@ -102,15 +105,40 @@ function ZodiacManagement() {
       </div>
 
       <section className="w-full mt-8">
-        <TableZodiac data={filteredData} onUpdate={fetchData}/>
+        <TableZodiac data={filteredData} onUpdate={fetchData} />
         <div className="flex justify-center mt-6">
-          <Pagination
-            count={totalPages}
-            page={page}
-            onChange={handlePageChange}
-            showFirstButton
-            showLastButton
-          />
+          <Grid
+            container
+            justifyContent="space-between"
+            alignItems="center"
+            mt={2}
+          >
+            <Pagination
+              count={totalPages}
+              page={page}
+              onChange={handlePageChange}
+              showFirstButton
+              showLastButton
+              sx={{
+                "& .MuiPaginationItem-root.Mui-selected": {
+                  backgroundColor: "#b2b251",
+                  color: "#fff",
+                },
+              }}
+            />
+            <Select
+              value={pageSize}
+              onChange={handlePageSizeChange}
+              displayEmpty
+              inputProps={{ "aria-label": "Without label" }}
+              size="small"
+              sx={{ minWidth: 120 }}
+            >
+              <MenuItem value={5}>5 per page</MenuItem>
+              <MenuItem value={10}>10 per page</MenuItem>
+              <MenuItem value={15}>15 per page</MenuItem>
+            </Select>
+          </Grid>
         </div>
       </section>
 

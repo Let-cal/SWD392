@@ -1,4 +1,4 @@
-import { Backdrop, CircularProgress, Pagination } from "@mui/material";
+import { Backdrop, CircularProgress, Pagination,Grid,Select,MenuItem } from "@mui/material";
 import axios from "axios";
 import { useEffect, useState } from "react";
 import FilterComponent from "./FilterManagement/FilterComponent";
@@ -150,21 +150,38 @@ const ProductManagement = () => {
       <section className="w-full mt-8">
         <TableProduct products={filteredProducts} onUpdate={fetchProducts} />
         <div className="flex justify-center mt-6">
-          <Pagination
-            count={totalPages}
-            page={page}
-            onChange={handlePageChange}
-            showFirstButton
-            showLastButton
-          />
-          <select
-            value={pageSize}
-            onChange={(e) => handlePageSizeChange(Number(e.target.value))}
+        <Grid
+            container
+            justifyContent="space-between"
+            alignItems="center"
+            mt={2}
           >
-            <option value={5}>5 per page</option>
-            <option value={10}>10 per page</option>
-            <option value={15}>15 per page</option>
-          </select>
+            <Pagination
+              count={totalPages}
+              page={page}
+              onChange={handlePageChange}
+              showFirstButton
+              showLastButton
+              sx={{
+                "& .MuiPaginationItem-root.Mui-selected": {
+                  backgroundColor: "#b2b251",
+                  color: "#fff",
+                },
+              }}
+            />
+            <Select
+              value={pageSize}
+              onChange={handlePageSizeChange}
+              displayEmpty
+              inputProps={{ "aria-label": "Without label" }}
+              size="small"
+              sx={{ minWidth: 120 }}
+            >
+              <MenuItem value={5}>5 per page</MenuItem>
+              <MenuItem value={10}>10 per page</MenuItem>
+              <MenuItem value={15}>15 per page</MenuItem>
+            </Select>
+          </Grid>
         </div>
       </section>
       <Backdrop open={loading} sx={{ color: "#fff", zIndex: 9999 }}>

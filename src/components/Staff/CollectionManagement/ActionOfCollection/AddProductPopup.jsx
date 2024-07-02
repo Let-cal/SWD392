@@ -5,7 +5,10 @@ import {
   DialogActions,
   DialogContent,
   DialogTitle,
+  Grid,
+  MenuItem,
   Pagination,
+  Select,
   Typography,
 } from "@mui/material";
 import PropTypes from "prop-types";
@@ -17,6 +20,7 @@ const AddProductPopup = ({
   onClose = () => {},
   collectionId,
   onAddProduct,
+  allProducts,
 }) => {
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -27,44 +31,21 @@ const AddProductPopup = ({
 
   useEffect(() => {
     if (open) {
-      fetchProducts();
-    }
-  }, [open, page, pageSize]);
-
-  const fetchProducts = async () => {
-    setLoading(true);
-    const token = localStorage.getItem("token");
-    try {
-      const response = await fetch(
-        `https://zodiacjewerlyswd.azurewebsites.net/api/products?page=${page}&pageSize=${pageSize}`,
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-            accept: "*/*",
-          },
-        }
-      );
-      if (!response.ok) {
-        throw new Error("Failed to fetch products.");
-      }
-      const result = await response.json();
-      const { data } = result;
-
-      setProducts(data["list-data"]);
-      setTotalPages(data["total-page"]);
-    } catch (error) {
-      setError("Error fetching products.");
-      console.error("Error fetching products:", error);
-    } finally {
+      // Calculate pagination based on the number of allProducts
+      const start = (page - 1) * pageSize;
+      const end = start + pageSize;
+      setProducts(allProducts.slice(start, end));
+      setTotalPages(Math.ceil(allProducts.length / pageSize));
       setLoading(false);
     }
-  };
+  }, [open, page, pageSize, allProducts]);
 
   const handlePageChange = (event, value) => {
     setPage(value);
   };
 
-  const handlePageSizeChange = (size) => {
+  const handlePageSizeChange = (event) => {
+    const size = Number(event.target.value);
     setPageSize(size);
     setPage(1); // Reset to first page when changing page size
   };
@@ -97,34 +78,57 @@ const AddProductPopup = ({
       <DialogTitle>Add Product to Collection</DialogTitle>
       <DialogContent>
         {loading ? (
-          <CircularProgress />
+          <Grid container justifyContent="center">
+            <CircularProgress />
+          </Grid>
         ) : error ? (
           <Typography color="error">{error}</Typography>
         ) : (
-          <TableProduct
-            products={products}
-            onAddProduct={handleAddProduct}
-            showAddButton
-          />
+          <>
+            <TableProduct
+              products={products}
+              onAddProduct={handleAddProduct}
+              showAddButton
+            />
+            <Grid
+              container
+              justifyContent="space-between"
+              alignItems="center"
+              mt={2}
+            >
+              <Pagination
+                count={totalPages}
+                page={page}
+                onChange={handlePageChange}
+                showFirstButton
+                showLastButton
+                sx={{
+                  "& .MuiPaginationItem-root.Mui-selected": {
+                    backgroundColor: "#b2b251",
+                    color: "#fff",
+                  },
+                }}
+              />
+              <Select
+                value={pageSize}
+                onChange={handlePageSizeChange}
+                displayEmpty
+                inputProps={{ "aria-label": "Without label" }}
+                size="small"
+                sx={{ minWidth: 120 }}
+              >
+                <MenuItem value={5}>5 per page</MenuItem>
+                <MenuItem value={10}>10 per page</MenuItem>
+                <MenuItem value={15}>15 per page</MenuItem>
+              </Select>
+            </Grid>
+          </>
         )}
-        <Pagination
-          count={totalPages}
-          page={page}
-          onChange={handlePageChange}
-          showFirstButton
-          showLastButton
-        />
-        <select
-          value={pageSize}
-          onChange={(e) => handlePageSizeChange(Number(e.target.value))}
-        >
-          <option value={5}>5 per page</option>
-          <option value={10}>10 per page</option>
-          <option value={15}>15 per page</option>
-        </select>
       </DialogContent>
       <DialogActions>
-        <Button onClick={onClose}>Close</Button>
+        <Button onClick={onClose} variant="contained" color="secondary">
+          Close
+        </Button>
       </DialogActions>
     </Dialog>
   );
@@ -135,6 +139,7 @@ AddProductPopup.propTypes = {
   onClose: PropTypes.func.isRequired,
   collectionId: PropTypes.number.isRequired,
   onAddProduct: PropTypes.func.isRequired,
+  allProducts: PropTypes.array.isRequired,
 };
 
 export default AddProductPopup;

@@ -1,5 +1,13 @@
 import AddCircleIcon from "@mui/icons-material/AddCircle";
-import { Backdrop, Button, CircularProgress, Pagination } from "@mui/material";
+import {
+  Backdrop,
+  Button,
+  CircularProgress,
+  Grid,
+  MenuItem,
+  Pagination,
+  Select,
+} from "@mui/material";
 import axios from "axios";
 import { useEffect, useState } from "react";
 import CreateProductModal from "./CreateProductController/CreateProductModal";
@@ -188,13 +196,38 @@ const ProductManagement = () => {
         <TableProduct products={filteredProducts} onUpdate={fetchProducts} />
 
         <div className="flex justify-center mt-6">
-          <Pagination
-            count={totalPages}
-            page={page}
-            onChange={handlePageChange}
-            showFirstButton
-            showLastButton
-          />
+          <Grid
+            container
+            justifyContent="space-between"
+            alignItems="center"
+            mt={2}
+          >
+            <Pagination
+              count={totalPages}
+              page={page}
+              onChange={handlePageChange}
+              showFirstButton
+              showLastButton
+              sx={{
+                "& .MuiPaginationItem-root.Mui-selected": {
+                  backgroundColor: "#b2b251",
+                  color: "#fff",
+                },
+              }}
+            />
+            <Select
+              value={pageSize}
+              onChange={handlePageSizeChange}
+              displayEmpty
+              inputProps={{ "aria-label": "Without label" }}
+              size="small"
+              sx={{ minWidth: 120 }}
+            >
+              <MenuItem value={5}>5 per page</MenuItem>
+              <MenuItem value={10}>10 per page</MenuItem>
+              <MenuItem value={15}>15 per page</MenuItem>
+            </Select>
+          </Grid>
           <select
             value={pageSize}
             onChange={(e) => handlePageSizeChange(Number(e.target.value))}

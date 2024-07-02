@@ -1,19 +1,19 @@
-import Visibility from "@mui/icons-material/Visibility";
-import VisibilityOff from "@mui/icons-material/VisibilityOff";
-import IconButton from "@mui/material/IconButton";
-import InputAdornment from "@mui/material/InputAdornment";
-import TextField from "@mui/material/TextField";
+import { useState } from "react";
+import {
+  TextField,
+  IconButton,
+  InputAdornment,
+} from "@mui/material";
+import { Visibility, VisibilityOff } from "@mui/icons-material";
 import PropTypes from "prop-types";
-import { useMemo, useState } from "react";
 
-const Input = ({
-  className = "",
-  Content,
-  Placeholder,
-  propMinWidth,
+const InputForm = ({
+  label,
+  placeholder,
   isPassword = false,
   inputType = "text",
   name,
+  value,
   onChange,
 }) => {
   const [showPassword, setShowPassword] = useState(false);
@@ -22,77 +22,42 @@ const Input = ({
     setShowPassword(!showPassword);
   };
 
-  const FormStyle = useMemo(() => {
-    return {
-      minWidth: propMinWidth,
-    };
-  }, [propMinWidth]);
-
   return (
-    <div
-      className={`self-stretch flex flex-col items-start justify-start gap-[6px] max-w-full text-left text-sm text-slate-900 font-body-medium ${className}`}
-    >
-      <div
-        className="font-semibold relative leading-[20px]  inline-block min-w-[36px]"
-        style={FormStyle}
-      >
-        {Content}
-      </div>
-      <div className="self-stretch flex flex-row items-start justify-start gap-[8px] max-w-full text-light-colors-white-light">
-        <div className="flex-1 flex flex-col items-start justify-start max-w-full">
-          <div className="w-full flex flex-col justify-center">
-            <TextField
-              name={name}
-              type={
-                isPassword ? (showPassword ? "text" : "password") : inputType
-              }
-              placeholder={Placeholder}
-              variant="outlined"
-              fullWidth
-              onChange={onChange}
-              sx={{
-                height: "44px",
-                "& .MuiOutlinedInput-root": {
-                  height: "100%",
-                  "& input": {
-                    height: "100%",
-                    boxSizing: "border-box",
-                  },
-                },
-              }}
-              InputProps={
-                isPassword
-                  ? {
-                      endAdornment: (
-                        <InputAdornment position="end">
-                          <IconButton onClick={toggleShowPassword} edge="end">
-                            {showPassword ? <VisibilityOff /> : <Visibility />}
-                          </IconButton>
-                        </InputAdornment>
-                      ),
-                    }
-                  : {}
-              }
-            />
-          </div>
-        </div>
-      </div>
-      <div className="w-[164px] relative leading-[20px] text-slate-500 hidden">
-        Enter your {Content.toLowerCase()}
-      </div>
-    </div>
+    <TextField
+      label={label}
+      type={isPassword ? (showPassword ? "text" : "password") : inputType}
+      name={name}
+      value={value}
+      placeholder={placeholder}
+      variant="outlined"
+      fullWidth
+      margin="normal"
+      onChange={onChange}
+      InputProps={
+        isPassword
+          ? {
+              endAdornment: (
+                <InputAdornment position="end">
+                  <IconButton onClick={toggleShowPassword} edge="end">
+                    {showPassword ? <VisibilityOff /> : <Visibility />}
+                  </IconButton>
+                </InputAdornment>
+              ),
+            }
+          : {}
+      }
+    />
   );
 };
 
-Input.propTypes = {
-  className: PropTypes.string,
-  Content: PropTypes.string,
-  Placeholder: PropTypes.string,
+InputForm.propTypes = {
+  label: PropTypes.string.isRequired,
+  placeholder: PropTypes.string,
   isPassword: PropTypes.bool,
-  propMinWidth: PropTypes.any,
   inputType: PropTypes.string,
   name: PropTypes.string.isRequired,
+  value: PropTypes.string.isRequired,
   onChange: PropTypes.func.isRequired,
 };
 
-export default Input;
+export default InputForm;

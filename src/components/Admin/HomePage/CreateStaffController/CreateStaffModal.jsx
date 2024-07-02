@@ -1,9 +1,17 @@
-import { Backdrop, CircularProgress } from "@mui/material";
+import {
+  Backdrop,
+  Button,
+  CircularProgress,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogTitle,
+} from "@mui/material";
 import axios from "axios";
 import { enqueueSnackbar } from "notistack";
 import PropTypes from "prop-types";
 import { useState } from "react";
-import Input from "./InputForm";
+import InputForm from "./InputForm";
 
 const CreateStaffModal = ({ isOpen, onClose }) => {
   const [formData, setFormData] = useState({
@@ -28,19 +36,22 @@ const CreateStaffModal = ({ isOpen, onClose }) => {
     }
 
     const { email, password, fullName, telephoneNumber } = formData;
-    const requestData = { email, password, fullName, telephoneNumber };
-
+    console.log("Request Data:", {
+      email: email,
+      password: password,
+      "full-name": fullName,
+      "telephone-number": telephoneNumber,
+    });
     setLoading(true);
     try {
       const token = localStorage.getItem("token");
+      console.log("Token:", token);
       if (!token) {
         enqueueSnackbar("Authentication token is missing", {
           variant: "error",
         });
         return;
       }
-
-      console.log("Request Data:", requestData); // Log the request payload
 
       await axios.post(
         "https://zodiacjewerlyswd.azurewebsites.net/api/authentication/staff",
@@ -57,6 +68,7 @@ const CreateStaffModal = ({ isOpen, onClose }) => {
           },
         }
       );
+
       enqueueSnackbar("Staff account created successfully", {
         variant: "success",
       });
@@ -75,110 +87,71 @@ const CreateStaffModal = ({ isOpen, onClose }) => {
   if (!isOpen) return null;
 
   return (
-    <div style={modalStyles.overlay}>
-      <div style={modalStyles.modal}>
-        <button onClick={onClose} style={modalStyles.closeButton}>
-          X
-        </button>
-        <h2 className="font-bold mb-4 text-2xl font-serif">
-          Create Staff Account
-        </h2>
+    <Dialog open={isOpen} onClose={onClose} maxWidth="sm" fullWidth>
+      <DialogTitle>Create Staff Account</DialogTitle>
+      <DialogContent>
         <form onSubmit={handleSubmit}>
-          <Input
-            Content="Email Address"
-            Placeholder="Enter your Email"
-            propMinWidth="66px"
+          <InputForm
+            label="Email Address"
+            placeholder="Enter your email"
             name="email"
-            inputType="email"
+            value={formData.email}
             onChange={handleChange}
           />
-          <Input
-            Content="Password"
-            Placeholder="Enter your password"
-            propMinWidth="200px"
-            isPassword={true}
+          <InputForm
+            label="Password"
+            placeholder="Enter your password"
+            isPassword
             name="password"
+            value={formData.password}
             onChange={handleChange}
           />
-          <Input
-            Content="Confirm your password"
-            Placeholder="Enter your password again"
-            propMinWidth="200px"
-            isPassword={true}
+          <InputForm
+            label="Confirm Password"
+            placeholder="Confirm your password"
+            isPassword
             name="confirmPassword"
+            value={formData.confirmPassword}
             onChange={handleChange}
           />
-          <Input
-            Content="Fullname"
-            Placeholder="Enter your Fullname"
-            propMinWidth="200px"
+          <InputForm
+            label="Full Name"
+            placeholder="Enter your full name"
             name="fullName"
-            inputType="text"
+            value={formData.fullName}
             onChange={handleChange}
           />
-          <Input
-            Content="Telephone Number"
-            Placeholder="+84"
-            propMinWidth="200px"
+          <InputForm
+            label="Telephone Number"
+            placeholder="+84"
             name="telephoneNumber"
-            inputType="text"
+            value={formData.telephoneNumber}
             onChange={handleChange}
           />
-          <button type="submit" style={modalStyles.submitButton}>
-            Create Staff
-          </button>
+          <DialogActions>
+            <Button onClick={onClose} color="secondary">
+              Cancel
+            </Button>
+            <Button
+              type="submit"
+              sx={{ backgroundColor: "black" }}
+              variant="contained"
+            >
+              Create Staff
+            </Button>
+          </DialogActions>
         </form>
-        <Backdrop style={{ color: "#fff", zIndex: 1000 }} open={loading}>
-          <CircularProgress color="inherit" />
-        </Backdrop>
-      </div>
-    </div>
+      </DialogContent>
+      <Backdrop style={{ color: "#fff", zIndex: 1000 }} open={loading}>
+        <CircularProgress color="inherit" />
+      </Backdrop>
+    </Dialog>
   );
 };
 
 CreateStaffModal.propTypes = {
   isOpen: PropTypes.bool.isRequired,
   onClose: PropTypes.func.isRequired,
-};
-
-const modalStyles = {
-  overlay: {
-    position: "fixed",
-    top: 0,
-    left: 0,
-    right: 0,
-    bottom: 0,
-    backgroundColor: "rgba(0, 0, 0, 0.5)",
-    display: "flex",
-    justifyContent: "center",
-    alignItems: "center",
-  },
-  modal: {
-    background: "white",
-    padding: "20px",
-    borderRadius: "8px",
-    maxWidth: "500px",
-    width: "100%",
-    position: "relative",
-  },
-  closeButton: {
-    position: "absolute",
-    top: "10px",
-    right: "10px",
-    background: "transparent",
-    border: "none",
-    fontSize: "20px",
-    cursor: "pointer",
-  },
-  submitButton: {
-    background: "#000",
-    color: "#fff",
-    padding: "10px 20px",
-    border: "none",
-    borderRadius: "4px",
-    cursor: "pointer",
-    marginTop: "10px",
-  },
 };
 
 export default CreateStaffModal;

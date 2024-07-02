@@ -1,3 +1,4 @@
+import DeleteIcon from "@mui/icons-material/Delete";
 import {
   Button,
   Dialog,
@@ -10,7 +11,6 @@ import axios from "axios";
 import { useSnackbar } from "notistack";
 import PropTypes from "prop-types";
 import { useEffect, useState } from "react";
-
 const EditUserDialog = ({ open, handleClose, userData, updateUser }) => {
   const [updatedUser, setUpdatedUser] = useState(
     userData || {
@@ -126,6 +126,7 @@ const EditUserDialog = ({ open, handleClose, userData, updateUser }) => {
           Save Changes
         </Button>
         <Button onClick={handleDelete} color="error">
+          <DeleteIcon />
           Delete
         </Button>
       </DialogActions>

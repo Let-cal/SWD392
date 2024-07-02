@@ -1,18 +1,24 @@
-import Backdrop from "@mui/material/Backdrop";
-import CircularProgress from "@mui/material/CircularProgress";
-import Pagination from "@mui/material/Pagination";
-import Tab from "@mui/material/Tab";
-import Tabs from "@mui/material/Tabs";
-import TextField from "@mui/material/TextField";
+import {
+  Backdrop,
+  CircularProgress,
+  Grid,
+  IconButton,
+  MenuItem,
+  Pagination,
+  Select,
+  Tab,
+  Tabs,
+  TextField,
+} from "@mui/material";
+
+import SearchIcon from "@mui/icons-material/Search";
 import { useSnackbar } from "notistack";
 import { useEffect, useState } from "react";
 import TableUser from "./TableUser";
-
 function UserController() {
   const [data, setData] = useState([]);
   const [loading, setLoading] = useState(false);
   const [page, setPage] = useState(1);
-  // eslint-disable-next-line no-unused-vars
   const [pageSize, setPageSize] = useState(5);
   const [totalPages, setTotalPages] = useState(1);
   const [search, setSearch] = useState("");
@@ -25,7 +31,7 @@ function UserController() {
 
   const fetchUsers = () => {
     setLoading(true);
-    const url = `https://zodiacjewerlyswd.azurewebsites.net/api/users?additionalProp1=string&additionalProp2=string&additionalProp3=string&sort=id&page=${page}&pageSize=${pageSize}`;
+    const url = `https://zodiacjewerlyswd.azurewebsites.net/api/users?additionalProp1=string&additionalProp2=string&additionalProp3=string&sort=id&page=${page}&pageSize=${pageSize}&search=${search}`;
 
     fetch(url, {
       method: "GET",
@@ -41,7 +47,11 @@ function UserController() {
         console.log("Response data: ", data);
         if (data && data.success && Array.isArray(data.data["list-data"])) {
           const filteredData = data.data["list-data"].filter(
-            (user) => roleFilter === "All" || user["role-name"] === roleFilter
+            (user) =>
+              (roleFilter === "All" || user["role-name"] === roleFilter) &&
+              (search.trim() === "" ||
+                user.email.toLowerCase().includes(search.toLowerCase()) ||
+                user["full-name"].toLowerCase().includes(search.toLowerCase()))
           );
           setData(filteredData);
           setTotalPages(data.data["total-page"]);
@@ -69,22 +79,38 @@ function UserController() {
     setRoleFilter(newValue);
   };
 
+  const handleSearchButtonClick = () => {
+    fetchUsers(); // Gọi fetchUsers khi người dùng nhấn nút "Search"
+  };
+  const handlePageSizeChange = (size) => {
+    setPageSize(size);
+    setPage(1); // Reset to first page when changing page size
+  };
   return (
     <div>
       <div className="flex flex-row justify-between w-full items-center">
         <h1 className="font-serif text-[30px] w-[394px] relative text-inherit leading-[48px] font-bold font-inherit inline-block shrink-0 max-w-full mq450:text-[23px] mq450:leading-[29px] mq1050:text-11xl mq1050:leading-[38px]">
           User Management
         </h1>
-        <TextField
-          id="standard-textarea"
-          label="Search"
-          placeholder="Search name of user account"
-          multiline
-          variant="standard"
-          value={search}
-          onChange={handleSearchChange}
-          sx={{ width: "30%" }}
-        />
+        <div className="flex flex-row items-end w-[30%] ">
+          <TextField
+            id="standard-textarea"
+            label="Search"
+            placeholder="Search email or full name"
+            multiline
+            variant="standard"
+            value={search}
+            onChange={handleSearchChange}
+            sx={{ width: "100%" }}
+          />
+          <IconButton
+            variant="contained"
+            onClick={handleSearchButtonClick}
+            sx={{ color: "black" }}
+          >
+            <SearchIcon />
+          </IconButton>
+        </div>
       </div>
       <Tabs
         value={roleFilter}
@@ -99,13 +125,38 @@ function UserController() {
       <section className="w-full mt-8">
         <TableUser data={data} updateUser={fetchUsers} />
         <div className="flex justify-center mt-6">
-          <Pagination
-            count={totalPages}
-            page={page}
-            onChange={handlePageChange}
-            showFirstButton
-            showLastButton
-          />
+          <Grid
+            container
+            justifyContent="space-between"
+            alignItems="center"
+            mt={2}
+          >
+            <Pagination
+              count={totalPages}
+              page={page}
+              onChange={handlePageChange}
+              showFirstButton
+              showLastButton
+              sx={{
+                "& .MuiPaginationItem-root.Mui-selected": {
+                  backgroundColor: "#b2b251",
+                  color: "#fff",
+                },
+              }}
+            />
+            <Select
+              value={pageSize}
+              onChange={handlePageSizeChange}
+              displayEmpty
+              inputProps={{ "aria-label": "Without label" }}
+              size="small"
+              sx={{ minWidth: 120 }}
+            >
+              <MenuItem value={5}>5 per page</MenuItem>
+              <MenuItem value={10}>10 per page</MenuItem>
+              <MenuItem value={15}>15 per page</MenuItem>
+            </Select>
+          </Grid>
         </div>
       </section>
       <Backdrop

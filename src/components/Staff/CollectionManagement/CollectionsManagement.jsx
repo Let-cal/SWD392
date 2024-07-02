@@ -1,5 +1,12 @@
 import AddCircleOutlineIcon from "@mui/icons-material/AddCircleOutline";
-import { Backdrop, Button, CircularProgress } from "@mui/material";
+import {
+  Backdrop,
+  Button,
+  CircularProgress,
+  Grid,
+  MenuItem,
+  Select,
+} from "@mui/material";
 import Pagination from "@mui/material/Pagination";
 import axios from "axios";
 import { format, parse } from "date-fns";
@@ -132,6 +139,10 @@ const CollectionsManagement = () => {
     // Refresh collections or handle success action
     fetchCollections();
   };
+  const handlePageSizeChange = (size) => {
+    setPageSize(size);
+    setPage(1); // Reset to first page when changing page size
+  };
   return (
     <div>
       <div className="flex justify-between items-center mb-4">
@@ -174,13 +185,38 @@ const CollectionsManagement = () => {
             onUpdateCollection={fetchCollections}
           />
           <div className="flex justify-center mt-6">
-            <Pagination
-              count={totalPages}
-              page={page}
-              onChange={handlePageChange}
-              showFirstButton
-              showLastButton
-            />
+            <Grid
+              container
+              justifyContent="space-between"
+              alignItems="center"
+              mt={2}
+            >
+              <Pagination
+                count={totalPages}
+                page={page}
+                onChange={handlePageChange}
+                showFirstButton
+                showLastButton
+                sx={{
+                  "& .MuiPaginationItem-root.Mui-selected": {
+                    backgroundColor: "#b2b251",
+                    color: "#fff",
+                  },
+                }}
+              />
+              <Select
+                value={pageSize}
+                onChange={handlePageSizeChange}
+                displayEmpty
+                inputProps={{ "aria-label": "Without label" }}
+                size="small"
+                sx={{ minWidth: 120 }}
+              >
+                <MenuItem value={5}>5 per page</MenuItem>
+                <MenuItem value={10}>10 per page</MenuItem>
+                <MenuItem value={15}>15 per page</MenuItem>
+              </Select>
+            </Grid>
           </div>
         </>
       )}

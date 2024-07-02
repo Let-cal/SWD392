@@ -1,53 +1,105 @@
 import VisibilityIcon from "@mui/icons-material/Visibility";
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableContainer,
+  TableHead,
+  TableRow,
+  tableCellClasses,
+} from "@mui/material";
 import Button from "@mui/material/Button";
+import { styled } from "@mui/material/styles";
 import PropTypes from "prop-types";
-import InforOrder from "./InfoOrder";
 
-const Table = ({ data }) => {
+const StyledTableCell = styled(TableCell)(({ theme }) => ({
+  [`&.${tableCellClasses.head}`]: {
+    backgroundColor: theme.palette.common.black,
+    color: theme.palette.common.white,
+  },
+  [`&.${tableCellClasses.body}`]: {
+    fontSize: 14,
+    transition: "background-color 0.3s ease, transform 0.3s ease",
+  },
+}));
+
+const StyledTableRow = styled(TableRow)(({ theme }) => ({
+  "&:nth-of-type(odd)": {
+    backgroundColor: theme.palette.action.hover,
+  },
+  "&:hover": {
+    backgroundColor: theme.palette.action.selected,
+    transform: "scale(1.01)",
+    transition: "background-color 0.3s ease, transform 0.3s ease",
+    boxShadow: "0 4px 8px rgba(0, 0, 0, 0.1)",
+  },
+  "&:last-child td, &:last-child th": {
+    border: 0,
+  },
+}));
+
+const StyledTableContainer = styled(TableContainer)(() => ({
+  overflow: "hidden",
+}));
+
+const TableOrder = ({ orders }) => {
   return (
-    <div className="mx-auto bg-white shadow-lg rounded-lg overflow-hidden">
-      <div className="flex justify-between items-center  bg-gray-100 text-xs uppercase font-semibold text-gray-600">
-        <div className="w-1/5 px-4 text-center py-2">Order Number</div>
-        <div className="w-1/5 px-4 text-center py-2">User ID</div>
-        <div className="w-1/5 px-4 text-center py-2">Date</div>
-        <div className="w-1/5 px-4 text-center py-2">Status</div>
-        <div className="w-1/5 px-4 text-center py-2">Total</div>
-        <div className="w-1/5 px-4 text-center py-2">Action</div>
-      </div>
-      {Array.isArray(data) &&
-        data.map((Orders) => (
-          <InforOrder
-            key={Orders.OrderNumber}
-            OrderNumber={Orders.OrderNumber}
-            UserID={Orders.UserID}
-            Date={Orders.Date}
-            Status={Orders.Status}
-            TotalPrice={Orders.TotalPrice}
-            Action={
-              <Button
-                variant="contained"
-                endIcon={<VisibilityIcon />}
-                sx={{
-                  height: "20%",
-                  fontSize: "13px",
-                  backgroundColor: "black",
-                  color: "white",
-                  "&:hover": {
-                    backgroundColor: "gray",
-                  },
-                }}
+    <StyledTableContainer>
+      <Table>
+        <TableHead>
+          <TableRow>
+            <StyledTableCell align="center">Order Number</StyledTableCell>
+            <StyledTableCell align="center">User ID</StyledTableCell>
+            <StyledTableCell align="center">Date</StyledTableCell>
+            <StyledTableCell align="center">Status</StyledTableCell>
+            <StyledTableCell align="center">Total Price</StyledTableCell>
+            <StyledTableCell align="center">Action</StyledTableCell>
+          </TableRow>
+        </TableHead>
+        <TableBody>
+          {orders.map((order) => (
+            <StyledTableRow key={order.OrderNumber}>
+              <StyledTableCell align="center">
+                {order.OrderNumber}
+              </StyledTableCell>
+              <StyledTableCell align="center">{order.UserID}</StyledTableCell>
+              <StyledTableCell align="center">{order.Date}</StyledTableCell>
+              <StyledTableCell
+                align="center"
+                style={{ color: order.StatusColor }}
               >
-                View details
-              </Button>
-            }
-          />
-        ))}
-    </div>
+                {order.Status}
+              </StyledTableCell>
+              <StyledTableCell align="center">
+                {order.TotalPrice}
+              </StyledTableCell>
+              <StyledTableCell align="center">
+                <Button
+                  variant="contained"
+                  endIcon={<VisibilityIcon />}
+                  sx={{
+                    height: "20%",
+                    fontSize: "13px",
+                    backgroundColor: "black",
+                    color: "white",
+                    "&:hover": {
+                      backgroundColor: "gray",
+                    },
+                  }}
+                >
+                  View details
+                </Button>
+              </StyledTableCell>
+            </StyledTableRow>
+          ))}
+        </TableBody>
+      </Table>
+    </StyledTableContainer>
   );
 };
 
-Table.propTypes = {
-  data: PropTypes.array.isRequired,
+TableOrder.propTypes = {
+  orders: PropTypes.array.isRequired,
 };
 
-export default Table;
+export default TableOrder;

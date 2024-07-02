@@ -17,7 +17,7 @@ import {
   MenuItem,
 } from "@mui/material";
 import PropTypes from "prop-types";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import AddProductPopup from "./AddProductPopup";
 const ListItemButtons = ({
   onViewDetails,
@@ -29,6 +29,44 @@ const ListItemButtons = ({
   const [anchorEl, setAnchorEl] = useState(null);
   const [open, setOpen] = useState(false);
   const [popupOpen, setPopupOpen] = useState(false);
+  const [allProducts, setAllProducts] = useState([]);
+  useEffect(() => {
+    fetchAllProducts();
+  }, []);
+
+  const fetchAllProducts = async () => {
+    const token = localStorage.getItem("token");
+    let allProductsData = [];
+    let page = 1;
+    let totalPages = 1;
+
+    try {
+      while (page <= totalPages) {
+        const response = await fetch(
+          `https://zodiacjewerlyswd.azurewebsites.net/api/products?page=${page}&pageSize=100`, // adjust pageSize if needed
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+              accept: "*/*",
+            },
+          }
+        );
+        if (!response.ok) {
+          throw new Error("Failed to fetch products.");
+        }
+        const result = await response.json();
+        const { data } = result;
+
+        allProductsData = [...allProductsData, ...data["list-data"]];
+        totalPages = data["total-page"];
+        page++;
+      }
+      setAllProducts(allProductsData);
+    } catch (error) {
+      console.error("Error fetching all products:", error);
+    }
+  };
+
   const handleClick = (event) => {
     setAnchorEl(event.currentTarget);
     // setOpen(!open); // Comment this line to prevent immediate opening
@@ -140,6 +178,7 @@ const ListItemButtons = ({
         onClose={handlePopupClose}
         collectionId={collectionId}
         onAddProduct={handleAddProduct}
+        allProducts={allProducts}
       />
     </>
   );
