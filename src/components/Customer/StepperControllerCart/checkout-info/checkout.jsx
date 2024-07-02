@@ -1,12 +1,33 @@
-import { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useLocation } from "react-router-dom";
 import Header from "../../../Admin/HeaderOfAdmin";
 import CheckoutStepper from "../StepperComponent";
 import "./checkout.css";
+
 function Checkout() {
   const location = useLocation();
-  // eslint-disable-next-line no-unused-vars
-  const { selectedItems, items } = location.state || {};
+  const { selectedItems } = location.state || [];
+
+  useEffect(() => {
+    const handleResize = () => {
+      const checkoutItems = document.querySelectorAll(".checkout-item");
+      checkoutItems.forEach(item => {
+        const itemImage = item.querySelector(".item-image img");
+        const itemInfo = item.querySelector(".item-info");
+        if (itemImage && itemInfo) {
+          itemImage.style.height = `${itemInfo.offsetHeight}px`;
+        }
+      });
+    };
+
+    handleResize();
+
+    window.addEventListener("resize", handleResize);
+
+    return () => {
+      window.removeEventListener("resize", handleResize);
+    };
+  }, [selectedItems]);
 
   const [orderInfo, setOrderInfo] = useState({
     name: "",
@@ -17,12 +38,8 @@ function Checkout() {
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-
     if (name === "phone") {
-      if (
-        /^\d*$/.test(value) &&
-        (value.length === 0 || (value.length <= 10 && value[0] === "0"))
-      ) {
+      if (/^\d*$/.test(value) && (value.length === 0 || (value.length <= 10 && value[0] === "0"))) {
         setOrderInfo({ ...orderInfo, [name]: value });
       }
     } else {
@@ -40,32 +57,26 @@ function Checkout() {
       <Header />
       <CheckoutStepper />
       <div className="checkout-container">
-        <div className="checkout-items">
+        <div className="checkout-items-container">
           {selectedItems &&
             selectedItems.map((item, index) => (
-              <div key={index} className="checkout-item ">
+              <div key={index} className="checkout-item">
                 <div className="item-image">
                   <img src={item.imageSrc} alt={item.itemName} />
                 </div>
-                <div className="flex justify-between flex-row w-full">
-                  <div className="item-name">{item.itemName}</div>
-
-                  <div className="item-details">
-                    <div className=" flex-col checkout-item-quantity">
-                      {" "}
-                      <span className="font-bold">Quantity</span>
+                <div className="checkout-item-info">
+                  <div className="checkout-item-name">{item.itemName}</div>
+                  <div className="checkout-item-details">
+                    <div className="checkout-item-quantity">
+                      <span>Quantity</span>{" "}
                       <span>{item.itemQty}</span>
                     </div>
-
-                    <div className="flex-col checkout-item-price">
-                      {" "}
-                      <span className="font-bold">Unit price</span>
+                    <div className="checkout-item-price">
+                      <span>Unit price</span>{" "}
                       <span>${item.itemPrice.toFixed(2)}</span>
                     </div>
-
-                    <div className="flex-col checkout-item-total">
-                      {" "}
-                      <span className="font-bold">Total</span>
+                    <div className="checkout-item-total">
+                      <span>Total</span>{" "}
                       <span>${(item.itemPrice * item.itemQty).toFixed(2)}</span>
                     </div>
                   </div>
@@ -73,17 +84,16 @@ function Checkout() {
               </div>
             ))}
         </div>
+        
         <div>
           <div className="checkout-summary">
             BILL TOTAL: $
             {selectedItems
-              .reduce((total, item) => {
-                return total + item.itemPrice * item.itemQty;
-              }, 0)
+              .reduce((total, item) => total + item.itemPrice * item.itemQty, 0)
               .toFixed(2)}
           </div>
           <form onSubmit={(e) => e.preventDefault()} className="checkout-form">
-            <h2>Delivery Infomation</h2>
+            <h2>Delivery Information</h2>
             <input
               type="text"
               name="name"
@@ -108,7 +118,7 @@ function Checkout() {
               required
             ></textarea>
             <button type="submit" onClick={handleCheckout}>
-              PLACE TO ORDER
+              PLACE ORDER
             </button>
           </form>
         </div>

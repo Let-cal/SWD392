@@ -140,50 +140,78 @@ const DetailProduct = () => {
   const [quantity, setQuantity] = useState(1);
   const [similarProducts, setSimilarProducts] = useState([]);
 
+  // Hàm lấy thông tin sản phẩm từ API
   const fetchProduct = async (productId) => {
     try {
       const response = await axios.get(`https://zodiacjewerlyswd.azurewebsites.net/api/products/${productId}`);
       if (response.data && response.data.success && response.data.data) {
-        const productData = response.data.data;
-        setProduct(productData);
-        setMainImageSrc(productData["image-urls"][0]);
+        setProduct(response.data.data);
+        setMainImageSrc(response.data.data["image-urls"][0]);
       } else {
-        console.error("Dữ liệu sản phẩm không hợp lệ hoặc thiếu các thuộc tính cần thiết:", response.data);
+        console.error("Invalid response format or missing data in API response");
       }
     } catch (error) {
-      console.error("Có lỗi xảy ra khi lấy dữ liệu sản phẩm!", error);
+      console.error("Error fetching product:", error);
+    }
+  };
+
+  // Hàm lấy toàn bộ sản phẩm từ các trang
+  const fetchAllProducts = async () => {
+    try {
+      const response = await axios.get(`https://zodiacjewerlyswd.azurewebsites.net/api/products`);
+      if (response.data && response.data.success && response.data.data && Array.isArray(response.data.data['list-data'])) {
+        const totalPages = response.data.data['total-page'];
+        const allProducts = [];
+
+        // Lặp qua từng trang để lấy danh sách sản phẩm
+        for (let page = 1; page <= totalPages; page++) {
+          const pageResponse = await axios.get(`https://zodiacjewerlyswd.azurewebsites.net/api/products?page=${page}&pageSize=5`);
+          if (pageResponse.data && pageResponse.data.success && Array.isArray(pageResponse.data.data['list-data'])) {
+            allProducts.push(...pageResponse.data.data['list-data']);
+          } else {
+            console.error(`Failed to fetch products for page ${page}`);
+          }
+        }
+
+        // Loại bỏ sản phẩm đang xem chi tiết
+        const viewedProductId = parseInt(id);
+        const filteredProducts = allProducts.filter(p => p.id !== viewedProductId);
+        setSimilarProducts(filteredProducts);
+      } else {
+        console.error("Invalid response format or missing data in API response");
+        setSimilarProducts([]);
+      }
+    } catch (error) {
+      console.error("Error fetching products:", error);
+      setSimilarProducts([]);
     }
   };
 
   useEffect(() => {
     fetchProduct(id);
+    fetchAllProducts();
   }, [id]);
-
-  useEffect(() => {
-    axios.get('https://zodiacjewerlyswd.azurewebsites.net/api/products')
-      .then(response => {
-        console.log("API Response:", response.data);
-        if (response.data && response.data.success && Array.isArray(response.data.data)) {
-          setSimilarProducts(response.data.data);
-        } else {
-          setSimilarProducts([]);
-        }
-      })
-      .catch((error) => {
-        console.error(
-          "There was an error fetching the similar products data!",
-          error
-        );
-        setSimilarProducts([]);
-      });
-  }, []);
 
   const handleImageClick = (index) => {
     setMainImageSrc(product["image-urls"][index]);
   };
 
-  const handleAddToCart = () => {
-    console.log(`Số lượng: ${quantity}`);
+  const handleAddToCart = async () => {
+    const hint = localStorage.getItem("hint");
+    const productID = id;
+
+    for (let i = 0; i < quantity; i++) {
+      try {
+        const response = await axios.post(`https://zodiacjewerlyswd.azurewebsites.net/api/orders/${hint}/${productID}`);
+        if (response.data && response.data.success) {
+          console.log(`Sản phẩm ${productID} đã được thêm vào giỏ hàng cho người dùng ${hint}`);
+        } else {
+          console.error("Có lỗi xảy ra khi thêm sản phẩm vào giỏ hàng:", response.data);
+        }
+      } catch (error) {
+        console.error("Có lỗi xảy ra khi thêm sản phẩm vào giỏ hàng!", error);
+      }
+    }
   };
 
   return (
@@ -225,10 +253,10 @@ const DetailProduct = () => {
               <div className="quantity-value">{quantity}</div>
               <button onClick={() => setQuantity(quantity + 1)}>+</button>
             </div>
-
           </div>
+
           <button className="add-to-cart-button" onClick={handleAddToCart}>
-            <AddShoppingCartIcon/> ADD TO CART
+            <AddShoppingCartIcon /> ADD TO CART
           </button>
 
           <button className="checkout-button" onClick={handleAddToCart}>
@@ -242,12 +270,11 @@ const DetailProduct = () => {
         </div>
       </div>
 
-
       <div className="similar-products">
         <h2>Similar Products</h2>
         <div className="similar-products-list">
           {similarProducts.length > 0 ? (
-            similarProducts.filter(similarProduct => similarProduct.id !== product.id).map((product) => (
+            similarProducts.map((product) => (
               <SimilarProduct
                 key={product.id}
                 imageSrc={product["image-urls"][0]}

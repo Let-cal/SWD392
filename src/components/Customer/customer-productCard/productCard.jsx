@@ -85,6 +85,11 @@ const TrustedCompanies = ({ selectedZodiacId }) => {
   const [category, setCategory] = useState("");
   const [material, setMaterial] = useState("");
   const [zodiac, setZodiac] = useState("");
+  const [cardsData, setCardsData] = useState([]);
+  const [zodiacDetail, setZodiacDetail] = useState(null);
+  const [page, setPage] = useState(1);
+  const [pageSize, setPageSize] = useState(8); // or any other suitable value
+  const [totalPages, setTotalPages] = useState(1); // to store total pages from API
 
   const handleChangeCategory = (event) => {
     setCategory(event.target.value);
@@ -99,15 +104,25 @@ const TrustedCompanies = ({ selectedZodiacId }) => {
     setSelectedZodiacId(value === "" ? null : value);
   };
 
-  const [cardsData, setCardsData] = useState([]);
-  const [zodiacDetail, setZodiacDetail] = useState(null);
-
   useEffect(() => {
-    axios.get('https://zodiacjewerlyswd.azurewebsites.net/api/products')
-      .then(response => {
-        console.log('API response:', response.data);
+    const fetchProducts = async () => {
+      try {
+        const initialResponse = await axios.get('https://zodiacjewerlyswd.azurewebsites.net/api/products', {
+          params: { page: 1, pageSize: 1 }
+        });
 
-        const apiData = response.data.data;
+        const totalRecords = initialResponse.data.data['total-records'];
+        const totalPages = Math.ceil(totalRecords / pageSize);
+        setTotalPages(totalPages);
+
+        let allProducts = [];
+        for (let i = 1; i <= totalPages; i++) {
+          const response = await axios.get('https://zodiacjewerlyswd.azurewebsites.net/api/products', {
+            params: { page: i, pageSize: pageSize }
+          });
+          allProducts = allProducts.concat(response.data.data['list-data']);
+        }
+
         const categoryMap = {
           1: 'Necklaces',
           2: 'Bracelets',
@@ -140,10 +155,10 @@ const TrustedCompanies = ({ selectedZodiacId }) => {
           12: 'Pisces',
         };
 
-        let filteredData = apiData;
+        let filteredData = allProducts;
 
         if (selectedZodiacId) {
-          filteredData = apiData.filter(product => product["zodiac-id"] === selectedZodiacId);
+          filteredData = allProducts.filter(product => product["zodiac-id"] === selectedZodiacId);
         }
 
         if (category) {
@@ -173,15 +188,17 @@ const TrustedCompanies = ({ selectedZodiacId }) => {
         }));
 
         setCardsData(formattedData);
-      })
-      .catch(error => {
+      } catch (error) {
         console.error('There was an error fetching the data!', error);
-      });
-  }, [selectedZodiacId, category, material, zodiac]);
+      }
+    };
+
+    fetchProducts();
+  }, [selectedZodiacId, category, material, zodiac, pageSize]);
 
   useEffect(() => {
     if (selectedZodiacId) {
-      axios.get(`https://zodiacjewerly.azurewebsites.net/api/zodiacs/${selectedZodiacId}`)
+      axios.get(`https://zodiacjewerlyswd.azurewebsites.net/api/products/${selectedZodiacId}`)
         .then(response => {
           console.log('Zodiac detail:', response.data);
           setZodiacDetail(response.data);
