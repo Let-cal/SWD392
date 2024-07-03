@@ -223,7 +223,7 @@ const ProductManagement = () => {
             />
             <Select
               value={pageSize}
-              onChange={handlePageSizeChange}
+              onChange={(e) => handlePageSizeChange(Number(e.target.value))}
               displayEmpty
               inputProps={{ "aria-label": "Without label" }}
               size="small"
@@ -234,14 +234,6 @@ const ProductManagement = () => {
               <MenuItem value={15}>15 per page</MenuItem>
             </Select>
           </Grid>
-          <select
-            value={pageSize}
-            onChange={(e) => handlePageSizeChange(Number(e.target.value))}
-          >
-            <option value={5}>5 per page</option>
-            <option value={10}>10 per page</option>
-            <option value={15}>15 per page</option>
-          </select>
         </div>
       </section>
       <Backdrop open={loading} sx={{ color: "#fff", zIndex: 9999 }}>

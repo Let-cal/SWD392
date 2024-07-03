@@ -185,7 +185,7 @@ const ProductManagement = () => {
             />
             <Select
               value={pageSize}
-              onChange={handlePageSizeChange}
+              onChange={(e) => handlePageSizeChange(Number(e.target.value))}
               displayEmpty
               inputProps={{ "aria-label": "Without label" }}
               size="small"
