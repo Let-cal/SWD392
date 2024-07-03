@@ -5,12 +5,55 @@ import {
   DialogActions,
   DialogContent,
   DialogTitle,
+  FormControl,
+  FormControlLabel,
+  InputLabel,
+  MenuItem,
+  Select,
   TextField,
+  Typography,
 } from "@mui/material";
+import Switch from "@mui/material/Switch";
+import { styled } from "@mui/material/styles";
 import axios from "axios";
 import { useSnackbar } from "notistack";
 import PropTypes from "prop-types";
 import { useEffect, useState } from "react";
+
+// Styled Switch Component
+const Android12Switch = styled(Switch)(({ theme }) => ({
+  padding: 8,
+  "& .MuiSwitch-track": {
+    borderRadius: 22 / 2,
+    "&::before, &::after": {
+      content: '""',
+      position: "absolute",
+      top: "50%",
+      transform: "translateY(-50%)",
+      width: 16,
+      height: 16,
+    },
+    "&::before": {
+      backgroundImage: `url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" height="16" width="16" viewBox="0 0 24 24"><path fill="${encodeURIComponent(
+        theme.palette.getContrastText(theme.palette.primary.main)
+      )}" d="M21,7L9,19L3.5,13.5L4.91,12.09L9,16.17L19.59,5.59L21,7Z"/></svg>')`,
+      left: 12,
+    },
+    "&::after": {
+      backgroundImage: `url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" height="16" width="16" viewBox="0 0 24 24"><path fill="${encodeURIComponent(
+        theme.palette.getContrastText(theme.palette.primary.main)
+      )}" d="M19,13H5V11H19V13Z" /></svg>')`,
+      right: 12,
+    },
+  },
+  "& .MuiSwitch-thumb": {
+    boxShadow: "none",
+    width: 16,
+    height: 16,
+    margin: 2,
+  },
+}));
+
 const EditUserDialog = ({ open, handleClose, userData, updateUser }) => {
   const [updatedUser, setUpdatedUser] = useState(
     userData || {
@@ -18,6 +61,8 @@ const EditUserDialog = ({ open, handleClose, userData, updateUser }) => {
       email: "",
       address: "",
       "telephone-number": "",
+      status: 0,
+      "role-name": "Customer",
     }
   );
   const { enqueueSnackbar } = useSnackbar();
@@ -35,7 +80,21 @@ const EditUserDialog = ({ open, handleClose, userData, updateUser }) => {
       [name]: value,
     }));
   };
-  console.log(updatedUser);
+
+  const handleRoleChange = (event) => {
+    setUpdatedUser((prevUser) => ({
+      ...prevUser,
+      "role-name": event.target.value,
+    }));
+  };
+
+  const handleStatusChange = (event) => {
+    setUpdatedUser((prevUser) => ({
+      ...prevUser,
+      status: event.target.checked ? 1 : 0,
+    }));
+  };
+
   const handleSave = async () => {
     try {
       const response = await axios.put(
@@ -116,6 +175,39 @@ const EditUserDialog = ({ open, handleClose, userData, updateUser }) => {
           fullWidth
           value={updatedUser["telephone-number"] || ""}
           onChange={handleInputChange}
+        />
+        <FormControl fullWidth margin="dense">
+          <InputLabel id="role-name-label">Role</InputLabel>
+          <Select
+            labelId="role-name-label"
+            id="role-name"
+            name="role-name"
+            value={updatedUser["role-name"]}
+            onChange={handleRoleChange}
+            label="Role"
+          >
+            <MenuItem value="Customer">Customer</MenuItem>
+            <MenuItem value="Admin">Admin</MenuItem>
+            <MenuItem value="Staff">Staff</MenuItem>
+          </Select>
+        </FormControl>
+        <FormControlLabel
+          control={
+            <Android12Switch
+              checked={updatedUser.status === 1}
+              onChange={handleStatusChange}
+            />
+          }
+          label={
+            <Typography
+              variant="body1"
+              style={{
+                color: updatedUser.status === 1 ? "green" : "red",
+              }}
+            >
+              {updatedUser.status === 1 ? "Active" : "Inactive"}
+            </Typography>
+          }
         />
       </DialogContent>
       <DialogActions>

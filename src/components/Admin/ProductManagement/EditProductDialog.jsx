@@ -34,7 +34,8 @@ const EditProductDialog = ({ product, onUpdate }) => {
   const [materialId, setMaterialId] = useState(product["material-id"]);
   const [genderId, setGenderId] = useState(product["gender-id"]);
   const { enqueueSnackbar } = useSnackbar();
-
+  const token = localStorage.getItem("token");
+  const API_BASE_URL = "https://zodiacjewerlyswd.azurewebsites.net/api";
   const handleOpen = () => {
     setOpen(true);
   };
@@ -58,8 +59,14 @@ const EditProductDialog = ({ product, onUpdate }) => {
       };
 
       await axios.put(
-        `https://zodiacjewerlyswd.azurewebsites.net/api/products/${product.id}/zodiac/${product["zodiac-id"]}`,
-        updatedProduct
+        `${API_BASE_URL}/products/${product.id}/zodiac/${product["zodiac-id"]}`,
+        updatedProduct,
+        {
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+        }
       );
       enqueueSnackbar("Update product successful!!!", { variant: "success" });
       await onUpdate();
@@ -83,9 +90,12 @@ const EditProductDialog = ({ product, onUpdate }) => {
     }).then(async (willDelete) => {
       if (willDelete) {
         try {
-          await axios.delete(
-            `https://zodiacjewerlyswd.azurewebsites.net/api/products/${product.id}`
-          );
+          await axios.delete(`${API_BASE_URL}/products/${product.id}`, {
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: `Bearer ${token}`,
+            },
+          });
           enqueueSnackbar("Product deleted successfully!", {
             variant: "success",
           });

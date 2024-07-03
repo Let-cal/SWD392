@@ -1,4 +1,4 @@
-import { FormControl, InputLabel, MenuItem, Select,Grid } from "@mui/material";
+import { FormControl, Grid, InputLabel, MenuItem, Select } from "@mui/material";
 import Backdrop from "@mui/material/Backdrop";
 import CircularProgress from "@mui/material/CircularProgress";
 import Pagination from "@mui/material/Pagination";
@@ -15,7 +15,8 @@ function ZodiacManagement() {
   const [totalPages, setTotalPages] = useState(0);
   const [pageSize, setPageSize] = useState(5);
   const { enqueueSnackbar } = useSnackbar();
-
+  const token = localStorage.getItem("token");
+  const API_BASE_URL = "https://zodiacjewerlyswd.azurewebsites.net/api/zodiacs";
   useEffect(() => {
     fetchData();
   }, [page, selectedZodiac]);
@@ -24,7 +25,13 @@ function ZodiacManagement() {
     setLoading(true);
     try {
       const response = await axios.get(
-        `https://zodiacjewerlyswd.azurewebsites.net/api/zodiacs?page=${page}&pageSize=${pageSize}&sort=id`
+        `${API_BASE_URL}?page=${page}&pageSize=${pageSize}&sort=id`,
+        {
+          headers: {
+            "Content-Type": "multipart/form-data",
+            Authorization: `Bearer ${token}`,
+          },
+        }
       );
 
       const { "list-data": listData, "total-page": totalPage } =
@@ -64,10 +71,10 @@ function ZodiacManagement() {
   const filteredData = selectedZodiac
     ? data.filter((zodiac) => zodiac["name-zodiac"] === selectedZodiac)
     : data;
-    const handlePageSizeChange = (size) => {
-      setPageSize(size);
-      setPage(1); // Reset to first page when changing page size
-    };
+  const handlePageSizeChange = (size) => {
+    setPageSize(size);
+    setPage(1); // Reset to first page when changing page size
+  };
   return (
     <div>
       <div className="flex flex-row justify-between w-full items-center">
@@ -103,7 +110,7 @@ function ZodiacManagement() {
       <section className="w-full mt-8">
         <TableZodiac data={filteredData} onUpdate={fetchData} />
         <div className="flex justify-center mt-6">
-        <Grid
+          <Grid
             container
             justifyContent="space-between"
             alignItems="center"

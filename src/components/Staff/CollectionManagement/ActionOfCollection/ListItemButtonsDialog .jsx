@@ -13,12 +13,15 @@ import {
   ListItemButton,
   ListItemIcon,
   ListItemText,
-  Menu,
   MenuItem,
+  Popover,
 } from "@mui/material";
 import PropTypes from "prop-types";
 import { useEffect, useState } from "react";
+import swal from "sweetalert";
 import AddProductPopup from "./AddProductPopup";
+import ViewProductDialog from "./ViewProductDialog";
+
 const ListItemButtons = ({
   onViewDetails,
   onViewProducts,
@@ -27,12 +30,51 @@ const ListItemButtons = ({
   collectionId,
 }) => {
   const [anchorEl, setAnchorEl] = useState(null);
-  const [open, setOpen] = useState(false);
   const [popupOpen, setPopupOpen] = useState(false);
+  const [selectedProducts, setSelectedProducts] = useState([]);
   const [allProducts, setAllProducts] = useState([]);
+  const [viewProductsOpen, setViewProductsOpen] = useState(false);
+  const [settingsOpen, setSettingsOpen] = useState(false);
+  const [anchorOrigin, setAnchorOrigin] = useState({
+    vertical: "bottom",
+    horizontal: "right",
+  });
+  const [transformOrigin, setTransformOrigin] = useState({
+    vertical: "top",
+    horizontal: "right",
+  });
+
   useEffect(() => {
     fetchAllProducts();
   }, []);
+
+  const handleViewProducts = async (collectionId) => {
+    try {
+      const token = localStorage.getItem("token");
+      const response = await fetch(
+        `https://zodiacjewerlyswd.azurewebsites.net/api/collections/${collectionId}`,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+            accept: "*/*",
+          },
+        }
+      );
+      if (!response.ok) {
+        throw new Error("Failed to fetch products.");
+      }
+      const data = await response.json();
+      const products = data.data.products;
+      if (products.length === 0) {
+        swal("No Products", "This collection has no products.", "warning");
+      } else {
+        setSelectedProducts(products);
+        setViewProductsOpen(true);
+      }
+    } catch (error) {
+      console.error("Error fetching products:", error);
+    }
+  };
 
   const fetchAllProducts = async () => {
     const token = localStorage.getItem("token");
@@ -43,7 +85,7 @@ const ListItemButtons = ({
     try {
       while (page <= totalPages) {
         const response = await fetch(
-          `https://zodiacjewerlyswd.azurewebsites.net/api/products?page=${page}&pageSize=100`, // adjust pageSize if needed
+          `https://zodiacjewerlyswd.azurewebsites.net/api/products?page=${page}&pageSize=100`,
           {
             headers: {
               Authorization: `Bearer ${token}`,
@@ -69,17 +111,23 @@ const ListItemButtons = ({
 
   const handleClick = (event) => {
     setAnchorEl(event.currentTarget);
-    // setOpen(!open); // Comment this line to prevent immediate opening
-  };
-
-  const handleSettingClick = () => {
-    setOpen(!open); // Toggle the collapse open/close state only for Setting Collection
+    setSettingsOpen(false); // Close the settings collapse when opening the menu
+    adjustPopoverPosition(event.currentTarget, true);
   };
 
   const handleClose = () => {
     setAnchorEl(null);
-    setOpen(false); // Close the collapse when menu is closed
+    setSettingsOpen(false); // Close the settings collapse when closing the menu
   };
+
+  const handleSettingsClick = () => {
+    const isOpening = !settingsOpen;
+    setSettingsOpen(isOpening);
+    if (isOpening) {
+      adjustPopoverPosition(anchorEl, false);
+    }
+  };
+
   const handleAddProductClick = () => {
     setPopupOpen(true);
     handleClose();
@@ -89,11 +137,48 @@ const ListItemButtons = ({
     setPopupOpen(false);
   };
 
+  const handleCloseViewProducts = () => {
+    setViewProductsOpen(false);
+    setSelectedProducts([]);
+  };
+
   const handleAddProduct = (productId) => {
-    // Handle the added product logic here
     console.log("Added product ID:", productId);
     setPopupOpen(false);
   };
+
+  const adjustPopoverPosition = (element, isInitialClick) => {
+    if (!element) return;
+
+    const rect = element.getBoundingClientRect();
+    const windowHeight = window.innerHeight;
+    const offsetTop = rect.top;
+
+    if (isInitialClick) {
+      if (offsetTop > windowHeight / 1.5) {
+        // Near bottom of the page
+        setAnchorOrigin({
+          vertical: "top",
+          horizontal: "right",
+        });
+        setTransformOrigin({
+          vertical: "bottom",
+          horizontal: "right",
+        });
+      } else {
+        // Near top of the page
+        setAnchorOrigin({
+          vertical: "bottom",
+          horizontal: "right",
+        });
+        setTransformOrigin({
+          vertical: "top",
+          horizontal: "right",
+        });
+      }
+    }
+  };
+
   return (
     <>
       <IconButton
@@ -103,12 +188,14 @@ const ListItemButtons = ({
       >
         <MenuIcon />
       </IconButton>
-      <Menu
+      <Popover
         id="simple-menu"
         anchorEl={anchorEl}
-        keepMounted
         open={Boolean(anchorEl)}
         onClose={handleClose}
+        getContentAnchorEl={null}
+        anchorOrigin={anchorOrigin}
+        transformOrigin={transformOrigin}
       >
         <MenuItem
           onClick={() => {
@@ -132,14 +219,14 @@ const ListItemButtons = ({
           </ListItemIcon>
           <ListItemText primary="View Products" />
         </MenuItem>
-        <MenuItem onClick={handleSettingClick}>
+        <MenuItem onClick={handleSettingsClick}>
           <ListItemIcon>
             <MenuIcon />
           </ListItemIcon>
           <ListItemText primary="Setting Collection" />
-          {open ? <ExpandLess /> : <ExpandMore />}
+          {settingsOpen ? <ExpandLess /> : <ExpandMore />}
         </MenuItem>
-        <Collapse in={open} timeout="auto" unmountOnExit>
+        <Collapse in={settingsOpen} timeout="auto" unmountOnExit>
           <List component="div" disablePadding>
             <ListItemButton
               sx={{ pl: 4, display: "flex", flexDirection: "row", gap: "5px" }}
@@ -172,13 +259,19 @@ const ListItemButtons = ({
           </ListItemIcon>
           <ListItemText primary="Delete Collection" />
         </MenuItem>
-      </Menu>
+      </Popover>
+      <ViewProductDialog
+        open={viewProductsOpen}
+        onClose={handleCloseViewProducts}
+        products={selectedProducts}
+      />
       <AddProductPopup
         open={popupOpen}
         onClose={handlePopupClose}
         collectionId={collectionId}
         onAddProduct={handleAddProduct}
         allProducts={allProducts}
+        AddThenViewProduct={handleViewProducts}
       />
     </>
   );
@@ -189,6 +282,7 @@ ListItemButtons.propTypes = {
   onViewProducts: PropTypes.func.isRequired,
   onEdit: PropTypes.func.isRequired,
   onDelete: PropTypes.func.isRequired,
+  AddThenViewProduct: PropTypes.func.isRequired,
   collectionId: PropTypes.number.isRequired,
 };
 

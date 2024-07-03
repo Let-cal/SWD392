@@ -21,6 +21,7 @@ const AddProductPopup = ({
   collectionId,
   onAddProduct,
   allProducts,
+  AddThenViewProduct,
 }) => {
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -28,7 +29,7 @@ const AddProductPopup = ({
   const [page, setPage] = useState(1);
   const [pageSize, setPageSize] = useState(5);
   const [totalPages, setTotalPages] = useState(1);
-
+  const token = localStorage.getItem("token");
   useEffect(() => {
     if (open) {
       // Calculate pagination based on the number of allProducts
@@ -57,12 +58,14 @@ const AddProductPopup = ({
         {
           method: "POST",
           headers: {
-            accept: "*/*",
+            "Content-Type": "multipart/form-data",
+            Authorization: `Bearer ${token}`,
           },
         }
       );
 
       if (response.ok) {
+        AddThenViewProduct(collectionId);
         onAddProduct(productId);
       } else {
         throw new Error("Failed to add product.");
@@ -139,6 +142,7 @@ AddProductPopup.propTypes = {
   onClose: PropTypes.func.isRequired,
   collectionId: PropTypes.number.isRequired,
   onAddProduct: PropTypes.func.isRequired,
+  AddThenViewProduct: PropTypes.func.isRequired,
   allProducts: PropTypes.array.isRequired,
 };
 

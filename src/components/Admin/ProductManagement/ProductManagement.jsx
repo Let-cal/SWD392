@@ -1,4 +1,11 @@
-import { Backdrop, CircularProgress, Pagination,Grid,Select,MenuItem } from "@mui/material";
+import {
+  Backdrop,
+  CircularProgress,
+  Grid,
+  MenuItem,
+  Pagination,
+  Select,
+} from "@mui/material";
 import axios from "axios";
 import { useEffect, useState } from "react";
 import FilterComponent from "./FilterManagement/FilterComponent";
@@ -20,9 +27,16 @@ const ProductManagement = () => {
 
   const fetchProducts = async () => {
     setLoading(true);
+    const token = localStorage.getItem("token");
     try {
       const response = await axios.get(
-        `https://zodiacjewerlyswd.azurewebsites.net/api/products?page=${page}&pageSize=${pageSize}`
+        `https://zodiacjewerlyswd.azurewebsites.net/api/products?page=${page}&pageSize=${pageSize}`,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+            "Content-Type": "application/json",
+          },
+        }
       );
       const { data } = response.data;
       console.log(page);
@@ -150,7 +164,7 @@ const ProductManagement = () => {
       <section className="w-full mt-8">
         <TableProduct products={filteredProducts} onUpdate={fetchProducts} />
         <div className="flex justify-center mt-6">
-        <Grid
+          <Grid
             container
             justifyContent="space-between"
             alignItems="center"

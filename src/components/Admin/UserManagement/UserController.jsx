@@ -1,3 +1,4 @@
+import SearchIcon from "@mui/icons-material/Search";
 import {
   Backdrop,
   CircularProgress,
@@ -10,11 +11,10 @@ import {
   Tabs,
   TextField,
 } from "@mui/material";
-
-import SearchIcon from "@mui/icons-material/Search";
 import { useSnackbar } from "notistack";
 import { useEffect, useState } from "react";
 import TableUser from "./TableUser";
+
 function UserController() {
   const [data, setData] = useState([]);
   const [loading, setLoading] = useState(false);
@@ -24,14 +24,17 @@ function UserController() {
   const [search, setSearch] = useState("");
   const [roleFilter, setRoleFilter] = useState("All");
   const { enqueueSnackbar } = useSnackbar();
-
+  const API_BASE_URL = "https://zodiacjewerlyswd.azurewebsites.net/api/users";
   useEffect(() => {
     fetchUsers();
   }, [page, pageSize, roleFilter]);
 
   const fetchUsers = () => {
     setLoading(true);
-    const url = `https://zodiacjewerlyswd.azurewebsites.net/api/users?additionalProp1=string&additionalProp2=string&additionalProp3=string&sort=id&page=${page}&pageSize=${pageSize}&search=${search}`;
+    let url = `${API_BASE_URL}?page=${page}&pageSize=${pageSize}&search=${search}`;
+    if (roleFilter !== "All") {
+      url = `${API_BASE_URL}/role/${roleFilter}?page=${page}&pageSize=${pageSize}`;
+    }
 
     fetch(url, {
       method: "GET",
@@ -46,14 +49,7 @@ function UserController() {
       .then((data) => {
         console.log("Response data: ", data);
         if (data && data.success && Array.isArray(data.data["list-data"])) {
-          const filteredData = data.data["list-data"].filter(
-            (user) =>
-              (roleFilter === "All" || user["role-name"] === roleFilter) &&
-              (search.trim() === "" ||
-                user.email.toLowerCase().includes(search.toLowerCase()) ||
-                user["full-name"].toLowerCase().includes(search.toLowerCase()))
-          );
-          setData(filteredData);
+          setData(data.data["list-data"]);
           setTotalPages(data.data["total-page"]);
         } else {
           enqueueSnackbar("Failed to load users", { variant: "error" });
@@ -77,15 +73,18 @@ function UserController() {
 
   const handleRoleFilterChange = (event, newValue) => {
     setRoleFilter(newValue);
+    setPage(1); // Reset to the first page when the role filter changes
   };
 
   const handleSearchButtonClick = () => {
-    fetchUsers(); // Gọi fetchUsers khi người dùng nhấn nút "Search"
+    fetchUsers(); // Call fetchUsers when the user clicks the "Search" button
   };
+
   const handlePageSizeChange = (size) => {
     setPageSize(size);
-    setPage(1); // Reset to first page when changing page size
+    setPage(1); // Reset to the first page when changing page size
   };
+
   return (
     <div>
       <div className="flex flex-row justify-between w-full items-center">
@@ -116,6 +115,14 @@ function UserController() {
         value={roleFilter}
         onChange={handleRoleFilterChange}
         aria-label="role filter tabs"
+        sx={{
+          "& .MuiTabs-indicator": {
+            backgroundColor: "#b2b251", // Customize indicator color here
+          },
+          "& .Mui-selected": {
+            color: "#b2b251 !important", // Customize text color for selected tab
+          },
+        }}
       >
         <Tab value="All" label="All" />
         <Tab value="Customer" label="Customer" />

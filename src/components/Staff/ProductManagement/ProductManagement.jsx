@@ -26,12 +26,18 @@ const ProductManagement = () => {
   const [gender, setGender] = useState("");
   const [zodiac, setZodiac] = useState("");
   const [price, setPrice] = useState([0, 5000000]);
-
+  const token = localStorage.getItem("token");
   const fetchProducts = async () => {
     setLoading(true);
     try {
       const response = await axios.get(
-        `https://zodiacjewerlyswd.azurewebsites.net/api/products?page=${page}&pageSize=${pageSize}`
+        `https://zodiacjewerlyswd.azurewebsites.net/api/products?page=${page}&pageSize=${pageSize}`,
+        {
+          headers: {
+            "Content-Type": "multipart/form-data",
+            Authorization: `Bearer ${token}`,
+          },
+        }
       );
       const { data } = response.data;
       console.log(page);

@@ -20,7 +20,7 @@ const EditZodiacDialog = ({
 }) => {
   const [description, setDescription] = useState(initialDes);
   const { enqueueSnackbar } = useSnackbar();
-
+  const token = localStorage.getItem("token");
   useEffect(() => {
     setDescription(initialDes);
   }, [initialDes]);
@@ -32,6 +32,12 @@ const EditZodiacDialog = ({
         {
           id: zodiacId,
           "des-zodiac": description,
+        },
+        {
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
         }
       );
       console.log("Update Response:", response.data);

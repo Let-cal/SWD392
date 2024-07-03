@@ -13,8 +13,8 @@ import { format } from "date-fns";
 import PropTypes from "prop-types";
 import { useState } from "react";
 import swal from "sweetalert";
-import deleteCollection from "./ActionOfCollection/DeleteCollection";
-import ListItemButtons from "./ActionOfCollection/ListItemButtons ";
+import deleteCollection from "./ActionOfCollection/DeleteAction.jsx";
+import ListItemButtons from "./ActionOfCollection/ListItemButtonsDialog .jsx";
 import ViewCollectionDialog from "./ActionOfCollection/ViewCollectionDialog";
 import ViewProductDialog from "./ActionOfCollection/ViewProductDialog";
 import EditCollectionDialog from "./EditCollectionDialog"; // Ensure the correct path

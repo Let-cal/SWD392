@@ -23,15 +23,21 @@ const EditImage = ({ productId, onGetAll }) => {
   const [page, setPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
   const [loading, setLoading] = useState(false);
-
+  const token = localStorage.getItem("token");
   const pageSize = 4;
   const fileInputRef = useRef(null); // Ref for file input
-
+  const API_BASE_URL = "https://zodiacjewerlyswd.azurewebsites.net";
   const fetchImages = async () => {
     try {
       setLoading(true);
       const response = await axios.get(
-        `https://zodiacjewerlyswd.azurewebsites.net/api/image?page=${page}&pageSize=${pageSize}&search=${productId}`
+        `${API_BASE_URL}/api/image?page=${page}&pageSize=${pageSize}&search=${productId}`,
+        {
+          headers: {
+            "Content-Type": "multipart/form-data",
+            Authorization: `Bearer ${token}`,
+          },
+        }
       );
       const { "list-data": listData, "total-page": totalPages } =
         response.data.data;
@@ -69,11 +75,13 @@ const EditImage = ({ productId, onGetAll }) => {
       setUploading(true);
       setLoading(true); // Set loading to true for the entire dialog
       await axios.post(
-        `https://zodiacjewerlyswd.azurewebsites.net/api/products/${productId}/images`,
+        `${API_BASE_URL}/api/products/${productId}/images`,
         formData,
+
         {
           headers: {
             "Content-Type": "multipart/form-data",
+            Authorization: `Bearer ${token}`,
           },
         }
       );
@@ -98,16 +106,17 @@ const EditImage = ({ productId, onGetAll }) => {
           if (file) {
             const formData = new FormData();
             formData.append("file", file);
-
+            const token = localStorage.getItem("token");
             try {
               setUploading(true);
               setLoading(true); // Set loading to true for the entire dialog
               await axios.put(
-                `https://zodiacjewerlyswd.azurewebsites.net/api/products/${productId}/images/${imageId}`,
+                `${API_BASE_URL}/api/products/${productId}/images/${imageId}`,
                 formData,
                 {
                   headers: {
                     "Content-Type": "multipart/form-data",
+                    Authorization: `Bearer ${token}`,
                   },
                 }
               );

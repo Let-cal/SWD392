@@ -15,7 +15,9 @@ function ZodiacManagement() {
   const [totalPages, setTotalPages] = useState(0);
   const [pageSize, setPageSize] = useState(5);
   const { enqueueSnackbar } = useSnackbar();
-
+  const token = localStorage.getItem("token");
+  console.log(token);
+  const API_BASE_URL = "https://zodiacjewerlyswd.azurewebsites.net/api/zodiacs";
   useEffect(() => {
     fetchData();
   }, [page, selectedZodiac]);
@@ -24,10 +26,15 @@ function ZodiacManagement() {
     setLoading(true);
     try {
       const response = await axios.get(
-        `https://zodiacjewerlyswd.azurewebsites.net/api/zodiacs?page=${page}&pageSize=${pageSize}&sort=id`
+        `${API_BASE_URL}?page=${page}&pageSize=${pageSize}&sort=id`,
+        {
+          headers: {
+            "Content-Type": "multipart/form-data",
+            Authorization: `Bearer ${token}`,
+          },
+        }
       );
-      console.log("API Response:", response);
-      console.log("API Data:", response.data);
+
       const { "list-data": listData, "total-page": totalPage } =
         response.data.data; // Destructure correctly
       setData(listData);
@@ -52,10 +59,7 @@ function ZodiacManagement() {
       setLoading(false);
     }
   };
-  const handlePageSizeChange = (size) => {
-    setPageSize(size);
-    setPage(1); // Reset to first page when changing page size
-  };
+
   const handleZodiacChange = (event) => {
     setSelectedZodiac(event.target.value);
     setPage(1); // Reset page when filter changes
@@ -68,10 +72,10 @@ function ZodiacManagement() {
   const filteredData = selectedZodiac
     ? data.filter((zodiac) => zodiac["name-zodiac"] === selectedZodiac)
     : data;
-
-  console.log("Data in ZodiacManagement:", data);
-  console.log("Filtered Data in ZodiacManagement:", filteredData);
-
+  const handlePageSizeChange = (size) => {
+    setPageSize(size);
+    setPage(1); // Reset to first page when changing page size
+  };
   return (
     <div>
       <div className="flex flex-row justify-between w-full items-center">
