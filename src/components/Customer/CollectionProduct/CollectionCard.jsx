@@ -9,7 +9,6 @@ import {
   Typography,
 } from "@mui/material";
 import axios from "axios";
-import { format, parse } from "date-fns";
 import lottie from "lottie-web";
 import { useSnackbar } from "notistack";
 import PropTypes from "prop-types";
@@ -25,7 +24,7 @@ const CollectionCard = ({ collection }) => {
     <Card
       sx={{
         width: 210,
-        maxHeight: 260,
+        maxHeight: 280,
         margin: "0 auto",
         transition: "transform 0.5s ease-in-out",
         "&:hover": {
@@ -44,12 +43,6 @@ const CollectionCard = ({ collection }) => {
       <CardContent className="px-6 py-4">
         <Typography gutterBottom variant="h5" component="div">
           {collection["name-collection"]}
-        </Typography>
-        <Typography variant="body2" color="text.secondary">
-          Open: {format(new Date(collection["date-open"]), "dd/MM/yyyy")}
-        </Typography>
-        <Typography variant="body2" color="text.secondary">
-          Close: {format(new Date(collection["date-close"]), "dd/MM/yyyy")}
         </Typography>
       </CardContent>
       <button
@@ -78,8 +71,6 @@ CollectionCard.propTypes = {
   collection: PropTypes.shape({
     "image-collection": PropTypes.string.isRequired,
     "name-collection": PropTypes.string.isRequired,
-    "date-open": PropTypes.string.isRequired,
-    "date-close": PropTypes.string.isRequired,
   }).isRequired,
 };
 
@@ -115,22 +106,6 @@ const CollectionsCarousel = () => {
           if (Array.isArray(response.data.data.data)) {
             const formattedData = response.data.data.data.map((collection) => ({
               ...collection,
-              "date-open": format(
-                parse(
-                  collection["date-open"],
-                  "EEEE, MMMM d, yyyy h:mm a",
-                  new Date()
-                ),
-                "yyyy-MM-dd HH:mm:ss"
-              ),
-              "date-close": format(
-                parse(
-                  collection["date-close"],
-                  "EEEE, MMMM d, yyyy h:mm a",
-                  new Date()
-                ),
-                "yyyy-MM-dd HH:mm:ss"
-              ),
             }));
             setTotalPages(response.data.data["total-page"]);
             setCollections(formattedData);
@@ -215,7 +190,7 @@ const CollectionsCarousel = () => {
           sx={{
             display: "flex",
             gap: 2,
-            padding: "0 40px",
+            padding: "10px 40px",
             width: `${100 * totalPages}%`, // Adjust width based on totalPages
             transform: `translateX(-${(page - 1) * (70 / totalPages)}%)`, // Adjust translateX based on currentPage
             transition: "transform 0.5s ease-in-out", // Add transition for smooth animation
