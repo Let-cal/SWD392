@@ -24,7 +24,7 @@ const CollectionCard = ({ collection }) => {
   return (
     <Card
       sx={{
-        maxWidth: 345,
+        width: 210,
         maxHeight: 260,
         margin: "0 auto",
         transition: "transform 0.5s ease-in-out",
@@ -46,14 +46,14 @@ const CollectionCard = ({ collection }) => {
           {collection["name-collection"]}
         </Typography>
         <Typography variant="body2" color="text.secondary">
-          Open: {collection["date-open"]}
+          Open: {format(new Date(collection["date-open"]), "dd/MM/yyyy")}
         </Typography>
         <Typography variant="body2" color="text.secondary">
-          Close: {collection["date-close"]}
+          Close: {format(new Date(collection["date-close"]), "dd/MM/yyyy")}
         </Typography>
       </CardContent>
       <button
-        className={`flex flex-row justify-center items-center absolute add-to-cart-button ${
+        className={`flex flex-row justify-center items-center absolute Expanse-button ${
           isHovered ? "visible" : ""
         }`}
         style={{
@@ -61,7 +61,7 @@ const CollectionCard = ({ collection }) => {
           transform: "translateX(-50%)",
         }}
       >
-        <p> Add to cart</p>
+        <p> Expanse more</p>
         <lord-icon
           src="https://cdn.lordicon.com/mfmkufkr.json"
           trigger="loop"
@@ -215,6 +215,7 @@ const CollectionsCarousel = () => {
           sx={{
             display: "flex",
             gap: 2,
+            padding: "0 40px",
             width: `${100 * totalPages}%`, // Adjust width based on totalPages
             transform: `translateX(-${(page - 1) * (70 / totalPages)}%)`, // Adjust translateX based on currentPage
             transition: "transform 0.5s ease-in-out", // Add transition for smooth animation

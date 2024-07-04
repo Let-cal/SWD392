@@ -17,7 +17,7 @@
   transition: transform 300ms, opacity 300ms;
 }
 /* carousel.css */
-.add-to-cart-button {
+.Expanse-button {
   position: absolute;
   bottom: -50px; /* Khoảng cách từ dưới lên */
   left: 50%;
@@ -34,12 +34,12 @@
   box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2); /* Đổ bóng cho button */
 }
 
-.add-to-cart-button.visible {
+.Expanse-button.visible {
   bottom: 20px; /* Đưa nút lên khi hiển thị */
   opacity: 1; /* Hiển thị dần dần */
 }
 
-.add-to-cart-button:hover {
+.Expanse-button:hover {
   background-color: rgba(0, 0, 0, 0.9); /* Màu nền khi hover */
   transform: translateX(-50%) scale(1.1); /* Phóng to button khi hover */
 }
