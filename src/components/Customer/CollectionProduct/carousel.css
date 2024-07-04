@@ -1,0 +1,45 @@
+.slide-enter {
+  transform: translateX(100%);
+  opacity: 0;
+}
+.slide-enter-active {
+  transform: translateX(0);
+  opacity: 1;
+  transition: transform 300ms, opacity 300ms;
+}
+.slide-exit {
+  transform: translateX(0);
+  opacity: 1;
+}
+.slide-exit-active {
+  transform: translateX(-100%);
+  opacity: 0;
+  transition: transform 300ms, opacity 300ms;
+}
+/* carousel.css */
+.add-to-cart-button {
+  position: absolute;
+  bottom: -50px; /* Khoảng cách từ dưới lên */
+  left: 50%;
+  width: 100%;
+  transform: translateX(-50%);
+  transition: bottom 0.3s ease-in-out, opacity 0.3s ease-in-out; /* Thêm transition để điều khiển hiệu ứng */
+  opacity: 0; /* Ẩn ban đầu */
+  padding: 10px 20px; /* Điều chỉnh padding cho button */
+  background-color: rgba(0, 0, 0, 0.8); /* Màu nền của button */
+  color: white; /* Màu chữ của button */
+  border: none; /* Bỏ viền của button */
+  border-radius: 8px; /* Bo góc của button */
+  cursor: pointer; /* Đổi con trỏ khi hover vào button */
+  box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2); /* Đổ bóng cho button */
+}
+
+.add-to-cart-button.visible {
+  bottom: 20px; /* Đưa nút lên khi hiển thị */
+  opacity: 1; /* Hiển thị dần dần */
+}
+
+.add-to-cart-button:hover {
+  background-color: rgba(0, 0, 0, 0.9); /* Màu nền khi hover */
+  transform: translateX(-50%) scale(1.1); /* Phóng to button khi hover */
+}
