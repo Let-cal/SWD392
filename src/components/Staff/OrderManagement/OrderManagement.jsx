@@ -66,6 +66,7 @@ function OrdersManagement() {
           const transformedData = filteredOrders.map((order) => ({
             OrderNumber: order.id.toString(),
             UserID: order["user-id"],
+            UserName: order["user-name"],
             Date: order["payment-date"]
               ? new Date(order["payment-date"]).toLocaleDateString()
               : "N/A",

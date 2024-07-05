@@ -1,5 +1,6 @@
 import VisibilityIcon from "@mui/icons-material/Visibility";
 import {
+  IconButton,
   Table,
   TableBody,
   TableCell,
@@ -8,9 +9,11 @@ import {
   TableRow,
   tableCellClasses,
 } from "@mui/material";
-import Button from "@mui/material/Button";
 import { styled } from "@mui/material/styles";
+import Axios from "axios";
 import PropTypes from "prop-types";
+import { useState } from "react";
+import OrderDetailsDialog from "./OrderDetailsDialog";
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
   [`&.${tableCellClasses.head}`]: {
@@ -43,6 +46,45 @@ const StyledTableContainer = styled(TableContainer)(() => ({
 }));
 
 const TableOrder = ({ orders }) => {
+  const [open, setOpen] = useState(false);
+  const [selectedOrder, setSelectedOrder] = useState(null);
+  const [orderDetails, setOrderDetails] = useState([]);
+  const [loaded, setLoaded] = useState(false);
+  const API_BASE_URL = "https://zodiacjewerlyswd.azurewebsites.net/api/orders";
+
+  const handleViewDetails = async (order) => {
+    setSelectedOrder(order);
+    setOpen(true);
+
+    if (!loaded) {
+      try {
+        const token = localStorage.getItem("token");
+        const response = await Axios.get(
+          `${API_BASE_URL}/customer/${order.UserID}`,
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+              accept: "*/*",
+            },
+          }
+        );
+        setOrderDetails(response.data.data.product);
+        setLoaded(true);
+      } catch (error) {
+        console.error("Error fetching order details:", error);
+      }
+    }
+  };
+
+  const handleClose = () => {
+    setOpen(false);
+    setSelectedOrder(null);
+    setOrderDetails([]);
+    setLoaded(false);
+  };
+
+  console.log("Orders:", orders);
+
   return (
     <StyledTableContainer>
       <Table>
@@ -50,6 +92,7 @@ const TableOrder = ({ orders }) => {
           <TableRow>
             <StyledTableCell align="center">Order Number</StyledTableCell>
             <StyledTableCell align="center">User ID</StyledTableCell>
+            <StyledTableCell align="center">User Name</StyledTableCell>
             <StyledTableCell align="center">Date</StyledTableCell>
             <StyledTableCell align="center">Status</StyledTableCell>
             <StyledTableCell align="center">Total Price</StyledTableCell>
@@ -63,6 +106,7 @@ const TableOrder = ({ orders }) => {
                 {order.OrderNumber}
               </StyledTableCell>
               <StyledTableCell align="center">{order.UserID}</StyledTableCell>
+              <StyledTableCell align="center">{order.UserName}</StyledTableCell>
               <StyledTableCell align="center">{order.Date}</StyledTableCell>
               <StyledTableCell
                 align="center"
@@ -74,32 +118,28 @@ const TableOrder = ({ orders }) => {
                 {order.TotalPrice}
               </StyledTableCell>
               <StyledTableCell align="center">
-                <Button
-                  variant="contained"
-                  endIcon={<VisibilityIcon />}
-                  sx={{
-                    height: "20%",
-                    fontSize: "13px",
-                    backgroundColor: "black",
-                    color: "white",
-                    "&:hover": {
-                      backgroundColor: "gray",
-                    },
-                  }}
-                >
-                  View details
-                </Button>
+                <IconButton onClick={() => handleViewDetails(order)}>
+                  <VisibilityIcon />
+                </IconButton>
               </StyledTableCell>
             </StyledTableRow>
           ))}
         </TableBody>
       </Table>
+      {selectedOrder && (
+        <OrderDetailsDialog
+          open={open}
+          onClose={handleClose}
+          orderDetails={orderDetails}
+        />
+      )}
     </StyledTableContainer>
   );
 };
 
 TableOrder.propTypes = {
   orders: PropTypes.array.isRequired,
+  OnEdit: PropTypes.func.isRequired,
 };
 
 export default TableOrder;

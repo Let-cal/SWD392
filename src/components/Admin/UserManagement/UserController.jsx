@@ -1,6 +1,8 @@
+import AddCircleIcon from "@mui/icons-material/AddCircle";
 import SearchIcon from "@mui/icons-material/Search";
 import {
   Backdrop,
+  Button,
   CircularProgress,
   Grid,
   IconButton,
@@ -13,8 +15,8 @@ import {
 } from "@mui/material";
 import { useSnackbar } from "notistack";
 import { useEffect, useState } from "react";
+import CreateStaffModal from "../HomePage/CreateStaffController/CreateStaffModal";
 import TableUser from "./TableUser";
-
 function UserController() {
   const [data, setData] = useState([]);
   const [loading, setLoading] = useState(false);
@@ -63,6 +65,12 @@ function UserController() {
       });
   };
 
+  const handleSearchKeyDown = (event) => {
+    if (event.key === "Enter") {
+      setSearch(event.target.value);
+      fetchUsers();
+    }
+  };
   const handleSearchChange = (event) => {
     setSearch(event.target.value);
   };
@@ -84,22 +92,50 @@ function UserController() {
     setPageSize(size);
     setPage(1); // Reset to the first page when changing page size
   };
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
+  const handleOpenModal = () => {
+    setIsModalOpen(true);
+  };
+
+  const handleCloseModal = () => {
+    setIsModalOpen(false);
+  };
   return (
     <div>
       <div className="flex flex-row justify-between w-full items-center">
-        <h1 className="font-serif text-[30px] w-[394px] relative text-inherit leading-[48px] font-bold font-inherit inline-block shrink-0 max-w-full mq450:text-[23px] mq450:leading-[29px] mq1050:text-11xl mq1050:leading-[38px]">
-          User Management
-        </h1>
-        <div className="flex flex-row items-end w-[30%] ">
+        <div>
+          <h1 className="font-serif text-[30px] w-[394px] relative text-inherit leading-[48px] font-bold font-inherit inline-block shrink-0 max-w-full mq450:text-[23px] mq450:leading-[29px] mq1050:text-11xl mq1050:leading-[38px]">
+            User Management
+          </h1>
+
+          <Button
+            variant="contained"
+            endIcon={<AddCircleIcon />}
+            sx={{
+              width: "50%",
+              backgroundColor: "black",
+              color: "white",
+              "&:hover": {
+                backgroundColor: "gray",
+              },
+            }}
+            onClick={handleOpenModal}
+          >
+            Create Staff
+          </Button>
+        </div>
+
+        <div className="flex flex-row items-end w-[30%]">
           <TextField
             id="standard-textarea"
             label="Search"
             placeholder="Search email or full name"
-            multiline
+            multiline={false}
             variant="standard"
             value={search}
             onChange={handleSearchChange}
+            onKeyDown={handleSearchKeyDown}
             sx={{ width: "100%" }}
           />
           <IconButton
@@ -172,6 +208,7 @@ function UserController() {
       >
         <CircularProgress color="inherit" />
       </Backdrop>
+      <CreateStaffModal isOpen={isModalOpen} onClose={handleCloseModal} />
     </div>
   );
 }

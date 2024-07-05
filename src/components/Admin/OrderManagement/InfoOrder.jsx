@@ -3,6 +3,7 @@ import PropTypes from "prop-types";
 const InforOrder = ({
   OrderNumber,
   UserID,
+  UserName,
   Date,
   Status,
   TotalPrice,
@@ -31,6 +32,9 @@ const InforOrder = ({
         {UserID}
       </div>
       <div className="w-1/5 px-4 text-center text-xs uppercase text-gray-500 font-medium">
+        {UserName}
+      </div>
+      <div className="w-1/5 px-4 text-center text-xs uppercase text-gray-500 font-medium">
         {Date}
       </div>
       <div
@@ -52,6 +56,7 @@ const InforOrder = ({
 InforOrder.propTypes = {
   OrderNumber: PropTypes.string.isRequired,
   UserID: PropTypes.string.isRequired,
+  UserName: PropTypes.string.isRequired,
   Date: PropTypes.string.isRequired,
   Status: PropTypes.string.isRequired,
   TotalPrice: PropTypes.string.isRequired,

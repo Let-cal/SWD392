@@ -113,14 +113,16 @@ const CollectionsManagement = () => {
     let filtered = collections;
 
     if (dateOpen) {
+      const parsedDateOpen = new Date(dateOpen);
       filtered = filtered.filter(
-        (collection) => new Date(collection["date-open"]) >= dateOpen
+        (collection) => new Date(collection["date-open"]) >= parsedDateOpen
       );
     }
 
     if (dateClose) {
+      const parsedDateClose = new Date(dateClose);
       filtered = filtered.filter(
-        (collection) => new Date(collection["date-close"]) <= dateClose
+        (collection) => new Date(collection["date-close"]) <= parsedDateClose
       );
     }
 
@@ -144,7 +146,7 @@ const CollectionsManagement = () => {
     setPage(1); // Reset to first page when changing page size
   };
   return (
-    <div >
+    <div>
       <div className="flex justify-between items-center mb-4">
         <div className="flex flex-col">
           <h1 className="font-serif text-[30px] w-[394px] relative text-inherit leading-[48px] font-bold font-inherit inline-block shrink-0 max-w-full mq450:text-[23px] mq450:leading-[29px] mq1050:text-11xl mq1050:leading-[38px]">
