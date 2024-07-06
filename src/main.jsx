@@ -8,7 +8,7 @@ import "./components/Customer/Header/header.css";
 import LoadingBackdrop from "./components/Loading/LoadingBackdrop.jsx"; // Import LoadingBackdrop
 import { AuthProvider } from "./components/LoginController/AuthContext.jsx";
 import ProtectedRoute from "./components/LoginController/ProtectedRoute.jsx";
-import Collection from "./components/Customer/Collection/Collection.jsx";
+import Collection from "./components/Customer/CollectionProduct/Collection.jsx";
 import "./index.css";
 
 // Lazy loading components

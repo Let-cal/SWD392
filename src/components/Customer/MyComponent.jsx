@@ -7,6 +7,7 @@ import { Link, useLocation, useNavigate } from "react-router-dom";
 import ReasonChoose from "./BenefitOfPage/ReasonChoose.jsx";
 import CardStack from "./CollectionCard/CardStack.jsx";
 import "./CollectionCard/CollectionCard.css";
+import CollectionsCarousel from "./CollectionProduct/CollectionCard.jsx";
 import Footer from "./Footer/Footer.jsx";
 import Header from "./Header/header.jsx";
 import Zodiac from "./Zodiac controller/Zodiac.jsx";
@@ -17,9 +18,8 @@ const ProductsMonthly = ({ imgSrc, title, subtitle, price, oldPrice }) => {
   const [isHovered, setIsHovered] = useState(false);
   return (
     <article
-      className={`group relative flex flex-col px-4 pb-8 bg-white text-2xl leading-8 text-zinc-800 w-full max-w-xs md:max-w-sm overflow-hidden  ${
-        isHovered ? "grayed" : ""
-      }`}
+      className={`group relative flex flex-col px-4 pb-8 bg-white text-2xl leading-8 text-zinc-800 w-full max-w-xs md:max-w-sm overflow-hidden  ${isHovered ? "grayed" : ""
+        }`}
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
     >
@@ -212,7 +212,7 @@ function MyComponent() {
           <Zodiac />
         </section>
         <section ref={monthlyDealsRef} className="fade-in-section">
-          <MonthlyDeals />
+          <CollectionsCarousel />
         </section>
         <section
           ref={reasonChooseRef}

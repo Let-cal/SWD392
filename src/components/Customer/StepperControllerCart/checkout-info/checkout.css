@@ -80,8 +80,9 @@ body {
 .checkout-item-price span,
 .checkout-item-quantity span,
 .checkout-item-total span {
-    font-weight: bold;
+    /* font-weight: bold; */
     display: block;
+    color: #696969;
 }
 
 

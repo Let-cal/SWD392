@@ -84,11 +84,17 @@ function ViewCart() {
   const [isGetAll, setIsGetAll] = useState(true); // Initially "Get All"
   const navigate = useNavigate();
   const userId = localStorage.getItem("hint"); // Lấy userId từ localStorage
+  const token = localStorage.getItem("token"); // Lấy token từ localStorage
 
   const fetchCartItems = async () => {
     try {
       const response = await axios.get(
-        `https://zodiacjewerlyswd.azurewebsites.net/api/orders/customer/${userId}`
+        `https://zodiacjewerlyswd.azurewebsites.net/api/orders/customer/${userId}`,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
       );
       if (response.data && response.data.success && Array.isArray(response.data.data.product)) {
         setItems(response.data.data.product);

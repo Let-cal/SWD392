@@ -1,6 +1,7 @@
 import axios from "axios";
 import React, { useEffect, useState } from "react";
 import { useLocation, useNavigate, useParams } from "react-router-dom";
+import { useSnackbar } from "notistack";
 import Header from "../Header/header";
 import "./detail-product.css";
 import AddShoppingCartIcon from '@mui/icons-material/AddShoppingCart';
@@ -129,6 +130,7 @@ const ProductTabs = ({ activeTab, setActiveTab, product }) => {
 };
 
 const DetailProduct = () => {
+  const { enqueueSnackbar } = useSnackbar();
   const { id } = useParams();
   const location = useLocation();
   const navigate = useNavigate();
@@ -140,10 +142,17 @@ const DetailProduct = () => {
   const [quantity, setQuantity] = useState(1);
   const [similarProducts, setSimilarProducts] = useState([]);
 
+  // Lấy token từ localStorage
+  const token = localStorage.getItem("token");
+
   // Hàm lấy thông tin sản phẩm từ API
   const fetchProduct = async (productId) => {
     try {
-      const response = await axios.get(`https://zodiacjewerlyswd.azurewebsites.net/api/products/${productId}`);
+      const response = await axios.get(`https://zodiacjewerlyswd.azurewebsites.net/api/products/${productId}`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
       if (response.data && response.data.success && response.data.data) {
         setProduct(response.data.data);
         setMainImageSrc(response.data.data["image-urls"][0]);
@@ -158,14 +167,22 @@ const DetailProduct = () => {
   // Hàm lấy toàn bộ sản phẩm từ các trang
   const fetchAllProducts = async () => {
     try {
-      const response = await axios.get(`https://zodiacjewerlyswd.azurewebsites.net/api/products`);
+      const response = await axios.get(`https://zodiacjewerlyswd.azurewebsites.net/api/products`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
       if (response.data && response.data.success && response.data.data && Array.isArray(response.data.data['list-data'])) {
         const totalPages = response.data.data['total-page'];
         const allProducts = [];
 
         // Lặp qua từng trang để lấy danh sách sản phẩm
         for (let page = 1; page <= totalPages; page++) {
-          const pageResponse = await axios.get(`https://zodiacjewerlyswd.azurewebsites.net/api/products?page=${page}&pageSize=5`);
+          const pageResponse = await axios.get(`https://zodiacjewerlyswd.azurewebsites.net/api/products?page=${page}&pageSize=5`, {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          });
           if (pageResponse.data && pageResponse.data.success && Array.isArray(pageResponse.data.data['list-data'])) {
             allProducts.push(...pageResponse.data.data['list-data']);
           } else {
@@ -202,14 +219,33 @@ const DetailProduct = () => {
 
     for (let i = 0; i < quantity; i++) {
       try {
-        const response = await axios.post(`https://zodiacjewerlyswd.azurewebsites.net/api/orders/${hint}/${productID}`);
+        const response = await axios.post(`https://zodiacjewerlyswd.azurewebsites.net/api/orders/${hint}/${productID}`, {}, {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
         if (response.data && response.data.success) {
           console.log(`Sản phẩm ${productID} đã được thêm vào giỏ hàng cho người dùng ${hint}`);
+          enqueueSnackbar("The product has been added to cart", {
+            variant: "success",
+            anchorOrigin: { horizontal: "right", vertical: "top" },
+            preventDuplicate: true,
+          });
         } else {
           console.error("Có lỗi xảy ra khi thêm sản phẩm vào giỏ hàng:", response.data);
+          enqueueSnackbar("An error occurred", {
+            variant: "error",
+            anchorOrigin: { horizontal: "right", vertical: "top" },
+            preventDuplicate: true,
+          });
         }
       } catch (error) {
         console.error("Có lỗi xảy ra khi thêm sản phẩm vào giỏ hàng!", error);
+        enqueueSnackbar("An error occurred", {
+          variant: "error",
+          anchorOrigin: { horizontal: "right", vertical: "top" },
+          preventDuplicate: true,
+        });
       }
     }
   };
