@@ -282,7 +282,7 @@ ListItemButtons.propTypes = {
   onViewProducts: PropTypes.func.isRequired,
   onEdit: PropTypes.func.isRequired,
   onDelete: PropTypes.func.isRequired,
-  AddThenViewProduct: PropTypes.func.isRequired,
+  AddThenViewProduct: PropTypes.func,
   collectionId: PropTypes.number.isRequired,
 };
 

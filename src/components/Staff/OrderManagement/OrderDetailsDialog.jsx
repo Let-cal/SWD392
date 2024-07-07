@@ -4,6 +4,7 @@ import {
   DialogActions,
   DialogContent,
   DialogTitle,
+  IconButton,
   Table,
   TableBody,
   TableCell,
@@ -14,6 +15,7 @@ import {
 } from "@mui/material";
 import { styled } from "@mui/material/styles";
 import PropTypes from "prop-types";
+import { useState } from "react";
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
   [`&.${tableCellClasses.head}`]: {
@@ -36,9 +38,6 @@ const StyledTableRow = styled(TableRow)(({ theme }) => ({
     transition: "background-color 0.3s ease, transform 0.3s ease",
     boxShadow: "0 4px 8px rgba(0, 0, 0, 0.1)",
   },
-  "&:last-child td, &:last-child th": {
-    border: 0,
-  },
 }));
 
 const StyledTableContainer = styled(TableContainer)(() => ({
@@ -46,6 +45,18 @@ const StyledTableContainer = styled(TableContainer)(() => ({
 }));
 
 const OrderDetailsDialog = ({ open, onClose, orderDetails }) => {
+  const [openImageDialog, setOpenImageDialog] = useState(false);
+  const [selectedImage, setSelectedImage] = useState("");
+
+  const handleImageClick = (imageUrl) => {
+    setSelectedImage(imageUrl);
+    setOpenImageDialog(true);
+  };
+
+  const handleCloseImageDialog = () => {
+    setOpenImageDialog(false);
+  };
+
   return (
     <Dialog open={open} onClose={onClose} maxWidth="md" fullWidth>
       <DialogTitle>Order Details</DialogTitle>
@@ -54,7 +65,7 @@ const OrderDetailsDialog = ({ open, onClose, orderDetails }) => {
           <Table>
             <TableHead>
               <TableRow>
-                <StyledTableCell>Product ID</StyledTableCell>
+                <StyledTableCell>ID</StyledTableCell>
                 <StyledTableCell>Zodiac Name</StyledTableCell>
                 <StyledTableCell>Product Name</StyledTableCell>
                 <StyledTableCell>Description</StyledTableCell>
@@ -63,7 +74,8 @@ const OrderDetailsDialog = ({ open, onClose, orderDetails }) => {
                 <StyledTableCell>Category</StyledTableCell>
                 <StyledTableCell>Material</StyledTableCell>
                 <StyledTableCell>Gender</StyledTableCell>
-                <StyledTableCell>Image</StyledTableCell>
+                <StyledTableCell>Action</StyledTableCell>{" "}
+                {/* New column for Action */}
               </TableRow>
             </TableHead>
             <TableBody>
@@ -81,11 +93,15 @@ const OrderDetailsDialog = ({ open, onClose, orderDetails }) => {
                   <StyledTableCell>{product["name-material"]}</StyledTableCell>
                   <StyledTableCell>{product["name-gender"]}</StyledTableCell>
                   <StyledTableCell>
-                    <img
-                      src={product["image-url"]}
-                      alt={product["name-product"]}
-                      style={{ width: 50 }}
-                    />
+                    <IconButton
+                      onClick={() => handleImageClick(product["image-url"])}
+                    >
+                      <img
+                        src={product["image-url"]}
+                        alt={product["name-product"]}
+                        style={{ width: 50 }}
+                      />
+                    </IconButton>
                   </StyledTableCell>
                 </StyledTableRow>
               ))}
@@ -98,6 +114,11 @@ const OrderDetailsDialog = ({ open, onClose, orderDetails }) => {
           Close
         </Button>
       </DialogActions>
+      <Dialog open={openImageDialog} onClose={handleCloseImageDialog}>
+        <DialogContent>
+          <img src={selectedImage} alt="Full size" style={{ width: "100%" }} />
+        </DialogContent>
+      </Dialog>
     </Dialog>
   );
 };
@@ -105,7 +126,6 @@ const OrderDetailsDialog = ({ open, onClose, orderDetails }) => {
 OrderDetailsDialog.propTypes = {
   open: PropTypes.bool.isRequired,
   onClose: PropTypes.func.isRequired,
-  order: PropTypes.object.isRequired,
   orderDetails: PropTypes.array.isRequired,
 };
 

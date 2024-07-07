@@ -51,16 +51,16 @@ const StyledTableContainer = styled(TableContainer)(() => ({
 
 const ViewProductDialog = ({ open, onClose, products }) => {
   const [viewImagesOpen, setViewImagesOpen] = React.useState(false);
-  const [selectedImages, setSelectedImages] = React.useState([]);
+  const [selectedProduct, setSelectedProduct] = React.useState([]);
 
-  const handleViewImages = (imageUrls) => {
-    setSelectedImages(imageUrls);
+  const handleViewImages = (product) => {
+    setSelectedProduct(product);
     setViewImagesOpen(true);
   };
 
   const handleCloseViewImages = () => {
     setViewImagesOpen(false);
-    setSelectedImages([]);
+    setSelectedProduct([]);
   };
 
   if (!open || !products) return null;
@@ -99,7 +99,7 @@ const ViewProductDialog = ({ open, onClose, products }) => {
                     <StyledTableCell align="center">
                       <IconButton
                         aria-label="view images"
-                        onClick={() => handleViewImages(product["image-urls"])}
+                        onClick={() => handleViewImages(product)}
                       >
                         <PanoramaIcon />
                       </IconButton>
@@ -120,7 +120,7 @@ const ViewProductDialog = ({ open, onClose, products }) => {
       <ViewImagesDialog
         open={viewImagesOpen}
         onClose={handleCloseViewImages}
-        imageUrls={selectedImages}
+        imageUrls={selectedProduct["image-urls"]}
       />
     </Dialog>
   );
