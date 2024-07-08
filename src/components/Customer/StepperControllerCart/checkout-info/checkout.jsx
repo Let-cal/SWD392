@@ -52,6 +52,10 @@ function Checkout() {
     // Thực hiện logic thanh toán tại đây
   };
 
+  const formatPrice = (price) => {
+    return price.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".");
+  };
+
   return (
     <>
       <Header />
@@ -73,11 +77,11 @@ function Checkout() {
                     </div>
                     <div className="checkout-item-price">
                       <span>Unit price</span>{" "}
-                      <span>${item.itemPrice.toFixed(2)}</span>
+                      <span>{formatPrice(item.itemPrice)}đ</span>
                     </div>
                     <div className="checkout-item-total">
                       <span>Total</span>{" "}
-                      <span>${(item.itemPrice * item.itemQty).toFixed(2)}</span>
+                      <span>{formatPrice(item.itemPrice * item.itemQty)}đ</span>
                     </div>
                   </div>
                 </div>
@@ -87,10 +91,9 @@ function Checkout() {
         
         <div>
           <div className="checkout-summary">
-            BILL TOTAL: $
-            {selectedItems
-              .reduce((total, item) => total + item.itemPrice * item.itemQty, 0)
-              .toFixed(2)}
+            BILL TOTAL: {formatPrice(
+              selectedItems.reduce((total, item) => total + item.itemPrice * item.itemQty, 0)
+            )}đ
           </div>
           <form onSubmit={(e) => e.preventDefault()} className="checkout-form">
             <h2>Delivery Information</h2>

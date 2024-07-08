@@ -15,6 +15,10 @@ const ProductImage = ({ src, alt, index, onClick, isSelected }) => (
   />
 );
 
+const formatPrice = (price) => {
+  return price.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".");
+};
+
 const SimilarProduct = ({ imageSrc, name, price, product }) => {
   const navigate = useNavigate();
 
@@ -27,7 +31,7 @@ const SimilarProduct = ({ imageSrc, name, price, product }) => {
       <img className="similar-product-image" src={imageSrc} alt={name} />
       <div className="similar-product-name">{name}</div>
       <div className="similar-product-price">
-        <span className="price">{price}</span>
+        <span className="price">{formatPrice(price)}</span>
         <span className="currency">đ</span>
       </div>
     </div>
@@ -275,7 +279,7 @@ const DetailProduct = () => {
           <h1 className="product-name">{product["name-product"]}</h1>
 
           <p className="product-price">
-            <span className="price">{product.price}</span>
+            <span className="price">{formatPrice(product.price)}</span>
             <span className="currency">đ</span>
           </p>
 

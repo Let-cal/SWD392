@@ -9,6 +9,10 @@ import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import "./ViewCart.css";
 
+const formatPrice = (price) => {
+  return price.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".");
+};
+
 const CartItem = ({
   imageSrc,
   itemName,
@@ -32,7 +36,9 @@ const CartItem = ({
       <div className="item-info">
         <div className="item-name">{itemName}</div>
         <div className="item-details">{itemDetails}</div>
-        <div className="item-price">${(itemPrice * itemQty).toFixed(2)}</div>
+        <div className="item-price">
+          {formatPrice(itemPrice * itemQty)}<span className="currency">đ</span>
+        </div>
       </div>
     </div>
     <div className="item-quantity">
@@ -142,15 +148,12 @@ function ViewCart() {
   };
 
   const calculateTotal = () => {
-    return selectedItems
-      .reduce((total, index) => {
-        const item = items[index];
-        return total + item.price * item.quantity;
-      }, 0)
-      .toFixed(2);
+    return formatPrice(selectedItems.reduce((total, index) => {
+      const item = items[index];
+      return total + item.price * item.quantity;
+    }, 0));
   };
 
-  // Trong hàm handleCheckout của ViewCart.js
   const handleCheckout = () => {
     const selectedProducts = selectedItems.map((index) => {
       const item = items[index];
@@ -164,7 +167,6 @@ function ViewCart() {
     });
     navigate("/checkout", { state: { selectedItems: selectedProducts } });
   };
-
 
   const handleGetAll = () => {
     if (isGetAll) {
@@ -205,7 +207,7 @@ function ViewCart() {
         </section>
         <div className="checkout-section-fixed">
           <div className="total-amount">
-            TOTAL: <span className="amount">${calculateTotal()}</span>
+            TOTAL: <span className="amount">{calculateTotal()}<span className="currency">đ</span></span>
           </div>
           <div className="flex gap-4">
             <Button

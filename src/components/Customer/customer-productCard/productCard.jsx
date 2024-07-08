@@ -18,6 +18,10 @@ import {
 import PropTypes from "prop-types";
 import "./productCard.css";
 
+const formatPrice = (price) => {
+  return price.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".");
+};
+
 const Card = ({ image, alt, title, price, tags, product }) => {
   const navigate = useNavigate();
 
@@ -45,7 +49,7 @@ const Card = ({ image, alt, title, price, tags, product }) => {
       <div className="content">
         <h3>{title}</h3>
         <p>
-          <span className="price">{price}</span>
+          <span className="price">{formatPrice(price)}</span>
           <span className="currency">đ</span>
         </p>
         <ul>
