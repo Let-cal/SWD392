@@ -41,7 +41,7 @@ const FilterComponent = ({
   };
 
   return (
-    <div className="flex flex-col items-end">
+    <div className="flex flex-row items-end w-[100%]">
       <TextField
         label="Search"
         placeholder="Search products"
@@ -64,7 +64,6 @@ const FilterComponent = ({
           }}
         >
           <TuneIcon />
-          FILTER
         </Button>
 
         <Menu
@@ -200,12 +199,12 @@ FilterComponent.propTypes = {
   setPrice: PropTypes.func.isRequired,
   products: PropTypes.arrayOf(
     PropTypes.shape({
-      price: PropTypes.number.isRequired,
-      nameProduct: PropTypes.string.isRequired,
-      categoryId: PropTypes.number.isRequired,
-      materialId: PropTypes.number.isRequired,
-      genderId: PropTypes.number.isRequired,
-      zodiacId: PropTypes.number.isRequired,
+      price: PropTypes.number,
+      nameProduct: PropTypes.string,
+      categoryId: PropTypes.number,
+      materialId: PropTypes.number,
+      genderId: PropTypes.number,
+      zodiacId: PropTypes.number,
     })
   ).isRequired,
   handleDeleteChip: PropTypes.func.isRequired,

@@ -1,4 +1,7 @@
+import ViewListIcon from "@mui/icons-material/ViewList";
+import VisibilityIcon from "@mui/icons-material/Visibility";
 import {
+  IconButton,
   Paper,
   Table,
   TableBody,
@@ -13,12 +16,8 @@ import { format } from "date-fns";
 import PropTypes from "prop-types";
 import { useState } from "react";
 import swal from "sweetalert";
-import deleteCollection from "./ActionOfCollection/DeleteAction.jsx";
-import ListItemButtons from "./ActionOfCollection/ListItemButtonsDialog .jsx";
-import ViewCollectionDialog from "./ActionOfCollection/ViewCollectionDialog";
-import ViewProductDialog from "./ActionOfCollection/ViewProductDialog";
-import EditCollectionDialog from "./EditCollectionDialog"; // Ensure the correct path
-
+import ViewCollectionDialog from "./ViewAction/ViewCollectionDialog";
+import ViewProductDialog from "./ViewAction/ViewProductDialog"; // Import dialog for viewing products
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
   [`&.${tableCellClasses.head}`]: {
     backgroundColor: theme.palette.common.black,
@@ -45,8 +44,7 @@ const StyledTableRow = styled(TableRow)(({ theme }) => ({
   },
 }));
 
-// eslint-disable-next-line no-unused-vars
-const StyledTableContainer = styled(TableContainer)(({ theme }) => ({
+const StyledTableContainer = styled(TableContainer)(() => ({
   overflow: "hidden",
 }));
 
@@ -54,21 +52,15 @@ const getStatusColor = (status) => {
   return status === 1 ? "green" : "red";
 };
 
-const TableCollections = ({ data, onUpdateCollection }) => {
-  const [editOpen, setEditOpen] = useState(false);
-  const [selectedCollection, setSelectedCollection] = useState(null);
+const TableCollections = ({ data }) => {
   const [viewOpen, setViewOpen] = useState(false);
-  const [selectedProducts, setSelectedProducts] = useState([]);
-  const [viewProductsOpen, setViewProductsOpen] = useState(false);
+  const [viewProductsOpen, setViewProductsOpen] = useState(false); // State for viewing products dialog
+  const [selectedCollection, setSelectedCollection] = useState(null);
+  const [selectedProducts, setSelectedProducts] = useState([]); // State for storing products
 
   const handleViewDetails = (collection) => {
     setSelectedCollection(collection);
     setViewOpen(true);
-  };
-
-  const handleEditCollection = (collection) => {
-    setSelectedCollection(collection);
-    setEditOpen(true);
   };
 
   const handleViewProducts = async (collectionId) => {
@@ -99,43 +91,14 @@ const TableCollections = ({ data, onUpdateCollection }) => {
     }
   };
 
-  const handleDeleteCollection = async (collectionId) => {
-    const confirmation = await swal({
-      title: "Are you sure?",
-      text: "Once deleted, you will not be able to recover this collection!",
-      icon: "warning",
-      buttons: ["Cancel", "Delete"],
-      dangerMode: true,
-    });
-
-    if (confirmation) {
-      try {
-        await deleteCollection(collectionId);
-        swal("Poof! The collection has been deleted!", {
-          icon: "success",
-        });
-        onUpdateCollection(); // Refresh the collections data
-      } catch (error) {
-        swal("Oops! Something went wrong!", {
-          icon: "error",
-        });
-      }
-    }
+  const handleCloseView = () => {
+    setViewOpen(false);
+    setSelectedCollection(null);
   };
 
   const handleCloseViewProducts = () => {
     setViewProductsOpen(false);
     setSelectedProducts([]);
-  };
-
-  const handleCloseEdit = () => {
-    setEditOpen(false);
-    setSelectedCollection(null);
-  };
-
-  const handleCloseView = () => {
-    setViewOpen(false);
-    setSelectedCollection(null);
   };
 
   return (
@@ -149,7 +112,7 @@ const TableCollections = ({ data, onUpdateCollection }) => {
             <StyledTableCell align="center">Date Open</StyledTableCell>
             <StyledTableCell align="center">Date Close</StyledTableCell>
             <StyledTableCell align="center">Image</StyledTableCell>
-            <StyledTableCell align="center">Action</StyledTableCell>
+            <StyledTableCell align="center">Actions</StyledTableCell>
           </TableRow>
         </TableHead>
         <TableBody>
@@ -174,49 +137,47 @@ const TableCollections = ({ data, onUpdateCollection }) => {
                 <StyledTableCell align="center">
                   {format(new Date(collection["date-close"]), "dd/MM/yyyy")}
                 </StyledTableCell>
-                <StyledTableCell
-                  align="center"
-                  sx={{ display: "flex", justifyContent: "center" }}
-                >
+                <StyledTableCell align="center">
                   <img
                     src={collection["image-collection"]}
                     alt={collection["name-collection"]}
-                    style={{
-                      width: "50px",
-                      height: "50px",
-                    }}
+                    style={{ width: "50px", height: "50px" }}
                   />
                 </StyledTableCell>
                 <StyledTableCell align="center">
-                  <ListItemButtons
-                    onViewDetails={() => handleViewDetails(collection)}
-                    onViewProducts={() => handleViewProducts(collection.id)}
-                    onEdit={() => handleEditCollection(collection)}
-                    onDelete={() => handleDeleteCollection(collection.id)}
-                    collectionId={collection.id}
-                  />
+                  {/* IconButton for View details */}
+                  <IconButton
+                    aria-label="view details"
+                    onClick={() => handleViewDetails(collection)}
+                  >
+                    <VisibilityIcon />
+                  </IconButton>
+                  {/* IconButton for View products */}
+                  <IconButton
+                    aria-label="view products"
+                    onClick={() => handleViewProducts(collection.id)}
+                  >
+                    <ViewListIcon />
+                  </IconButton>
                 </StyledTableCell>
               </StyledTableRow>
             ))}
         </TableBody>
       </Table>
-      {/* Dialogs */}
-      <ViewCollectionDialog
-        open={viewOpen}
-        onClose={handleCloseView}
-        collection={selectedCollection}
-      />
-      <ViewProductDialog
-        open={viewProductsOpen}
-        onClose={handleCloseViewProducts}
-        products={selectedProducts}
-      />
+      {/* Dialog for viewing collection details */}
       {selectedCollection && (
-        <EditCollectionDialog
-          open={editOpen}
-          onClose={handleCloseEdit}
+        <ViewCollectionDialog
+          open={viewOpen}
+          onClose={handleCloseView}
           collection={selectedCollection}
-          onSave={onUpdateCollection}
+        />
+      )}
+      {/* Dialog for viewing products */}
+      {selectedProducts.length > 0 && (
+        <ViewProductDialog
+          open={viewProductsOpen}
+          onClose={handleCloseViewProducts}
+          products={selectedProducts}
         />
       )}
     </StyledTableContainer>
@@ -225,7 +186,6 @@ const TableCollections = ({ data, onUpdateCollection }) => {
 
 TableCollections.propTypes = {
   data: PropTypes.array.isRequired,
-  onUpdateCollection: PropTypes.func.isRequired,
 };
 
 export default TableCollections;

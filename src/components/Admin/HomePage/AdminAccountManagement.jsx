@@ -62,7 +62,7 @@ const AdminAccountManagement = () => {
             propFontSize="20px"
           />
           <User
-            customer="Bought this month"
+            customer="Joined this month"
             accounts="825 accounts"
             propWidth="unset"
             propFlex="1"
@@ -71,7 +71,7 @@ const AdminAccountManagement = () => {
             propFontSize="20px"
           />
           <User
-            customer="Joined this month"
+            customer="Joined this year"
             accounts="123 accounts"
             propWidth="unset"
             propFlex="1"

@@ -1,114 +1,144 @@
-import DeleteIcon from "@mui/icons-material/Delete";
-import UpdateIcon from "@mui/icons-material/Update";
-import Button from "@mui/material/Button";
-import Menu from "@mui/material/Menu";
-import MenuItem from "@mui/material/MenuItem";
+// TableProduct.jsx
+import AddIcon from "@mui/icons-material/Add";
+import {
+  IconButton,
+  Table,
+  TableBody,
+  TableCell,
+  TableContainer,
+  TableHead,
+  TableRow,
+  tableCellClasses,
+} from "@mui/material";
+import { styled } from "@mui/material/styles";
 import PropTypes from "prop-types";
-import { useState } from "react";
-import InforProduct from "./InfoProduct";
+import {
+  getCategoryName,
+  getGenderName,
+  getMaterialName,
+  getZodiacName,
+} from "./ChangeIDtoName";
+import UploadImage from "./EditImage";
+import EditProductDialog from "./EditProductDialog";
 
-const TableProduct = ({ data, onUpdate, onDelete, onGetAll }) => {
-  const [anchorEl, setAnchorEl] = useState(null);
-  const [selectedProductId, setSelectedProductId] = useState(null);
+const StyledTableCell = styled(TableCell)(({ theme }) => ({
+  [`&.${tableCellClasses.head}`]: {
+    backgroundColor: theme.palette.common.black,
+    color: theme.palette.common.white,
+  },
+  [`&.${tableCellClasses.body}`]: {
+    fontSize: 14,
+    transition: "background-color 0.3s ease, transform 0.3s ease",
+  },
+}));
 
-  const handleMenuOpen = (event, productId) => {
-    setAnchorEl(event.currentTarget);
-    setSelectedProductId(productId);
-  };
+const StyledTableRow = styled(TableRow)(({ theme }) => ({
+  "&:nth-of-type(odd)": {
+    backgroundColor: theme.palette.action.hover,
+  },
+  "&:hover": {
+    backgroundColor: theme.palette.action.selected,
+    transform: "scale(1.01)",
+    transition: "background-color 0.3s ease, transform 0.3s ease",
+    boxShadow: "0 4px 8px rgba(0, 0, 0, 0.1)",
+  },
+  "&:last-child td, &:last-child th": {
+    border: 0,
+  },
+}));
 
-  const handleMenuClose = () => {
-    setAnchorEl(null);
-    setSelectedProductId(null);
-  };
+// eslint-disable-next-line no-unused-vars
+const StyledTableContainer = styled(TableContainer)(({ theme }) => ({
+  overflow: "hidden",
+}));
 
-  const handleEditClick = () => {
-    document.getElementById(`edit-button-${selectedProductId}`).click();
-    handleMenuClose();
-  };
-
-  const handleDeleteClick = () => {
-    onDelete(selectedProductId);
-    handleMenuClose();
-  };
-
+const TableProduct = ({
+  products = [],
+  onUpdate,
+  onAddProduct,
+  showAddButton,
+}) => {
   return (
-    <div className="mx-auto bg-white shadow-lg rounded-lg overflow-hidden">
-      <div className="flex justify-between items-center  bg-gray-100 text-xs uppercase font-semibold text-gray-600">
-        <div className="w-[10%] text-center   py-2">ID</div>
-        <div className="w-[10%] text-center  py-2">Name</div>
-        <div className="w-[10%] text-center  py-2">Description</div>
-        <div className="w-[10%] text-center  py-2">Price</div>
-        <div className="w-[10%] text-center  py-2">Quantity</div>
-        <div className="w-[10%] text-center  py-2">Category</div>
-        <div className="w-[10%] text-center  py-2">Material</div>
-        <div className="w-[10%] text-center  py-2">Gender</div>
-        <div className="w-[10%] text-center  py-2">Zodiac</div>
-        <div className="w-[10%] text-center  py-2">ImgURL</div>
-        <div className="w-[10%] text-center  py-2">Action</div>
-      </div>
-      <div className="h-[500px] overflow-auto">
-        {data.map((product) => (
-          <InforProduct
-            key={product.id}
-            product={product}
-            onUpdate={onUpdate}
-            onGetAll={onGetAll}
-            Action={
-              <>
-                <Button
-                  id={`edit-button-${product.id}`}
-                  variant="contained"
-                  sx={{
-                    backgroundColor: "black",
-                    color: "white",
-                    "&:hover": {
-                      backgroundColor: "gray",
-                    },
-                  }}
-                  size="large"
-                  startIcon={<UpdateIcon />}
-                  onClick={(event) => handleMenuOpen(event, product.id)}
-                >
-                  Edit
-                </Button>
-                <Menu
-                  anchorEl={anchorEl}
-                  open={Boolean(anchorEl) && selectedProductId === product.id}
-                  onClose={handleMenuClose}
-                >
-                  <MenuItem onClick={handleEditClick}>
-                    <UpdateIcon className="mr-2" /> Update
-                  </MenuItem>
-                  <MenuItem onClick={handleDeleteClick}>
-                    <DeleteIcon className="mr-2" /> Delete
-                  </MenuItem>
-                </Menu>
-              </>
-            }
-          />
-        ))}
-      </div>
-    </div>
+    <StyledTableContainer>
+      <Table>
+        <TableHead>
+          <TableRow>
+            <StyledTableCell align="center">ID</StyledTableCell>
+            <StyledTableCell align="center">Name</StyledTableCell>
+            <StyledTableCell align="center">Description</StyledTableCell>
+            <StyledTableCell align="center">Price</StyledTableCell>
+            <StyledTableCell align="center">Quantity</StyledTableCell>
+            <StyledTableCell align="center">Category</StyledTableCell>
+            <StyledTableCell align="center">Material</StyledTableCell>
+            <StyledTableCell align="center">Gender</StyledTableCell>
+            <StyledTableCell align="center">Zodiac</StyledTableCell>
+            <StyledTableCell align="center">Action</StyledTableCell>
+          </TableRow>
+        </TableHead>
+        <TableBody>
+          {Array.isArray(products) &&
+            products.map((product) => (
+              <StyledTableRow key={product.id}>
+                <StyledTableCell align="center">{product.id}</StyledTableCell>
+                <StyledTableCell align="center">
+                  {product["name-product"]}
+                </StyledTableCell>
+                <StyledTableCell align="center">
+                  {product["description-product"]}
+                </StyledTableCell>
+                <StyledTableCell align="center">
+                  {product.price}
+                </StyledTableCell>
+                <StyledTableCell align="center">
+                  {product.quantity}
+                </StyledTableCell>
+                <StyledTableCell align="center">
+                  {getCategoryName(product["category-id"])}
+                </StyledTableCell>
+                <StyledTableCell align="center">
+                  {getMaterialName(product["material-id"])}
+                </StyledTableCell>
+                <StyledTableCell align="center">
+                  {getGenderName(product["gender-id"])}
+                </StyledTableCell>
+                <StyledTableCell align="center">
+                  {getZodiacName(product["zodiac-id"])}
+                </StyledTableCell>
+                <StyledTableCell align="center">
+                  {showAddButton ? (
+                    <IconButton
+                      onClick={() => onAddProduct(product.id)}
+                      color="primary"
+                    >
+                      <AddIcon />
+                    </IconButton>
+                  ) : (
+                    <>
+                      <EditProductDialog
+                        product={product}
+                        onUpdate={onUpdate}
+                      />
+                      <UploadImage productId={product.id} onGetAll={onUpdate} />
+                    </>
+                  )}
+                </StyledTableCell>
+              </StyledTableRow>
+            ))}
+        </TableBody>
+      </Table>
+    </StyledTableContainer>
   );
 };
 
 TableProduct.propTypes = {
-  data: PropTypes.arrayOf(
-    PropTypes.shape({
-      id: PropTypes.number.isRequired,
-      nameProduct: PropTypes.string.isRequired,
-      price: PropTypes.number.isRequired,
-      categoryId: PropTypes.number.isRequired, // Changed to number
-      materialId: PropTypes.number.isRequired, // Changed to number
-      genderId: PropTypes.number.isRequired, // Changed to number
-      zodiacId: PropTypes.number.isRequired, // Changed to number
-      descriptionProduct: PropTypes.string.isRequired,
-      quantity: PropTypes.number.isRequired,
-    })
-  ).isRequired,
-  onUpdate: PropTypes.func.isRequired,
-  onDelete: PropTypes.func.isRequired,
-  onGetAll: PropTypes.func.isRequired,
+  products: PropTypes.array.isRequired,
+  onUpdate: PropTypes.func,
+  onAddProduct: PropTypes.func,
+  showAddButton: PropTypes.bool,
+};
+
+TableProduct.defaultProps = {
+  showAddButton: false,
 };
 
 export default TableProduct;

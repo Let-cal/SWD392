@@ -1,104 +1,92 @@
-/* eslint-disable react-hooks/exhaustive-deps */
 import AddCircleIcon from "@mui/icons-material/AddCircle";
-import { Backdrop, Button, CircularProgress } from "@mui/material";
+import {
+  Backdrop,
+  Button,
+  CircularProgress,
+  Grid,
+  MenuItem,
+  Pagination,
+  Select,
+} from "@mui/material";
 import axios from "axios";
-import { useSnackbar } from "notistack";
 import { useEffect, useState } from "react";
 import CreateProductModal from "./CreateProductController/CreateProductModal";
 import FilterComponent from "./FilterManagement/FilterComponent";
 import TableProduct from "./TableProduct";
-
-const ProductPage = () => {
+const ProductManagement = () => {
   const [products, setProducts] = useState([]);
   const [filteredProducts, setFilteredProducts] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const [updating, setUpdating] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const [page, setPage] = useState(1);
+  const [totalPages, setTotalPages] = useState(1);
+  const [pageSize, setPageSize] = useState(5);
   const [search, setSearch] = useState("");
   const [category, setCategory] = useState("");
   const [material, setMaterial] = useState("");
   const [gender, setGender] = useState("");
   const [zodiac, setZodiac] = useState("");
-  const [price, setPrice] = useState([0, 0]);
-  const { enqueueSnackbar } = useSnackbar();
-  useEffect(() => {
-    fetchProducts();
-  }, []);
-
-  useEffect(() => {
-    filterProducts();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [search, category, material, gender, zodiac, price]);
-
+  const [price, setPrice] = useState([0, 5000000]);
+  const token = localStorage.getItem("token");
   const fetchProducts = async () => {
     setLoading(true);
     try {
       const response = await axios.get(
-        "https://zodiacjewerlyswd.azurewebsites.net/api/products"
+        `https://zodiacjewerlyswd.azurewebsites.net/api/products?page=${page}&pageSize=${pageSize}`,
+        {
+          headers: {
+            "Content-Type": "multipart/form-data",
+            Authorization: `Bearer ${token}`,
+          },
+        }
       );
-      const fetchedProducts = response.data.data.map((product) => ({
-        id: product.id,
-        nameProduct: product["name-product"],
-        descriptionProduct: product["description-product"],
-        price: product.price,
-        quantity: product.quantity,
-        categoryId: product["category-id"],
-        materialId: product["material-id"],
-        genderId: product["gender-id"],
-        imageURLs: product["image-urls"],
-        zodiacId: product["zodiac-id"],
-      }));
+      const { data } = response.data;
+      console.log(page);
+      setProducts(data["list-data"]);
+      setTotalPages(data["total-page"]);
 
-      setProducts(fetchedProducts);
-      setFilteredProducts(fetchedProducts);
-
-      const maxPrice = Math.max(...fetchedProducts.map((p) => p.price));
-      setPrice([0, maxPrice]);
+      // Initialize price range after products are fetched
     } catch (error) {
       console.error("Error fetching products:", error);
-
-      if (!error.response) {
-        enqueueSnackbar(
-          "Network error: Unable to connect to the server. Please check your internet connection.",
-          { variant: "error" }
-        );
-      } else {
-        enqueueSnackbar("Error fetching products", { variant: "error" });
-      }
     } finally {
       setLoading(false);
     }
   };
+
+  useEffect(() => {
+    fetchProducts();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [page, pageSize]);
 
   const filterProducts = () => {
     let filtered = products;
 
     if (search) {
       filtered = filtered.filter((product) =>
-        product.nameProduct.toLowerCase().includes(search.toLowerCase())
+        product["name-product"].toLowerCase().includes(search.toLowerCase())
       );
     }
 
     if (category) {
       filtered = filtered.filter(
-        (product) => product.categoryId === parseInt(category)
+        (product) => product["category-id"] === parseInt(category)
       );
     }
 
     if (material) {
       filtered = filtered.filter(
-        (product) => product.materialId === parseInt(material)
+        (product) => product["material-id"] === parseInt(material)
       );
     }
 
     if (gender) {
       filtered = filtered.filter(
-        (product) => product.genderId === parseInt(gender)
+        (product) => product["gender-id"] === parseInt(gender)
       );
     }
 
     if (zodiac) {
       filtered = filtered.filter(
-        (product) => product.zodiacId === parseInt(zodiac)
+        (product) => product["zodiac-id"] === parseInt(zodiac)
       );
     }
 
@@ -109,77 +97,10 @@ const ProductPage = () => {
     setFilteredProducts(filtered);
   };
 
-  const updateProduct = async (product) => {
-    setUpdating(true);
-    try {
-      if (!product.id) {
-        throw new Error("Product ID is missing");
-      }
-
-      const payload = {
-        id: product.id,
-        "name-product": product.nameProduct || "",
-        "description-product": product.descriptionProduct || "",
-        price: product.price || 0,
-        quantity: product.quantity || 0,
-        "category-id": product.categoryId || 0,
-        "material-id": product.materialId || 0,
-        "gender-id": product.genderId || 0,
-        "zodiac-id": product.zodiacId || 0,
-      };
-
-      const response = await axios.put(
-        `https://zodiacjewerlyswd.azurewebsites.net/api/products/${product.id}/zodiac/${product.zodiacId}`,
-        payload,
-        { headers: { "Content-Type": "application/json" } }
-      );
-      const updatedProduct = response.data;
-      enqueueSnackbar("Product updated successfully", { variant: "success" });
-      setProducts((prev) =>
-        prev.map((p) => (p.id === updatedProduct.id ? updatedProduct : p))
-      );
-
-      await fetchProducts();
-    } catch (error) {
-      console.error("Error updating product:", error);
-      enqueueSnackbar("Error updating product", { variant: "error" });
-    } finally {
-      setUpdating(false);
-    }
-  };
-
-  const deleteProduct = async (productId) => {
-    setUpdating(true);
-    try {
-      await axios.delete(
-        `https://zodiacjewerlyswd.azurewebsites.net/api/products/${productId}`
-      );
-
-      setProducts((prev) => prev.filter((product) => product.id !== productId));
-      setFilteredProducts((prev) =>
-        prev.filter((product) => product.id !== productId)
-      );
-
-      enqueueSnackbar("Product deleted successfully", { variant: "success" });
-    } catch (error) {
-      console.error("Error deleting product:", error);
-      enqueueSnackbar("Error deleting product", { variant: "error" });
-    } finally {
-      setUpdating(false);
-    }
-  };
-
-  const [isModalOpen, setIsModalOpen] = useState(false);
-
-  const handleOpenModal = () => {
-    setIsModalOpen(true);
-  };
-  const handleProductCreate = () => {
-    fetchProducts();
-  };
-  const handleCloseModal = () => {
-    setIsModalOpen(false);
-  };
+  useEffect(() => {
+    filterProducts();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [search, category, material, gender, zodiac, price, products]); // Thêm products vào dependencies để filter lại khi có sản phẩm mới
 
   const handleDeleteChip = (chipType) => {
     switch (chipType) {
@@ -199,79 +120,127 @@ const ProductPage = () => {
         setZodiac("");
         break;
       case "price":
-        setPrice([0, Math.max(...products.map((p) => p.price))]);
+        setPrice([0, 50000]);
         break;
       default:
         break;
     }
   };
 
+  const handlePageChange = (event, value) => {
+    setPage(value);
+  };
+
+  const handlePageSizeChange = (size) => {
+    setPageSize(size);
+    setPage(1); // Reset to first page when changing page size
+  };
+
+  const [isModalOpen, setIsModalOpen] = useState(false);
+
+  const handleOpenModal = () => {
+    setIsModalOpen(true);
+  };
+  const handleProductCreate = () => {
+    fetchProducts();
+  };
+  const handleCloseModal = () => {
+    setIsModalOpen(false);
+  };
   return (
-    <div>
-      <Backdrop
-        sx={{ color: "#fff", zIndex: (theme) => theme.zIndex.drawer + 1 }}
-        open={loading || updating}
-      >
-        <CircularProgress color="inherit" />
-      </Backdrop>
-      <div className="flex flex-row gap-4 items-start w-full justify-between">
-        <div>
-          <h1 className="font-serif text-[30px] relative text-inherit leading-[48px] font-bold">
-            Product Management
-          </h1>
-          <Button
-            variant="contained"
-            endIcon={<AddCircleIcon />}
-            sx={{
-              width: "60%",
-              backgroundColor: "black",
-              color: "white",
-              "&:hover": {
-                backgroundColor: "gray",
-              },
-            }}
-            onClick={handleOpenModal}
-          >
-            Create Product
-          </Button>
-          <CreateProductModal
-            isOpen={isModalOpen}
-            onClose={handleCloseModal}
-            onProductCreated={handleProductCreate}
-          />
+    <>
+      <div className="flex flex-row justify-between items-center">
+        <div className="flex flex-col">
+          <h1 className="font-serif text-2xl font-bold">Product Management</h1>
+          <div className="w-[100%]">
+            <Button
+              variant="contained"
+              endIcon={<AddCircleIcon />}
+              sx={{
+                width: "100%",
+                backgroundColor: "black",
+                color: "white",
+                "&:hover": {
+                  backgroundColor: "gray",
+                },
+              }}
+              onClick={handleOpenModal}
+            >
+              Create Product
+            </Button>
+            <CreateProductModal
+              isOpen={isModalOpen}
+              onClose={handleCloseModal}
+              onProductCreated={handleProductCreate}
+            />
+          </div>
         </div>
-        <div className="w-[30%]">
-          <FilterComponent
-            search={search}
-            setSearch={setSearch}
-            category={category}
-            setCategory={setCategory}
-            material={material}
-            setMaterial={setMaterial}
-            gender={gender}
-            setGender={setGender}
-            zodiac={zodiac}
-            setZodiac={setZodiac}
-            price={price}
-            setPrice={setPrice}
-            products={products}
-            handleDeleteChip={handleDeleteChip}
-          />
+
+        <div className="flex items-end w-[30%]">
+          {products && products.length > 0 && (
+            <FilterComponent
+              search={search}
+              setSearch={setSearch}
+              category={category}
+              setCategory={setCategory}
+              material={material}
+              setMaterial={setMaterial}
+              gender={gender}
+              setGender={setGender}
+              zodiac={zodiac}
+              setZodiac={setZodiac}
+              price={price}
+              setPrice={setPrice}
+              products={products}
+              handleDeleteChip={handleDeleteChip}
+            />
+          )}
         </div>
       </div>
 
       <section className="w-full mt-8">
-        {!loading && (
-          <TableProduct
-            data={filteredProducts}
-            onUpdate={updateProduct}
-            onDelete={deleteProduct}
-            onGetAll={fetchProducts}
-          />
-        )}
+        <TableProduct products={filteredProducts} onUpdate={fetchProducts} />
+
+        <div className="flex justify-center mt-6">
+          <Grid
+            container
+            justifyContent="space-between"
+            alignItems="center"
+            mt={2}
+          >
+            <Pagination
+              count={totalPages}
+              page={page}
+              onChange={handlePageChange}
+              showFirstButton
+              showLastButton
+              sx={{
+                "& .MuiPaginationItem-root.Mui-selected": {
+                  backgroundColor: "#b2b251",
+                  color: "#fff",
+                },
+              }}
+            />
+            <Select
+              value={pageSize}
+              onChange={(e) => handlePageSizeChange(Number(e.target.value))}
+              displayEmpty
+              inputProps={{ "aria-label": "Without label" }}
+              size="small"
+              sx={{ minWidth: 120 }}
+            >
+              <MenuItem value={5}>5 per page</MenuItem>
+              <MenuItem value={10}>10 per page</MenuItem>
+              <MenuItem value={15}>15 per page</MenuItem>
+            </Select>
+          </Grid>
+        </div>
       </section>
-    </div>
+      <Backdrop open={loading} sx={{ color: "#fff", zIndex: 9999 }}>
+        <CircularProgress color="inherit" />
+      </Backdrop>
+    </>
   );
 };
 
-export default ProductPage;
+export default ProductManagement;

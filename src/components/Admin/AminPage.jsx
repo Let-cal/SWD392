@@ -1,6 +1,7 @@
 import { useState } from "react";
 import UserManagement from "../Admin/UserManagement/UserController.jsx";
 import { useAuth } from "../LoginController/AuthContext.jsx";
+import CollectionsManagement from "./CollectionManagement/CollectionsManagement.jsx";
 import Header from "./HeaderOfAdmin.jsx";
 import AdminAccountManagement from "./HomePage/AdminAccountManagement.jsx";
 import OrdersManagement from "./OrderManagement/OrderManagement.jsx";
@@ -8,6 +9,7 @@ import ProductsManagement from "./ProductManagement/ProductManagement.jsx";
 import ZodiacManagement from "./ZodiacController/ZodiacManagement.jsx";
 import "./adminpage.css"; // Add this import for the new CSS styles
 import Sidebar from "./sidebar.jsx";
+
 function AdminPage() {
   const { handleLogout } = useAuth();
   const [selectedContent, setSelectedContent] = useState(
@@ -24,16 +26,13 @@ function AdminPage() {
       ContentComponent = ProductsManagement;
       break;
     case "CollectionsManagement":
-      // ContentComponent = CollectionsManagement;
+      ContentComponent = CollectionsManagement;
       break;
     case "ZodiacManagement":
       ContentComponent = ZodiacManagement;
       break;
     case "UsersManagement":
       ContentComponent = UserManagement;
-      break;
-    case "Logout":
-      ContentComponent = handleLogout;
       break;
     case "AdminAccountManagement":
       ContentComponent = AdminAccountManagement;
@@ -43,13 +42,21 @@ function AdminPage() {
       break;
   }
 
+  const handleSidebarSelection = (content) => {
+    if (content === "Logout") {
+      handleLogout(); // Logout when "Logout" is selected
+    } else {
+      setSelectedContent(content); // Update selected content for other options
+    }
+  };
+
   return (
     <div className="flex flex-row justify-between">
       <div
         className={`sidebar-container ${isSidebarCollapsed ? "collapsed" : ""}`}
       >
         <Sidebar
-          setSelectedContent={setSelectedContent}
+          setSelectedContent={handleSidebarSelection}
           setIsSidebarCollapsed={setIsSidebarCollapsed}
         />
       </div>

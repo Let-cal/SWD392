@@ -1,53 +1,145 @@
 import VisibilityIcon from "@mui/icons-material/Visibility";
-import Button from "@mui/material/Button";
+import {
+  IconButton,
+  Table,
+  TableBody,
+  TableCell,
+  TableContainer,
+  TableHead,
+  TableRow,
+  tableCellClasses,
+} from "@mui/material";
+import { styled } from "@mui/material/styles";
+import Axios from "axios";
 import PropTypes from "prop-types";
-import InforOrder from "./InfoOrder";
+import { useState } from "react";
+import OrderDetailsDialog from "./OrderDetailsDialog";
 
-const Table = ({ data }) => {
+const StyledTableCell = styled(TableCell)(({ theme }) => ({
+  [`&.${tableCellClasses.head}`]: {
+    backgroundColor: theme.palette.common.black,
+    color: theme.palette.common.white,
+  },
+  [`&.${tableCellClasses.body}`]: {
+    fontSize: 14,
+    transition: "background-color 0.3s ease, transform 0.3s ease",
+  },
+}));
+
+const StyledTableRow = styled(TableRow)(({ theme }) => ({
+  "&:nth-of-type(odd)": {
+    backgroundColor: theme.palette.action.hover,
+  },
+  "&:hover": {
+    backgroundColor: theme.palette.action.selected,
+    transform: "scale(1.01)",
+    transition: "background-color 0.3s ease, transform 0.3s ease",
+    boxShadow: "0 4px 8px rgba(0, 0, 0, 0.1)",
+  },
+  "&:last-child td, &:last-child th": {
+    border: 0,
+  },
+}));
+
+const StyledTableContainer = styled(TableContainer)(() => ({
+  overflow: "hidden",
+}));
+
+const TableOrder = ({ orders }) => {
+  const [open, setOpen] = useState(false);
+  const [selectedOrder, setSelectedOrder] = useState(null);
+  const [orderDetails, setOrderDetails] = useState([]);
+  const [loaded, setLoaded] = useState(false);
+  const API_BASE_URL = "https://zodiacjewerlyswd.azurewebsites.net/api/orders";
+
+  const handleViewDetails = async (order) => {
+    setSelectedOrder(order);
+    setOpen(true);
+
+    if (!loaded) {
+      try {
+        const token = localStorage.getItem("token");
+        const response = await Axios.get(
+          `${API_BASE_URL}/customer/${order.UserID}`,
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+              accept: "*/*",
+            },
+          }
+        );
+        setOrderDetails(response.data.data.product);
+        setLoaded(true);
+      } catch (error) {
+        console.error("Error fetching order details:", error);
+      }
+    }
+  };
+
+  const handleClose = () => {
+    setOpen(false);
+    setSelectedOrder(null);
+    setOrderDetails([]);
+    setLoaded(false);
+  };
+
+  console.log("Orders:", orders);
+
   return (
-    <div className="mx-auto bg-white shadow-lg rounded-lg overflow-hidden">
-      <div className="flex justify-between items-center  bg-gray-100 text-xs uppercase font-semibold text-gray-600">
-        <div className="w-1/5 px-4 text-center py-2">Order Number</div>
-        <div className="w-1/5 px-4 text-center py-2">User ID</div>
-        <div className="w-1/5 px-4 text-center py-2">Date</div>
-        <div className="w-1/5 px-4 text-center py-2">Status</div>
-        <div className="w-1/5 px-4 text-center py-2">Total</div>
-        <div className="w-1/5 px-4 text-center py-2">Action</div>
-      </div>
-      {Array.isArray(data) &&
-        data.map((Orders) => (
-          <InforOrder
-            key={Orders.OrderNumber}
-            OrderNumber={Orders.OrderNumber}
-            UserID={Orders.UserID}
-            Date={Orders.Date}
-            Status={Orders.Status}
-            TotalPrice={Orders.TotalPrice}
-            Action={
-              <Button
-                variant="contained"
-                endIcon={<VisibilityIcon />}
-                sx={{
-                  height: "20%",
-                  fontSize: "13px",
-                  backgroundColor: "black",
-                  color: "white",
-                  "&:hover": {
-                    backgroundColor: "gray",
-                  },
-                }}
+    <StyledTableContainer>
+      <Table>
+        <TableHead>
+          <TableRow>
+            <StyledTableCell align="center">Order Number</StyledTableCell>
+            <StyledTableCell align="center">User ID</StyledTableCell>
+            <StyledTableCell align="center">User Name</StyledTableCell>
+            <StyledTableCell align="center">Date</StyledTableCell>
+            <StyledTableCell align="center">Status</StyledTableCell>
+            <StyledTableCell align="center">Total Price</StyledTableCell>
+            <StyledTableCell align="center">Action</StyledTableCell>
+          </TableRow>
+        </TableHead>
+        <TableBody>
+          {orders.map((order) => (
+            <StyledTableRow key={order.OrderNumber}>
+              <StyledTableCell align="center">
+                {order.OrderNumber}
+              </StyledTableCell>
+              <StyledTableCell align="center">{order.UserID}</StyledTableCell>
+              <StyledTableCell align="center">{order.UserName}</StyledTableCell>
+              <StyledTableCell align="center">{order.Date}</StyledTableCell>
+              <StyledTableCell
+                align="center"
+                style={{ color: order.StatusColor }}
               >
-                View details
-              </Button>
-            }
-          />
-        ))}
-    </div>
+                {order.Status}
+              </StyledTableCell>
+              <StyledTableCell align="center">
+                {order.TotalPrice}
+              </StyledTableCell>
+              <StyledTableCell align="center">
+                <IconButton onClick={() => handleViewDetails(order)}>
+                  <VisibilityIcon />
+                </IconButton>
+              </StyledTableCell>
+            </StyledTableRow>
+          ))}
+        </TableBody>
+      </Table>
+      {selectedOrder && (
+        <OrderDetailsDialog
+          open={open}
+          onClose={handleClose}
+          orderDetails={orderDetails}
+        />
+      )}
+    </StyledTableContainer>
   );
 };
 
-Table.propTypes = {
-  data: PropTypes.array.isRequired,
+TableOrder.propTypes = {
+  orders: PropTypes.array.isRequired,
+  OnEdit: PropTypes.func.isRequired,
 };
 
-export default Table;
+export default TableOrder;
