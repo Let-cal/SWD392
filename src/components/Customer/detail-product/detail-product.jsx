@@ -1,10 +1,11 @@
-import AddShoppingCartIcon from "@mui/icons-material/AddShoppingCart";
 import axios from "axios";
-import PropTypes from "prop-types";
-import { useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useLocation, useNavigate, useParams } from "react-router-dom";
+import { useSnackbar } from "notistack";
 import Header from "../Header/header";
 import "./detail-product.css";
+import AddShoppingCartIcon from '@mui/icons-material/AddShoppingCart';
+
 const ProductImage = ({ src, alt, index, onClick, isSelected }) => (
   <img
     className={`product-image ${isSelected ? "selected" : ""}`}
@@ -13,13 +14,11 @@ const ProductImage = ({ src, alt, index, onClick, isSelected }) => (
     onClick={() => onClick(index)}
   />
 );
-ProductImage.propTypes = {
-  src: PropTypes.string.isRequired,
-  alt: PropTypes.string.isRequired,
-  index: PropTypes.number.isRequired,
-  onClick: PropTypes.func.isRequired,
-  isSelected: PropTypes.bool.isRequired,
+
+const formatPrice = (price) => {
+  return price.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".");
 };
+
 const SimilarProduct = ({ imageSrc, name, price, product }) => {
   const navigate = useNavigate();
 
@@ -32,18 +31,13 @@ const SimilarProduct = ({ imageSrc, name, price, product }) => {
       <img className="similar-product-image" src={imageSrc} alt={name} />
       <div className="similar-product-name">{name}</div>
       <div className="similar-product-price">
-        <span className="price">{price}</span>
+        <span className="price">{formatPrice(price)}</span>
         <span className="currency">đ</span>
       </div>
     </div>
   );
 };
-SimilarProduct.propTypes = {
-  imageSrc: PropTypes.string.isRequired,
-  name: PropTypes.string.isRequired,
-  price: PropTypes.number.isRequired,
-  product: PropTypes.object.isRequired,
-};
+
 const categoryMap = {
   1: "Necklaces",
   2: "Bracelets",
@@ -76,7 +70,6 @@ const zodiacMap = {
   12: "Pisces",
 };
 
-// eslint-disable-next-line react/prop-types
 const ProductTabs = ({ activeTab, setActiveTab, product }) => {
   const renderContent = () => {
     switch (activeTab) {
@@ -120,17 +113,15 @@ const ProductTabs = ({ activeTab, setActiveTab, product }) => {
     <div>
       <div className="product-tabs">
         <div
-          className={`product-tab ${
-            activeTab === "description" ? "active" : ""
-          }`}
+          className={`product-tab ${activeTab === "description" ? "active" : ""
+            }`}
           onClick={() => setActiveTab("description")}
         >
           Information
         </div>
         <div
-          className={`product-tab ${
-            activeTab === "additional" ? "active" : ""
-          }`}
+          className={`product-tab ${activeTab === "additional" ? "active" : ""
+            }`}
           onClick={() => setActiveTab("additional")}
         >
           Product description
@@ -141,15 +132,12 @@ const ProductTabs = ({ activeTab, setActiveTab, product }) => {
     </div>
   );
 };
-ProductTabs.propTypes = {
-  activeTab: PropTypes.oneOf(["description", "additional"]).isRequired,
-  setActiveTab: PropTypes.func.isRequired,
-  product: PropTypes.object.isRequired,
-};
+
 const DetailProduct = () => {
+  const { enqueueSnackbar } = useSnackbar();
   const { id } = useParams();
   const location = useLocation();
-
+  const navigate = useNavigate();
   const [product, setProduct] = useState(location.state?.product || {});
   const [mainImageSrc, setMainImageSrc] = useState(
     product["image-urls"] ? product["image-urls"][0] : ""
@@ -158,60 +146,112 @@ const DetailProduct = () => {
   const [quantity, setQuantity] = useState(1);
   const [similarProducts, setSimilarProducts] = useState([]);
 
+  // Lấy token từ localStorage
+  const token = localStorage.getItem("token");
+
+  // Hàm lấy thông tin sản phẩm từ API
   const fetchProduct = async (productId) => {
     try {
-      const response = await axios.get(
-        `https://zodiacjewerlyswd.azurewebsites.net/api/products/${productId}`
-      );
+      const response = await axios.get(`https://zodiacjewerlyswd.azurewebsites.net/api/products/${productId}`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
       if (response.data && response.data.success && response.data.data) {
-        const productData = response.data.data;
-        setProduct(productData);
-        setMainImageSrc(productData["image-urls"][0]);
+        setProduct(response.data.data);
+        setMainImageSrc(response.data.data["image-urls"][0]);
       } else {
-        console.error(
-          "Dữ liệu sản phẩm không hợp lệ hoặc thiếu các thuộc tính cần thiết:",
-          response.data
-        );
+        console.error("Invalid response format or missing data in API response");
       }
     } catch (error) {
-      console.error("Có lỗi xảy ra khi lấy dữ liệu sản phẩm!", error);
+      console.error("Error fetching product:", error);
+    }
+  };
+
+  // Hàm lấy toàn bộ sản phẩm từ các trang
+  const fetchAllProducts = async () => {
+    try {
+      const response = await axios.get(`https://zodiacjewerlyswd.azurewebsites.net/api/products`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+      if (response.data && response.data.success && response.data.data && Array.isArray(response.data.data['list-data'])) {
+        const totalPages = response.data.data['total-page'];
+        const allProducts = [];
+
+        // Lặp qua từng trang để lấy danh sách sản phẩm
+        for (let page = 1; page <= totalPages; page++) {
+          const pageResponse = await axios.get(`https://zodiacjewerlyswd.azurewebsites.net/api/products?page=${page}&pageSize=5`, {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          });
+          if (pageResponse.data && pageResponse.data.success && Array.isArray(pageResponse.data.data['list-data'])) {
+            allProducts.push(...pageResponse.data.data['list-data']);
+          } else {
+            console.error(`Failed to fetch products for page ${page}`);
+          }
+        }
+
+        // Loại bỏ sản phẩm đang xem chi tiết
+        const viewedProductId = parseInt(id);
+        const filteredProducts = allProducts.filter(p => p.id !== viewedProductId);
+        setSimilarProducts(filteredProducts);
+      } else {
+        console.error("Invalid response format or missing data in API response");
+        setSimilarProducts([]);
+      }
+    } catch (error) {
+      console.error("Error fetching products:", error);
+      setSimilarProducts([]);
     }
   };
 
   useEffect(() => {
     fetchProduct(id);
+    fetchAllProducts();
   }, [id]);
-
-  useEffect(() => {
-    axios
-      .get("https://zodiacjewerlyswd.azurewebsites.net/api/products")
-      .then((response) => {
-        console.log("API Response:", response.data);
-        if (
-          response.data &&
-          response.data.success &&
-          Array.isArray(response.data.data)
-        ) {
-          setSimilarProducts(response.data.data);
-        } else {
-          setSimilarProducts([]);
-        }
-      })
-      .catch((error) => {
-        console.error(
-          "There was an error fetching the similar products data!",
-          error
-        );
-        setSimilarProducts([]);
-      });
-  }, []);
 
   const handleImageClick = (index) => {
     setMainImageSrc(product["image-urls"][index]);
   };
 
-  const handleAddToCart = () => {
-    console.log(`Số lượng: ${quantity}`);
+  const handleAddToCart = async () => {
+    const hint = localStorage.getItem("hint");
+    const productID = id;
+
+    for (let i = 0; i < quantity; i++) {
+      try {
+        const response = await axios.post(`https://zodiacjewerlyswd.azurewebsites.net/api/orders/${hint}/${productID}`, {}, {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
+        if (response.data && response.data.success) {
+          console.log(`Sản phẩm ${productID} đã được thêm vào giỏ hàng cho người dùng ${hint}`);
+          enqueueSnackbar("The product has been added to cart", {
+            variant: "success",
+            anchorOrigin: { horizontal: "right", vertical: "top" },
+            preventDuplicate: true,
+          });
+        } else {
+          console.error("Có lỗi xảy ra khi thêm sản phẩm vào giỏ hàng:", response.data);
+          enqueueSnackbar("An error occurred", {
+            variant: "error",
+            anchorOrigin: { horizontal: "right", vertical: "top" },
+            preventDuplicate: true,
+          });
+        }
+      } catch (error) {
+        console.error("Có lỗi xảy ra khi thêm sản phẩm vào giỏ hàng!", error);
+        enqueueSnackbar("An error occurred", {
+          variant: "error",
+          anchorOrigin: { horizontal: "right", vertical: "top" },
+          preventDuplicate: true,
+        });
+      }
+    }
   };
 
   return (
@@ -239,7 +279,7 @@ const DetailProduct = () => {
           <h1 className="product-name">{product["name-product"]}</h1>
 
           <p className="product-price">
-            <span className="price">{product.price}</span>
+            <span className="price">{formatPrice(product.price)}</span>
             <span className="currency">đ</span>
           </p>
 
@@ -254,6 +294,7 @@ const DetailProduct = () => {
               <button onClick={() => setQuantity(quantity + 1)}>+</button>
             </div>
           </div>
+
           <button className="add-to-cart-button" onClick={handleAddToCart}>
             <AddShoppingCartIcon /> ADD TO CART
           </button>
@@ -273,17 +314,15 @@ const DetailProduct = () => {
         <h2>Similar Products</h2>
         <div className="similar-products-list">
           {similarProducts.length > 0 ? (
-            similarProducts
-              .filter((similarProduct) => similarProduct.id !== product.id)
-              .map((product) => (
-                <SimilarProduct
-                  key={product.id}
-                  imageSrc={product["image-urls"][0]}
-                  name={product["name-product"]}
-                  price={product.price}
-                  product={product}
-                />
-              ))
+            similarProducts.map((product) => (
+              <SimilarProduct
+                key={product.id}
+                imageSrc={product["image-urls"][0]}
+                name={product["name-product"]}
+                price={product.price}
+                product={product}
+              />
+            ))
           ) : (
             <p>No similar products found.</p>
           )}
@@ -292,16 +331,5 @@ const DetailProduct = () => {
     </div>
   );
 };
-DetailProduct.propTypes = {
-  product: PropTypes.shape({
-    "material-id": PropTypes.number,
-    "category-id": PropTypes.number,
-    "zodiac-id": PropTypes.number,
-    "gender-id": PropTypes.number,
-    "image-urls": PropTypes.arrayOf(PropTypes.string),
-    "name-product": PropTypes.string,
-    price: PropTypes.number,
-    "description-product": PropTypes.string,
-  }),
-};
+
 export default DetailProduct;

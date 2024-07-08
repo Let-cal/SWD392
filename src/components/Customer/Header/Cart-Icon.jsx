@@ -8,6 +8,7 @@ import { styled } from "@mui/material/styles";
 import React from "react";
 import { useNavigate } from "react-router-dom";
 import ViewCart from "../StepperControllerCart/view-cart/ViewCart";
+
 const StyledBadge = styled(Badge)(({ theme }) => ({
   "& .MuiBadge-badge": {
     right: -3,
@@ -47,31 +48,44 @@ export default function CartIcon() {
       onClick={(event) => event.stopPropagation()} // Ngăn chặn sự kiện onClick lan truyền
       onKeyDown={(event) => event.stopPropagation()} // Ngăn chặn sự kiện onKeyDown lan truyền
     >
-      <List>
+      <List
+        sx={{
+          maxHeight: "calc(100vh - 136px)", // Điều chỉnh giá trị này để chừa khoảng trống cho nút khác
+          overflowY: "auto", // Cho phép cuộn dọc
+        }}
+      >
         <ViewCart />
-        <div className="mr-4 relative">
-          <Divider
-            style={{
-              backgroundColor: "black",
-            }}
-          />
-          <Button
-            className="checkout-button"
-            onClick={handleChange}
-            style={{
-              marginTop: 20,
-              color: "white",
-              backgroundColor: "black",
-              position: "absolute",
-              right: 0,
-              "&:hover": { backgroundColor: "gray" },
-            }}
-            startIcon={<ViewIcon />}
-          >
-            View Detail
-          </Button>
-        </div>
       </List>
+      <Divider
+        style={{
+          backgroundColor: "black",
+        }}
+      />
+      <Box
+        sx={{
+          display: "flex",
+          justifyContent: "flex-end", // Canh nút "View Detail" về bên phải
+          position: "sticky",
+          bottom: 0, // Đảm bảo nút "View Detail" luôn nằm ở dưới cùng
+          backgroundColor: "white",
+          padding: "10px", // Thêm khoảng đệm để nút không dính sát vào cạnh dưới
+        }}
+      >
+        <Button
+          className="checkout-button"
+          onClick={handleChange}
+          style={{
+            color: "white",
+            backgroundColor: "black",
+            fontSize: "12px", // Chỉnh kích thước chữ nhỏ lại
+            whiteSpace: "nowrap", // Đảm bảo chữ không bị xuống hàng
+            "&:hover": { backgroundColor: "gray" },
+          }}
+          startIcon={<ViewIcon />}
+        >
+          View Detail
+        </Button>
+      </Box>
     </Box>
   );
 

@@ -1,3 +1,4 @@
+import axios from "axios";
 import CancelIcon from "@mui/icons-material/Cancel";
 import CheckCircleOutlineIcon from "@mui/icons-material/CheckCircleOutline";
 import ClearIcon from "@mui/icons-material/Clear";
@@ -7,6 +8,10 @@ import PropTypes from "prop-types";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import "./ViewCart.css";
+
+const formatPrice = (price) => {
+  return price.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".");
+};
 
 const CartItem = ({
   imageSrc,
@@ -31,7 +36,9 @@ const CartItem = ({
       <div className="item-info">
         <div className="item-name">{itemName}</div>
         <div className="item-details">{itemDetails}</div>
-        <div className="item-price">${(itemPrice * itemQty).toFixed(2)}</div>
+        <div className="item-price">
+          {formatPrice(itemPrice * itemQty)}<span className="currency">đ</span>
+        </div>
       </div>
     </div>
     <div className="item-quantity">
@@ -78,46 +85,50 @@ CartItem.propTypes = {
 };
 
 function ViewCart() {
-  const [items, setItems] = useState([
-    {
-      imageSrc:
-        "https://cdn.builder.io/api/v1/image/assets/TEMP/f1bb51e07d3fec2c980222cb5a092812489e1a401e71e4917bb6ba4ecad78638?apiKey=bf5f3d3b953d4f9f9f93e548457c202f&",
-      itemName: "Lira Earrings",
-      itemDetails: "Black / Medium",
-      itemPrice: 30.0,
-      itemQty: 1,
-    },
-    {
-      imageSrc:
-        "https://cdn.builder.io/api/v1/image/assets/TEMP/b99eef8e517d6dcfb80b0c0c159f7dd0571dc4bccdc9927600b2e1239f661326?apiKey=bf5f3d3b953d4f9f9f93e548457c202f&",
-      itemName: "Ollie Earrings",
-      itemDetails: "Gold / Small",
-      itemPrice: 20.0,
-      itemQty: 1,
-    },
-    {
-      imageSrc:
-        "https://cdn.builder.io/api/v1/image/assets/TEMP/d85854aecfe81a23e7735255b6c1d788e03b9b8f46a9b90997d2ac8856a9856b?apiKey=bf5f3d3b953d4f9f9f93e548457c202f&",
-      itemName: "Kaede Hair Pin",
-      itemDetails: "Silver/ Large",
-      itemPrice: 50.0,
-      itemQty: 1,
-    },
-  ]);
-
+  const [items, setItems] = useState([]);
   const [selectedItems, setSelectedItems] = useState([]);
   const [isGetAll, setIsGetAll] = useState(true); // Initially "Get All"
   const navigate = useNavigate();
+  const userId = localStorage.getItem("hint"); // Lấy userId từ localStorage
+  const token = localStorage.getItem("token"); // Lấy token từ localStorage
+
+  const fetchCartItems = async () => {
+    try {
+      const response = await axios.get(
+        `https://zodiacjewerlyswd.azurewebsites.net/api/orders/customer/${userId}`,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+      if (response.data && response.data.success && Array.isArray(response.data.data.product)) {
+        setItems(response.data.data.product);
+      } else {
+        console.error("Dữ liệu giỏ hàng không hợp lệ hoặc thiếu các thuộc tính cần thiết:", response.data);
+      }
+    } catch (error) {
+      console.error("Có lỗi xảy ra khi lấy dữ liệu giỏ hàng!", error);
+    }
+  };
+
+  useEffect(() => {
+    fetchCartItems();
+  }, []);
 
   const handleCheck = (index) => {
     setSelectedItems((prevSelectedItems) => {
-      if (prevSelectedItems.includes(index)) {
-        // Remove item if already checked
-        return prevSelectedItems.filter((item) => item !== index);
+      const newSelectedItems = prevSelectedItems.includes(index)
+        ? prevSelectedItems.filter((item) => item !== index)
+        : [...prevSelectedItems, index];
+
+      if (newSelectedItems.length !== items.length) {
+        setIsGetAll(true);
       } else {
-        // Add item if not checked
-        return [...prevSelectedItems, index];
+        setIsGetAll(false);
       }
+
+      return newSelectedItems;
     });
   };
 
@@ -125,28 +136,35 @@ function ViewCart() {
     if (newQty < 0) return;
     setItems((prevItems) =>
       prevItems.map((item) =>
-        item.itemName === itemName ? { ...item, itemQty: newQty } : item
+        item["name-product"] === itemName ? { ...item, quantity: newQty } : item
       )
     );
   };
 
   const handleRemove = (itemName) => {
     setItems((prevItems) =>
-      prevItems.filter((item) => item.itemName !== itemName)
+      prevItems.filter((item) => item["name-product"] !== itemName)
     );
   };
 
   const calculateTotal = () => {
-    return selectedItems
-      .reduce((total, index) => {
-        const item = items[index];
-        return total + item.itemPrice * item.itemQty;
-      }, 0)
-      .toFixed(2);
+    return formatPrice(selectedItems.reduce((total, index) => {
+      const item = items[index];
+      return total + item.price * item.quantity;
+    }, 0));
   };
 
   const handleCheckout = () => {
-    const selectedProducts = selectedItems.map((index) => items[index]);
+    const selectedProducts = selectedItems.map((index) => {
+      const item = items[index];
+      return {
+        itemName: item["name-product"],
+        itemDetails: `${item["name-category"]} / ${item["name-material"]}`,
+        itemPrice: item.price,
+        itemQty: item.quantity,
+        imageSrc: item["image-url"],
+      };
+    });
     navigate("/checkout", { state: { selectedItems: selectedProducts } });
   };
 
@@ -161,17 +179,25 @@ function ViewCart() {
   };
 
   useEffect(() => {
-    calculateTotal();
-  }, [items, selectedItems]);
+    if (selectedItems.length !== items.length) {
+      setIsGetAll(true);
+    } else {
+      setIsGetAll(false);
+    }
+  }, [selectedItems, items]);
 
   return (
     <>
       <div className="shopping-cart-container mt-5">
         <section className="shopping-cart">
-          {items.map((item, index) => (
+          {Array.isArray(items) && items.map((item, index) => (
             <CartItem
               key={index}
-              {...item}
+              imageSrc={item["image-url"]}
+              itemName={item["name-product"]}
+              itemDetails={`${item["name-category"]} / ${item["name-material"]}`}
+              itemPrice={item.price}
+              itemQty={item.quantity}
               isChecked={selectedItems.includes(index)}
               onCheck={() => handleCheck(index)}
               onQtyChange={handleQtyChange}
@@ -181,7 +207,7 @@ function ViewCart() {
         </section>
         <div className="checkout-section-fixed">
           <div className="total-amount">
-            TOTAL: <span className="amount">${calculateTotal()}</span>
+            TOTAL: <span className="amount">{calculateTotal()}<span className="currency">đ</span></span>
           </div>
           <div className="flex gap-4">
             <Button

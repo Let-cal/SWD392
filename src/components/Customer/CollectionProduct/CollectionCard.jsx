@@ -1,5 +1,6 @@
 import { defineElement } from "@lordicon/element";
 import { ArrowBack, ArrowForward } from "@mui/icons-material";
+import { useNavigate } from 'react-router-dom';
 import {
   Box,
   Card,
@@ -19,6 +20,12 @@ defineElement(lottie.loadAnimation);
 
 const CollectionCard = ({ collection }) => {
   const [isHovered, setIsHovered] = useState(false);
+  const navigate = useNavigate();
+
+  const handleExpanseMore = () => {
+    navigate('/Collection', { state: { selectedCollectionId: collection.id } });
+  };
+
 
   return (
     <Card
@@ -46,15 +53,15 @@ const CollectionCard = ({ collection }) => {
         </Typography>
       </CardContent>
       <button
-        className={`flex flex-row justify-center items-center absolute Expanse-button ${
-          isHovered ? "visible" : ""
-        }`}
+        className={`flex flex-row justify-center items-center absolute Expanse-button ${isHovered ? "visible" : ""
+          }`}
         style={{
           left: "50%",
           transform: "translateX(-50%)",
         }}
+        onClick={handleExpanseMore}
       >
-        <p> Expanse more</p>
+        <p>Expanse more</p>
         <lord-icon
           src="https://cdn.lordicon.com/mfmkufkr.json"
           trigger="loop"
@@ -199,14 +206,14 @@ const CollectionsCarousel = () => {
           <TransitionGroup component={null}>
             {collections.length > 0
               ? collections.map((collection) => (
-                  <CSSTransition
-                    key={collection.id}
-                    timeout={300}
-                    classNames="slide"
-                  >
-                    <CollectionCard collection={collection} />
-                  </CSSTransition>
-                ))
+                <CSSTransition
+                  key={collection.id}
+                  timeout={300}
+                  classNames="slide"
+                >
+                  <CollectionCard collection={collection} />
+                </CSSTransition>
+              ))
               : null}
           </TransitionGroup>
         </Box>

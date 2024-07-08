@@ -27,7 +27,7 @@ function ColorTabs() {
   useEffect(() => {
     if (location.pathname === "/customer-page") {
       setValue("one");
-    } else if (location.pathname.includes("#Collection")) {
+    } else if (location.pathname.includes("/Collection")) {
       setValue("two");
     } else if (location.pathname.includes("/AboutPage")) {
       setValue("three");
@@ -78,7 +78,7 @@ function ColorTabs() {
         </ListItem>
         <ListItem button>
           <a
-            href="#Collection"
+            href="/Collection"
             onClick={(e) => {
               e.preventDefault();
               handleChange(null, "two");
@@ -167,7 +167,7 @@ function ColorTabs() {
             value="two"
             label="Collection"
             component="a"
-            href="#Collection"
+            href="/Collection"
           />
           <Tab value="three" label="About" component="a" href="/AboutPage" />
           <Tab

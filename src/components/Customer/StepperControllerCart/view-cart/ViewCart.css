@@ -37,7 +37,7 @@ body {
   margin-right: 10px;
 }
 
-.item-image {
+.cart-item .item-image {
   width: 80px;
   height: 80px;
   object-fit: cover;
@@ -45,29 +45,29 @@ body {
   margin-right: 20px;
 }
 
-.item-info {
+.cart-item .item-info {
   display: flex;
   flex-direction: column;
 }
 
-.item-name {
+.cart-item .item-name {
   font-size: 18px;
   font-weight: bold;
 }
 
-.item-details {
+.cart-item .item-details {
   font-size: 14px;
   color: #777777;
 }
 
-.item-info .item-price {
+.cart-item .item-info .item-price {
   font-size: 16px;
   color: #333333;
   font-weight: bold;
   margin-top: 5px;
 }
 
-.item-quantity {
+.cart-item .item-quantity {
   display: flex;
   align-items: center;
   gap: 40px;
