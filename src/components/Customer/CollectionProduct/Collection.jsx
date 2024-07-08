@@ -235,7 +235,7 @@ function Collection() {
               className="collection-product-item"
               onClick={() => handleProductClick(product)}
             >
-              <img src={product['image-urls'][0]['image-url']} alt={product['name-product']} />
+              <img src={product['image-urls'][0]} alt={product['name-product']} />
               <div className="product-details">
                 <h4>{product['name-product']}</h4>
                 <p>

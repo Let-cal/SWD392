@@ -84,6 +84,11 @@
   flex-direction: column;
   margin-bottom: 20px;
   border: 1px solid;
+  cursor: pointer;
+}
+
+.collection-product-item:hover {
+  opacity: 0.7;
 }
 
 .collection-product-item img {
