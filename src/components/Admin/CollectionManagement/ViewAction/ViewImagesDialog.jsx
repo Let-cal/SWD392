@@ -11,7 +11,6 @@ import {
 import { styled } from "@mui/material/styles";
 import PropTypes from "prop-types";
 
-
 const StyledGridItem = styled(Grid)(({ theme }) => ({
   display: "flex",
   justifyContent: "center",
@@ -21,10 +20,10 @@ const StyledGridItem = styled(Grid)(({ theme }) => ({
 
 const ViewImagesDialog = ({ open, onClose, imageUrls }) => {
   if (!open || !imageUrls) return null;
-
-  const handleImageClick = (imageId) => {
+  console.log(imageUrls);
+  const handleImageClick = (imageUrl) => {
     // Handle image click action here if needed
-    console.log(`Clicked image id: ${imageId}`);
+    console.log(`Clicked image url: ${imageUrl}`);
   };
 
   return (
@@ -34,12 +33,12 @@ const ViewImagesDialog = ({ open, onClose, imageUrls }) => {
         <Paper elevation={3} sx={{ padding: 2, marginBottom: 2 }}>
           <Grid container spacing={2}>
             {imageUrls.map((image, index) => (
-              <StyledGridItem item xs={6} key={index}>
+              <StyledGridItem item xs={6} key={image}>
                 <Box
                   component="img"
-                  src={image["image-url"]}
+                  src={image} // Use the image URL string directly
                   alt={`product-${index}`}
-                  onClick={() => handleImageClick(image.id)}
+                  onClick={() => handleImageClick(image)} // Use the image URL
                   sx={{
                     width: "100%",
                     aspectRatio: "1 / 1",
@@ -64,7 +63,7 @@ const ViewImagesDialog = ({ open, onClose, imageUrls }) => {
 ViewImagesDialog.propTypes = {
   open: PropTypes.bool.isRequired,
   onClose: PropTypes.func.isRequired,
-  imageUrls: PropTypes.array.isRequired,
+  imageUrls: PropTypes.array,
 };
 
 export default ViewImagesDialog;

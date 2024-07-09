@@ -1,8 +1,4 @@
-import React, { useState, useEffect } from 'react';
-import { useLocation, useNavigate } from 'react-router-dom';
-import axios from 'axios';
 import TuneIcon from "@mui/icons-material/Tune";
-import Header from '../Header/header';
 import {
   Box,
   Button,
@@ -16,22 +12,28 @@ import {
   RadioGroup,
   Select,
 } from "@mui/material";
+import axios from "axios";
+import { useEffect, useState } from "react";
+import { useLocation, useNavigate } from "react-router-dom";
+import Header from "../Header/header";
 import "./Collection.css"; // Import CSS file specific to Collection component
 
 function Collection() {
   const [collections, setCollections] = useState([]);
-  const [token, setToken] = useState('');
+  const [token, setToken] = useState("");
   const [anchorEl, setAnchorEl] = useState(null);
   const [category, setCategory] = useState("");
   const [material, setMaterial] = useState("");
   const [selectedCollectionId, setSelectedCollectionId] = useState(null);
-  const [selectedCollectionProducts, setSelectedCollectionProducts] = useState([]);
+  const [selectedCollectionProducts, setSelectedCollectionProducts] = useState(
+    []
+  );
   const open = Boolean(anchorEl);
   const location = useLocation();
   const navigate = useNavigate();
 
   useEffect(() => {
-    const userToken = localStorage.getItem('token');
+    const userToken = localStorage.getItem("token");
     if (userToken) {
       setToken(userToken);
     }
@@ -40,18 +42,21 @@ function Collection() {
   useEffect(() => {
     const fetchCollections = async () => {
       try {
-        const response = await axios.get('https://zodiacjewerlyswd.azurewebsites.net/api/collections?page=1&pageSize=8&sort=id', {
-          headers: {
-            Authorization: `Bearer ${token}`
+        const response = await axios.get(
+          "https://zodiacjewerlyswd.azurewebsites.net/api/collections?page=1&pageSize=8&sort=id",
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
           }
-        });
+        );
         if (response.data.success) {
           setCollections(response.data.data.data);
         } else {
-          console.error('Error fetching collections:', response.data.message);
+          console.error("Error fetching collections:", response.data.message);
         }
       } catch (error) {
-        console.error('Error fetching collections:', error);
+        console.error("Error fetching collections:", error);
       }
     };
 
@@ -84,20 +89,26 @@ function Collection() {
 
   const handleCollectionClick = async (collectionId) => {
     try {
-      const response = await axios.get(`https://zodiacjewerlyswd.azurewebsites.net/api/collections/${collectionId}`, {
-        headers: {
-          Authorization: `Bearer ${token}`
+      const response = await axios.get(
+        `https://zodiacjewerlyswd.azurewebsites.net/api/collections/${collectionId}`,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
         }
-      });
+      );
       if (response.data.success) {
         setSelectedCollectionId(collectionId);
         setSelectedCollectionProducts(response.data.data.products);
-        console.log('Products:', response.data.data.products); // Log products to check
+        console.log("Products:", response.data.data.products); // Log products to check
       } else {
-        console.error('Error fetching collection products:', response.data.message);
+        console.error(
+          "Error fetching collection products:",
+          response.data.message
+        );
       }
     } catch (error) {
-      console.error('Error fetching collection products:', error);
+      console.error("Error fetching collection products:", error);
     }
   };
 
@@ -107,7 +118,7 @@ function Collection() {
 
   // Function to format price
   const formatPrice = (price) => {
-    return price.toLocaleString('vi-VN');
+    return price.toLocaleString("vi-VN");
   };
 
   return (
@@ -115,17 +126,26 @@ function Collection() {
       <Header />
       <div className="collection-container">
         <div className="collection-grid">
-          {collections.map(collection => (
+          {collections.map((collection) => (
             <div
               key={collection.id}
-              className={`collection-item ${selectedCollectionId === collection.id ? 'selected' : ''}`}
+              className={`collection-item ${
+                selectedCollectionId === collection.id ? "selected" : ""
+              }`}
               onClick={() => handleCollectionClick(collection.id)}
             >
-              <img src={collection['image-collection']} alt={collection['name-collection']} />
+              <img
+                src={collection["image-collection"]}
+                alt={collection["name-collection"]}
+              />
               <div className="collection-details">
-                <h2>{collection['name-collection']}</h2>
-                <p><strong>Open:</strong> {collection['date-open']}</p>
-                <p><strong>Close:</strong> {collection['date-close']}</p>
+                <h2>{collection["name-collection"]}</h2>
+                <p>
+                  <strong>Open:</strong> {collection["date-open"]}
+                </p>
+                <p>
+                  <strong>Close:</strong> {collection["date-close"]}
+                </p>
               </div>
             </div>
           ))}
@@ -133,7 +153,7 @@ function Collection() {
 
         <h2>
           <span className="flex justify-between items-end font-serif">
-            Dealing Collections
+            Hotting Collections
             <div>
               <Button
                 id="basic-button"
@@ -187,7 +207,10 @@ function Collection() {
                         />
                       </RadioGroup>
                     </FormControl>
-                    <FormControl variant="standard" sx={{ m: 1, minWidth: 120 }}>
+                    <FormControl
+                      variant="standard"
+                      sx={{ m: 1, minWidth: 120 }}
+                    >
                       <InputLabel id="demo-simple-select-standard-label">
                         Category
                       </InputLabel>
@@ -208,7 +231,10 @@ function Collection() {
                         <MenuItem value={5}>T-shirt</MenuItem>
                       </Select>
                     </FormControl>
-                    <FormControl variant="standard" sx={{ m: 1, minWidth: 120 }}>
+                    <FormControl
+                      variant="standard"
+                      sx={{ m: 1, minWidth: 120 }}
+                    >
                       <InputLabel id="demo-simple-select-standard-label">
                         Material
                       </InputLabel>
@@ -238,17 +264,20 @@ function Collection() {
 
         {selectedCollectionId && (
           <div className="collection-selected-products">
-            {selectedCollectionProducts.map(product => (
+            {selectedCollectionProducts.map((product) => (
               <div
                 key={product.id}
                 className="collection-product-item"
                 onClick={() => handleProductClick(product)}
               >
-                <img src={product['image-urls'][0]} alt={product['name-product']} />
+                <img
+                  src={product["image-urls"][0]}
+                  alt={product["name-product"]}
+                />
                 <div className="product-details">
-                  <h4>{product['name-product']}</h4>
+                  <h4>{product["name-product"]}</h4>
                   <p>
-                    {formatPrice(product['price'])}
+                    {formatPrice(product["price"])}
                     <span>đ</span>
                   </p>
                 </div>

@@ -25,8 +25,10 @@ const EditImage = ({ productId, onGetAll }) => {
   const [loading, setLoading] = useState(false);
   const token = localStorage.getItem("token");
   const pageSize = 4;
-  const fileInputRef = useRef(null); // Ref for file input
+  const fileInputRef = useRef(null);
+  const fileInputUpdateRef = useRef(null); // Separate ref for update file input
   const API_BASE_URL = "https://zodiacjewerlyswd.azurewebsites.net";
+
   const fetchImages = async () => {
     try {
       setLoading(true);
@@ -73,11 +75,10 @@ const EditImage = ({ productId, onGetAll }) => {
 
     try {
       setUploading(true);
-      setLoading(true); // Set loading to true for the entire dialog
+      setLoading(true);
       await axios.post(
         `${API_BASE_URL}/api/products/${productId}/images`,
         formData,
-
         {
           headers: {
             "Content-Type": "multipart/form-data",
@@ -92,24 +93,23 @@ const EditImage = ({ productId, onGetAll }) => {
       console.error("Error uploading images:", error);
       swal("Error!", "Failed to upload image.", "error");
     } finally {
-      setLoading(false); // Set loading to false when operation completes
+      setLoading(false);
       setUploading(false);
     }
   };
 
   const handleImageClick = (imageId) => {
     if (!uploading) {
-      const fileInput = fileInputRef.current;
+      const fileInput = fileInputUpdateRef.current;
       if (fileInput) {
         fileInput.onchange = async (event) => {
           const file = event.target.files[0];
           if (file) {
             const formData = new FormData();
             formData.append("file", file);
-            const token = localStorage.getItem("token");
             try {
               setUploading(true);
-              setLoading(true); // Set loading to true for the entire dialog
+              setLoading(true);
               await axios.put(
                 `${API_BASE_URL}/api/products/${productId}/images/${imageId}`,
                 formData,
@@ -127,12 +127,12 @@ const EditImage = ({ productId, onGetAll }) => {
               console.error("Error updating image:", error);
               swal("Error!", "Failed to update image.", "error");
             } finally {
-              setLoading(false); // Set loading to false when operation completes
+              setLoading(false);
               setUploading(false);
             }
           }
         };
-        fileInput.click(); // Trigger file input dialog
+        fileInput.click();
       }
     }
   };
@@ -171,6 +171,11 @@ const EditImage = ({ productId, onGetAll }) => {
             onChange={handleUpload}
             style={{ display: "none" }}
             ref={fileInputRef}
+          />
+          <input
+            type="file"
+            style={{ display: "none" }}
+            ref={fileInputUpdateRef}
           />
         </DialogTitle>
 

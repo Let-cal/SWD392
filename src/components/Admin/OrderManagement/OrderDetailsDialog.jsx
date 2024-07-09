@@ -54,7 +54,7 @@ const OrderDetailsDialog = ({ open, onClose, orderDetails }) => {
           <Table>
             <TableHead>
               <TableRow>
-                <StyledTableCell>Product ID</StyledTableCell>
+                <StyledTableCell>ID</StyledTableCell>
                 <StyledTableCell>Zodiac Name</StyledTableCell>
                 <StyledTableCell>Product Name</StyledTableCell>
                 <StyledTableCell>Description</StyledTableCell>
@@ -105,7 +105,6 @@ const OrderDetailsDialog = ({ open, onClose, orderDetails }) => {
 OrderDetailsDialog.propTypes = {
   open: PropTypes.bool.isRequired,
   onClose: PropTypes.func.isRequired,
-  order: PropTypes.object.isRequired,
   orderDetails: PropTypes.array.isRequired,
 };
 

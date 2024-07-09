@@ -1,39 +1,48 @@
+import { Grid, MenuItem, Pagination, Select } from "@mui/material";
 import { format } from "date-fns";
 import PropTypes from "prop-types";
 import { useEffect, useState } from "react";
 import ProfileContent from "./MyOrderedTable";
+
 const AccountOrders = ({ status }) => {
   const [ordersData, setOrdersData] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [page, setPage] = useState(1);
+  const [pageSize, setPageSize] = useState(5);
+  const [totalPages, setTotalPages] = useState(1);
+  const token = localStorage.getItem("token");
+  const userHint = localStorage.getItem("hint");
+  const sort = userHint || 8; // Default to 8 if no hint is found
 
   useEffect(() => {
     const fetchOrders = async () => {
+      setLoading(true);
       try {
         const response = await fetch(
-          "https://zodiacjewerly.azurewebsites.net/api/orders",
+          `https://zodiacjewerlyswd.azurewebsites.net/api/orders?page=${page}&pageSize=${pageSize}&sort=${sort}`,
           {
             method: "GET",
             headers: {
               accept: "*/*",
+              Authorization: `Bearer ${token}`,
             },
           }
         );
         const result = await response.json();
         if (result.success) {
-          const userHint = localStorage.getItem("hint");
-          const filteredOrders = result.data
+          const filteredOrders = result.data["list-data"]
             .filter(
               (order) =>
                 order["user-id"] == userHint &&
                 getStatusText(order.status) === status
             )
             .map((order) => ({
-              orderNumber: order.id.toString(), // Chuyển đổi thành chuỗi
-              date: format(new Date(order["payment-date"]), "dd/MM/yyyy HH:mm"), // Định dạng ngày
+              orderNumber: order.id.toString(), // Convert to string
+              date: format(new Date(order["payment-date"]), "dd/MM/yyyy HH:mm"), // Format date
               status: getStatusText(order.status),
-              total: calculateTotal(order), // Giả sử bạn có logic để tính toán tổng giá trị đơn hàng
             }));
           setOrdersData(filteredOrders);
+          setTotalPages(result.data["total-page"]); // Set total pages from API response
         }
       } catch (error) {
         console.error("Error fetching orders:", error);
@@ -43,7 +52,7 @@ const AccountOrders = ({ status }) => {
     };
 
     fetchOrders();
-  }, [status]);
+  }, [status, page, pageSize, sort]);
 
   const getStatusText = (status) => {
     switch (status) {
@@ -58,14 +67,51 @@ const AccountOrders = ({ status }) => {
     }
   };
 
-  const calculateTotal = () => {
-    // Logic để tính tổng giá trị đơn hàng, nếu có
-    return "0"; // Giả sử mặc định là 0
+  const handlePageChange = (event, value) => {
+    setPage(value);
   };
 
-  return <ProfileContent orders={ordersData} loading={loading} />;
+  const handlePageSizeChange = (event) => {
+    setPageSize(Number(event.target.value));
+    setPage(1); // Reset to first page when page size changes
+  };
+
+  return (
+    <>
+      <ProfileContent orders={ordersData} loading={loading} />
+      <Grid container justifyContent="space-between" alignItems="center" mt={2}>
+        <Pagination
+          count={totalPages}
+          page={page}
+          onChange={handlePageChange}
+          showFirstButton
+          showLastButton
+          sx={{
+            "& .MuiPaginationItem-root.Mui-selected": {
+              backgroundColor: "#b2b251",
+              color: "#fff",
+            },
+          }}
+        />
+        <Select
+          value={pageSize}
+          onChange={handlePageSizeChange}
+          displayEmpty
+          inputProps={{ "aria-label": "Without label" }}
+          size="small"
+          sx={{ minWidth: 120 }}
+        >
+          <MenuItem value={5}>5 per page</MenuItem>
+          <MenuItem value={10}>10 per page</MenuItem>
+          <MenuItem value={15}>15 per page</MenuItem>
+        </Select>
+      </Grid>
+    </>
+  );
 };
+
 AccountOrders.propTypes = {
   status: PropTypes.string.isRequired,
 };
+
 export default AccountOrders;

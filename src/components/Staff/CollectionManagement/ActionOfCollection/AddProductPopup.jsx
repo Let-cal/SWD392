@@ -22,24 +22,42 @@ const AddProductPopup = ({
   onAddProduct,
   allProducts,
   AddThenViewProduct,
+  selectedProducts,
 }) => {
-  const [products, setProducts] = useState([]);
+  const [filteredProducts, setFilteredProducts] = useState([]);
+  const [displayedProducts, setDisplayedProducts] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [page, setPage] = useState(1);
   const [pageSize, setPageSize] = useState(5);
   const [totalPages, setTotalPages] = useState(1);
   const token = localStorage.getItem("token");
+
   useEffect(() => {
     if (open) {
-      // Calculate pagination based on the number of allProducts
-      const start = (page - 1) * pageSize;
-      const end = start + pageSize;
-      setProducts(allProducts.slice(start, end));
-      setTotalPages(Math.ceil(allProducts.length / pageSize));
+      // Filter out selected products
+      console.log("Selected Products:", selectedProducts); // Log selected products
+      const productsToAdd = allProducts.filter(
+        (product) =>
+          !selectedProducts.find(
+            (selectedProduct) => selectedProduct.id === product.id
+          )
+      );
+
+      setFilteredProducts(productsToAdd);
       setLoading(false);
     }
-  }, [open, page, pageSize, allProducts]);
+  }, [open, allProducts, selectedProducts]);
+
+  useEffect(() => {
+    if (!loading) {
+      // Calculate pagination based on the filtered products
+      const start = (page - 1) * pageSize;
+      const end = start + pageSize;
+      setDisplayedProducts(filteredProducts.slice(start, end));
+      setTotalPages(Math.ceil(filteredProducts.length / pageSize));
+    }
+  }, [page, pageSize, filteredProducts, loading]);
 
   const handlePageChange = (event, value) => {
     setPage(value);
@@ -89,7 +107,7 @@ const AddProductPopup = ({
         ) : (
           <>
             <TableProduct
-              products={products}
+              products={displayedProducts}
               onAddProduct={handleAddProduct}
               showAddButton
             />
@@ -144,6 +162,7 @@ AddProductPopup.propTypes = {
   onAddProduct: PropTypes.func.isRequired,
   AddThenViewProduct: PropTypes.func.isRequired,
   allProducts: PropTypes.array.isRequired,
+  selectedProducts: PropTypes.array.isRequired,
 };
 
 export default AddProductPopup;

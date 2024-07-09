@@ -48,7 +48,9 @@ const ListItemButtons = ({
     fetchAllProducts();
   }, []);
 
-  const handleViewProducts = async (collectionId) => {
+  // View products in collection
+  // Fetch products for a specific collection
+  const fetchCollectionProducts = async (collectionId) => {
     try {
       const token = localStorage.getItem("token");
       const response = await fetch(
@@ -63,16 +65,24 @@ const ListItemButtons = ({
       if (!response.ok) {
         throw new Error("Failed to fetch products.");
       }
+
       const data = await response.json();
       const products = data.data.products;
-      if (products.length === 0) {
-        swal("No Products", "This collection has no products.", "warning");
-      } else {
-        setSelectedProducts(products);
-        setViewProductsOpen(true);
-      }
+      setSelectedProducts(products);
+      return products;
     } catch (error) {
       console.error("Error fetching products:", error);
+      return [];
+    }
+  };
+
+  // View products in collection
+  const handleViewProducts = async (collectionId) => {
+    const products = await fetchCollectionProducts(collectionId);
+    if (products.length === 0) {
+      swal("No Products", "This collection has no products.", "warning");
+    } else {
+      setViewProductsOpen(true);
     }
   };
 
@@ -128,7 +138,8 @@ const ListItemButtons = ({
     }
   };
 
-  const handleAddProductClick = () => {
+  const handleAddProductClick = async () => {
+    await fetchCollectionProducts(collectionId);
     setPopupOpen(true);
     handleClose();
   };
@@ -272,6 +283,7 @@ const ListItemButtons = ({
         onAddProduct={handleAddProduct}
         allProducts={allProducts}
         AddThenViewProduct={handleViewProducts}
+        selectedProducts={selectedProducts}
       />
     </>
   );

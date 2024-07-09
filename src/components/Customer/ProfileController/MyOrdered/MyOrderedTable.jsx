@@ -1,9 +1,50 @@
-// ProfileContent.jsx
 import VisibilityIcon from "@mui/icons-material/Visibility";
-import Button from "@mui/material/Button";
+import {
+  IconButton,
+  Table,
+  TableBody,
+  TableCell,
+  TableContainer,
+  TableHead,
+  TableRow,
+  tableCellClasses,
+} from "@mui/material";
+import { styled } from "@mui/material/styles";
+import Axios from "axios";
 import PropTypes from "prop-types";
+import { useState } from "react";
+import OrderDetailsDialog from "../../../Admin/OrderManagement/OrderDetailsDialog";
+const StyledTableCell = styled(TableCell)(({ theme }) => ({
+  [`&.${tableCellClasses.head}`]: {
+    backgroundColor: theme.palette.common.black,
+    color: theme.palette.common.white,
+  },
+  [`&.${tableCellClasses.body}`]: {
+    fontSize: 14,
+    transition: "background-color 0.3s ease, transform 0.3s ease",
+  },
+}));
 
-const ProfileContent = ({ className = "", orders = [], loading }) => {
+const StyledTableRow = styled(TableRow)(({ theme }) => ({
+  "&:nth-of-type(odd)": {
+    backgroundColor: theme.palette.action.hover,
+  },
+  "&:hover": {
+    backgroundColor: theme.palette.action.selected,
+    transform: "scale(1.01)",
+    transition: "background-color 0.3s ease, transform 0.3s ease",
+    boxShadow: "0 4px 8px rgba(0, 0, 0, 0.1)",
+  },
+  "&:last-child td, &:last-child th": {
+    border: 0,
+  },
+}));
+
+const StyledTableContainer = styled(TableContainer)(() => ({
+  overflow: "hidden",
+}));
+
+const ProfileContent = ({ orders = [], loading }) => {
   const statusClasses = {
     COMPLETED: "text-green-600 font-bold",
     PROCESSING: "text-yellow-600 font-bold",
@@ -11,81 +52,100 @@ const ProfileContent = ({ className = "", orders = [], loading }) => {
   };
 
   const showOrdersTable = orders.length > 0;
+  const [open, setOpen] = useState(false);
+  const [selectedOrder, setSelectedOrder] = useState(null);
+  const [orderDetails, setOrderDetails] = useState([]);
+  const [loaded, setLoaded] = useState(false);
+  const API_BASE_URL = "https://zodiacjewerlyswd.azurewebsites.net/api/orders";
+  const handleViewDetails = async (order) => {
+    setSelectedOrder(order);
+    setOpen(true);
+
+    if (!loaded) {
+      try {
+        const token = localStorage.getItem("token");
+        const UserId = localStorage.getItem("hint");
+        const response = await Axios.get(`${API_BASE_URL}/customer/${UserId}`, {
+          headers: {
+            Authorization: `Bearer ${token}`,
+            accept: "*/*",
+          },
+        });
+        setOrderDetails(response.data.data.product);
+        setLoaded(true);
+      } catch (error) {
+        console.error("Error fetching order details:", error);
+        if (error.response) {
+          // Server responded with a status other than 200 range
+          console.error("Response data:", error.response.data);
+          console.error("Response status:", error.response.status);
+          console.error("Response headers:", error.response.headers);
+        } else if (error.request) {
+          // Request was made but no response was received
+          console.error("Request data:", error.request);
+        } else {
+          // Something happened in setting up the request that triggered an Error
+          console.error("Error message:", error.message);
+        }
+      }
+    }
+  };
+  const handleClose = () => {
+    setOpen(false);
+    setSelectedOrder(null);
+    setOrderDetails([]);
+    setLoaded(false);
+  };
 
   return (
     <div>
       {loading ? (
         <div>Loading...</div>
       ) : showOrdersTable ? (
-        <section
-          className={`w-[100%] flex flex-col items-start justify-start pt-0 pb-[116px] pr-0 pl-[3px] box-border max-w-full text-left text-xl text-light-colors-dark-gray-light font-px-heading-5 mq450:pb-[75px] mq450:box-border ${className}`}
-        >
-          <div className="Table-ordered w-full flex flex-col items-start justify-start gap-[27px] max-w-full">
-            <div className="self-stretch flex flex-col items-start justify-start gap-[16px] max-w-full text-base">
-              <div className="w-full flex flex-row items-center justify-between gap-[20px] max-w-full text-light-colors-black-light mq450:flex-wrap bg-gray-100 p-4 rounded-lg shadow-sm">
-                <div className="flex-1 flex flex-col font-sans  text-center justify-start relative leading-[27px] font-semibold">
-                  ORDER NUMBER
-                </div>
-                <div className="flex-1 flex flex-col font-sans  text-center justify-start relative leading-[27px] font-semibold">
-                  DATE
-                </div>
-                <div className="flex-1 flex flex-col font-sans  text-center justify-start relative leading-[27px] font-semibold">
-                  STATUS
-                </div>
-                <div className="flex-1 flex flex-col font-sans  text-center justify-start relative leading-[27px] font-semibold">
-                  TOTAL
-                </div>
-                <div className="flex-1 flex flex-col  font-sans text-center justify-start relative leading-[27px] font-semibold">
-                  ACTIONS
-                </div>
-              </div>
-
+        <StyledTableContainer>
+          <Table>
+            <TableHead>
+              <TableRow>
+                <StyledTableCell align="center">Order Number</StyledTableCell>
+                <StyledTableCell align="center">Date</StyledTableCell>
+                <StyledTableCell align="center">Status</StyledTableCell>
+                <StyledTableCell align="center">Total</StyledTableCell>
+                <StyledTableCell align="center">Actions</StyledTableCell>
+              </TableRow>
+            </TableHead>
+            <TableBody>
               {orders.map((order, index) => (
-                <div
-                  key={index}
-                  className="w-full flex flex-row items-center justify-between gap-[20px] max-w-full p-4 bg-white shadow-md rounded-lg hover:bg-gray-200 transition-colors duration-200"
-                >
-                  <div className="flex-1 flex flex-col text-center justify-start">
-                    <div className="relative leading-[27px]">
-                      {order.orderNumber}
-                    </div>
-                  </div>
-                  <div className="flex-1 relative text-center leading-[27px]">
-                    {order.date}
-                  </div>
-                  <div
-                    className={`flex-1 flex flex-col  text-center justify-start ${
-                      statusClasses[order.status]
-                    }`}
+                <StyledTableRow key={index}>
+                  <StyledTableCell align="center">
+                    {order.orderNumber}
+                  </StyledTableCell>
+                  <StyledTableCell align="center">{order.date}</StyledTableCell>
+                  <StyledTableCell
+                    align="center"
+                    className={statusClasses[order.status]}
                   >
-                    <div className="relative font-sans leading-[27px]">
-                      {order.status}
-                    </div>
-                  </div>
-                  <div className="flex-1 flex flex-col text-center justify-start">
-                    <div className="relative leading-[27px]">{order.total}</div>
-                  </div>
-                  <div className="flex-1 flex flex-col text-center items-center justify-start text-light-colors-accent-light">
-                    <Button
-                      variant="contained"
-                      endIcon={<VisibilityIcon />}
-                      sx={{
-                        backgroundColor: "black",
-                        width: "70%",
-                        color: "white",
-                        "&:hover": {
-                          backgroundColor: "gray",
-                        },
-                      }}
-                    >
-                      View details
-                    </Button>
-                  </div>
-                </div>
+                    {order.status}
+                  </StyledTableCell>
+                  <StyledTableCell align="center">
+                    {order.total}
+                  </StyledTableCell>
+                  <StyledTableCell align="center">
+                    <IconButton onClick={() => handleViewDetails(order)}>
+                      <VisibilityIcon />
+                    </IconButton>
+                  </StyledTableCell>
+                </StyledTableRow>
               ))}
-            </div>
-          </div>
-        </section>
+            </TableBody>
+          </Table>
+          {selectedOrder && (
+            <OrderDetailsDialog
+              open={open}
+              onClose={handleClose}
+              orderDetails={orderDetails}
+            />
+          )}
+        </StyledTableContainer>
       ) : (
         <div className="self-stretch bg-light-colors-light-gray-light flex flex-col items-end justify-start pt-px px-0 pb-[21px] box-border gap-[17px] max-w-full text-base text-light-colors-black-light">
           <div className="self-stretch h-[68px] relative bg-light-colors-light-gray-light hidden" />

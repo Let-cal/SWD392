@@ -48,7 +48,9 @@ export default function ProfileColorTabs() {
 
   return (
     <Box sx={{ width: "auto" }}>
-      <Box sx={{ borderBottom: 1, borderColor: "divider" }}>
+      <Box
+        sx={{ borderBottom: 1, borderColor: "divider", marginBottom: "30px" }}
+      >
         <Tabs
           value={value}
           onChange={handleChange}

@@ -195,7 +195,7 @@ const EditCollectionDialog = ({ open, onClose, collection, onSave }) => {
 EditCollectionDialog.propTypes = {
   open: PropTypes.bool.isRequired,
   onClose: PropTypes.func.isRequired,
-  collection: PropTypes.object.isRequired,
+  collection: PropTypes.number.isRequired,
   onSave: PropTypes.func.isRequired,
 };
 

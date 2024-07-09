@@ -157,7 +157,7 @@ const ViewCollectionDialog = ({ open, onClose, collection }) => {
 ViewCollectionDialog.propTypes = {
   open: PropTypes.bool.isRequired,
   onClose: PropTypes.func.isRequired,
-  collection: PropTypes.object,
+  collection: PropTypes.number,
 };
 
 const ImageModal = ({ open, onClose, imageSrc }) => {

@@ -1,6 +1,5 @@
 import { defineElement } from "@lordicon/element";
 import { ArrowBack, ArrowForward } from "@mui/icons-material";
-import { useNavigate } from 'react-router-dom';
 import {
   Box,
   Card,
@@ -14,6 +13,7 @@ import lottie from "lottie-web";
 import { useSnackbar } from "notistack";
 import PropTypes from "prop-types";
 import { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { CSSTransition, TransitionGroup } from "react-transition-group";
 import "./carousel.css"; // Import CSS file for managing animation effects
 defineElement(lottie.loadAnimation);
@@ -23,9 +23,8 @@ const CollectionCard = ({ collection }) => {
   const navigate = useNavigate();
 
   const handleExpanseMore = () => {
-    navigate('/Collection', { state: { selectedCollectionId: collection.id } });
+    navigate("/Collection", { state: { selectedCollectionId: collection.id } });
   };
-
 
   return (
     <Card
@@ -53,8 +52,9 @@ const CollectionCard = ({ collection }) => {
         </Typography>
       </CardContent>
       <button
-        className={`flex flex-row justify-center items-center absolute Expanse-button ${isHovered ? "visible" : ""
-          }`}
+        className={`flex flex-row justify-center items-center absolute Expanse-button ${
+          isHovered ? "visible" : ""
+        }`}
         style={{
           left: "50%",
           transform: "translateX(-50%)",
@@ -76,6 +76,7 @@ const CollectionCard = ({ collection }) => {
 
 CollectionCard.propTypes = {
   collection: PropTypes.shape({
+    id: PropTypes.number.isRequired,
     "image-collection": PropTypes.string.isRequired,
     "name-collection": PropTypes.string.isRequired,
   }).isRequired,
@@ -161,7 +162,7 @@ const CollectionsCarousel = () => {
       <Box sx={{ width: "100%", mb: 4 }}>
         <h2>
           <span className="flex justify-between items-end font-serif">
-            Dealing Collections
+            Hotting Collections
           </span>
           <div className="shrink-0 mt-2.5 h-px bg-black border border-black border-solid font-serif"></div>
         </h2>
@@ -206,14 +207,14 @@ const CollectionsCarousel = () => {
           <TransitionGroup component={null}>
             {collections.length > 0
               ? collections.map((collection) => (
-                <CSSTransition
-                  key={collection.id}
-                  timeout={300}
-                  classNames="slide"
-                >
-                  <CollectionCard collection={collection} />
-                </CSSTransition>
-              ))
+                  <CSSTransition
+                    key={collection.id}
+                    timeout={300}
+                    classNames="slide"
+                  >
+                    <CollectionCard collection={collection} />
+                  </CSSTransition>
+                ))
               : null}
           </TransitionGroup>
         </Box>
