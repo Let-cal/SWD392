@@ -31,7 +31,7 @@ function OrdersManagement() {
     let url = `https://zodiacjewerlyswd.azurewebsites.net/api/orders?page=${page}&pageSize=${pageSize}&sort=8`;
 
     if (status !== "All") {
-      url += `&filter=${getStatusValue(status)}`;
+      url += `&status=${getStatusValue(status)}`;
     }
     const token = localStorage.getItem("token");
     console.log("Fetching orders from:", url);

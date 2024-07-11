@@ -1,6 +1,6 @@
-import VisibilityIcon from "@mui/icons-material/Visibility";
+import { Edit } from "@mui/icons-material";
 import {
-  Button,
+  IconButton,
   Paper,
   Table,
   TableBody,
@@ -83,22 +83,9 @@ const TableZodiac = ({ data, onUpdate }) => {
                 {zodiac["des-zodiac"]}
               </StyledTableCell>
               <StyledTableCell align="center">
-                <Button
-                  variant="contained"
-                  endIcon={<VisibilityIcon />}
-                  sx={{
-                    height: "20%",
-                    fontSize: "13px",
-                    backgroundColor: "black",
-                    color: "white",
-                    "&:hover": {
-                      backgroundColor: "gray",
-                    },
-                  }}
-                  onClick={() => handleViewDetails(zodiac)}
-                >
-                  View details
-                </Button>
+                <IconButton onClick={() => handleViewDetails(zodiac)}>
+                  <Edit />
+                </IconButton>
               </StyledTableCell>
             </StyledTableRow>
           ))}

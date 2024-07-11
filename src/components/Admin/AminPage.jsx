@@ -56,6 +56,7 @@ function AdminPage() {
         className={`sidebar-container ${isSidebarCollapsed ? "collapsed" : ""}`}
       >
         <Sidebar
+          selectedContent={selectedContent}
           setSelectedContent={handleSidebarSelection}
           setIsSidebarCollapsed={setIsSidebarCollapsed}
         />

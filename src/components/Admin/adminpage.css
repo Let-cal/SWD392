@@ -5,6 +5,20 @@
 .sidebar-container.collapsed {
   width: 80px;
 }
+.sidebar-container {
+  border-right: 2px solid #000;
+  transition: all 0.3s ease-in-out;
+}
+
+.sidebar-container {
+  /* Modern border styling */
+  border-right-width: 3px;
+  border-right-style: solid;
+  border-right-color: transparent;
+  background: linear-gradient(to bottom, #ffffff, #f1f1f1);
+  box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
+  border-radius: 0 10px 10px 0;
+}
 
 .content-container {
   transition: width 0.2s ease;

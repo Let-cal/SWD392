@@ -10,7 +10,11 @@ import PropTypes from "prop-types";
 import { useEffect, useState } from "react";
 import "./sidebar.css";
 
-function Sidebar({ setSelectedContent, setIsSidebarCollapsed }) {
+function Sidebar({
+  selectedContent,
+  setSelectedContent,
+  setIsSidebarCollapsed,
+}) {
   const [isCollapsed, setIsCollapsed] = useState(true);
   const [showText, setShowText] = useState(false);
 
@@ -43,7 +47,10 @@ function Sidebar({ setSelectedContent, setIsSidebarCollapsed }) {
       </div>
       <Divider />
       <ul className="sidebar-nav">
-        <li onClick={() => setSelectedContent("HomePage")}>
+        <li
+          onClick={() => setSelectedContent("HomePage")}
+          className={selectedContent === "HomePage" ? "active" : ""}
+        >
           <a>
             <HomeIcon />
             <span className={`text-Admin ${showText ? "show" : ""}`}>
@@ -52,7 +59,10 @@ function Sidebar({ setSelectedContent, setIsSidebarCollapsed }) {
             </span>
           </a>
         </li>
-        <li onClick={() => setSelectedContent("OrdersManagement")}>
+        <li
+          onClick={() => setSelectedContent("OrdersManagement")}
+          className={selectedContent === "OrdersManagement" ? "active" : ""}
+        >
           <a>
             <ManageSearchIcon />
             <span className={`text-Admin ${showText ? "show" : ""}`}>
@@ -61,7 +71,10 @@ function Sidebar({ setSelectedContent, setIsSidebarCollapsed }) {
             </span>
           </a>
         </li>
-        <li onClick={() => setSelectedContent("ProductsManagement")}>
+        <li
+          onClick={() => setSelectedContent("ProductsManagement")}
+          className={selectedContent === "ProductsManagement" ? "active" : ""}
+        >
           <a>
             <ShoppingBagIcon />
             <span className={`text-Admin ${showText ? "show" : ""}`}>
@@ -70,7 +83,12 @@ function Sidebar({ setSelectedContent, setIsSidebarCollapsed }) {
             </span>
           </a>
         </li>
-        <li onClick={() => setSelectedContent("CollectionsManagement")}>
+        <li
+          onClick={() => setSelectedContent("CollectionsManagement")}
+          className={
+            selectedContent === "CollectionsManagement" ? "active" : ""
+          }
+        >
           <a>
             <LibraryBooksIcon />
             <span className={`text-Admin ${showText ? "show" : ""}`}>
@@ -80,7 +98,10 @@ function Sidebar({ setSelectedContent, setIsSidebarCollapsed }) {
           </a>
         </li>
         <Divider />
-        <li onClick={() => setSelectedContent("ZodiacManagement")}>
+        <li
+          onClick={() => setSelectedContent("ZodiacManagement")}
+          className={selectedContent === "ZodiacManagement" ? "active" : ""}
+        >
           <a className="gap-[13px]">
             <img
               className={`zodiac-icon ${isCollapsed ? "collapsed" : ""}`}
@@ -93,7 +114,10 @@ function Sidebar({ setSelectedContent, setIsSidebarCollapsed }) {
             </span>
           </a>
         </li>
-        <li onClick={() => setSelectedContent("UsersManagement")}>
+        <li
+          onClick={() => setSelectedContent("UsersManagement")}
+          className={selectedContent === "UsersManagement" ? "active" : ""}
+        >
           <a>
             <ManageAccountsIcon />
             <span className={`text-Admin ${showText ? "show" : ""}`}>
@@ -102,7 +126,10 @@ function Sidebar({ setSelectedContent, setIsSidebarCollapsed }) {
             </span>
           </a>
         </li>
-        <li onClick={() => setSelectedContent("Logout")}>
+        <li
+          onClick={() => setSelectedContent("Logout")}
+          className={selectedContent === "Logout" ? "active" : ""}
+        >
           <a>
             <LogoutIcon />
             <span className={`text-Admin ${showText ? "show" : ""}`}>
@@ -117,6 +144,7 @@ function Sidebar({ setSelectedContent, setIsSidebarCollapsed }) {
 }
 
 Sidebar.propTypes = {
+  selectedContent: PropTypes.string.isRequired,
   setSelectedContent: PropTypes.func.isRequired,
   setIsSidebarCollapsed: PropTypes.func.isRequired,
 };

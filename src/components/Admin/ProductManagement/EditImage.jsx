@@ -1,4 +1,4 @@
-import { CloudUpload } from "@mui/icons-material";
+import { CloudUpload, Delete } from "@mui/icons-material";
 import {
   Backdrop,
   Box,
@@ -10,6 +10,8 @@ import {
   DialogTitle,
   Grid,
   IconButton,
+  MenuItem,
+  Select,
 } from "@mui/material";
 import axios from "axios";
 import PropTypes from "prop-types";
@@ -23,6 +25,8 @@ const EditImage = ({ productId, onGetAll }) => {
   const [page, setPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
   const [loading, setLoading] = useState(false);
+  const [deleting, setDeleting] = useState(false);
+  const [selectedImageId, setSelectedImageId] = useState(null);
   const token = localStorage.getItem("token");
   const pageSize = 4;
   const fileInputRef = useRef(null);
@@ -99,7 +103,7 @@ const EditImage = ({ productId, onGetAll }) => {
   };
 
   const handleImageClick = (imageId) => {
-    if (!uploading) {
+    if (!uploading && !deleting) {
       const fileInput = fileInputUpdateRef.current;
       if (fileInput) {
         fileInput.onchange = async (event) => {
@@ -120,7 +124,7 @@ const EditImage = ({ productId, onGetAll }) => {
                   },
                 }
               );
-              swal("Good job!", "Image updated successfully!", "success");
+              swal("No error!", "Image updated successfully!", "success");
               onGetAll();
               fetchImages();
             } catch (error) {
@@ -133,6 +137,34 @@ const EditImage = ({ productId, onGetAll }) => {
           }
         };
         fileInput.click();
+      }
+    }
+  };
+
+  const handleDelete = async () => {
+    if (selectedImageId) {
+      try {
+        setDeleting(true);
+        setLoading(true);
+        await axios.delete(
+          `${API_BASE_URL}/api/image/image/${selectedImageId}`,
+          {
+            headers: {
+              "Content-Type": "multipart/form-data",
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        );
+        swal("Deleted!", "Image deleted successfully!", "success");
+        onGetAll();
+        fetchImages();
+      } catch (error) {
+        console.error("Error deleting image:", error);
+        swal("Error!", "Failed to delete image.", "error");
+      } finally {
+        setLoading(false);
+        setDeleting(false);
+        setSelectedImageId(null);
       }
     }
   };
@@ -156,7 +188,31 @@ const EditImage = ({ productId, onGetAll }) => {
         >
           Edit Images
           <div className="flex flex-row gap-2 items-center">
-            <p className="text-[12px]">(Click here to upload new image!!!)</p>
+            <Select
+              value={selectedImageId || ""}
+              onChange={(e) => setSelectedImageId(e.target.value)}
+              displayEmpty
+              inputProps={{ "aria-label": "Select image" }}
+              sx={{ minWidth: 120 }}
+            >
+              <MenuItem value="" disabled>
+                Select Image
+              </MenuItem>
+              {imageUrls.map((image) => (
+                <MenuItem key={image.id} value={image.id}>
+                  {image["image-url"].split("/").pop()}
+                </MenuItem>
+              ))}
+            </Select>
+            <Button
+              variant="contained"
+              color="error"
+              onClick={handleDelete}
+              disabled={!selectedImageId}
+              startIcon={<Delete />}
+            >
+              Delete
+            </Button>
             <IconButton
               onClick={() => fileInputRef.current.click()}
               aria-label="upload new image"
@@ -201,6 +257,8 @@ const EditImage = ({ productId, onGetAll }) => {
                       aspectRatio: "1 / 1",
                       objectFit: "cover",
                       cursor: "pointer",
+                      border:
+                        selectedImageId === image.id ? "2px solid red" : "none",
                     }}
                   />
                 </Grid>
