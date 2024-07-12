@@ -37,7 +37,8 @@ const CartItem = ({
         <div className="item-name">{itemName}</div>
         <div className="item-details">{itemDetails}</div>
         <div className="item-price">
-          {formatPrice(itemPrice * itemQty)}<span className="currency">đ</span>
+          {formatPrice(itemPrice * itemQty)}
+          <span className="currency">đ</span>
         </div>
       </div>
     </div>
@@ -46,6 +47,7 @@ const CartItem = ({
         <button
           className="quantity-button"
           onClick={() => onQtyChange(itemName, itemQty - 1)}
+          disabled={itemQty <= 1}
         >
           -
         </button>
@@ -58,7 +60,7 @@ const CartItem = ({
         </button>
       </div>
       <Button
-        onClick={() => onRemove(itemName)}
+        onClick={onRemove}
         startIcon={<ClearIcon />}
         sx={{
           color: "black",
@@ -87,10 +89,11 @@ CartItem.propTypes = {
 function ViewCart() {
   const [items, setItems] = useState([]);
   const [selectedItems, setSelectedItems] = useState([]);
-  const [isGetAll, setIsGetAll] = useState(true); // Initially "Get All"
+  const [showNoProductMessage, setShowNoProductMessage] = useState(false);
+  const [isGetAll, setIsGetAll] = useState(true);
   const navigate = useNavigate();
-  const userId = localStorage.getItem("hint"); // Lấy userId từ localStorage
-  const token = localStorage.getItem("token"); // Lấy token từ localStorage
+  const userId = localStorage.getItem("hint");
+  const token = localStorage.getItem("token");
 
   const fetchCartItems = async () => {
     try {
@@ -132,26 +135,77 @@ function ViewCart() {
     });
   };
 
-  const handleQtyChange = (itemName, newQty) => {
-    if (newQty < 0) return;
-    setItems((prevItems) =>
-      prevItems.map((item) =>
-        item["name-product"] === itemName ? { ...item, quantity: newQty } : item
-      )
-    );
+  const handleQtyChange = async (itemName, newQty) => {
+    if (newQty < 1) return; // Không cho phép giảm số lượng xuống dưới 1
+
+    const itemToUpdate = items.find((item) => item["name-product"] === itemName);
+    if (!itemToUpdate) return;
+
+    try {
+      await axios.put(
+        `https://zodiacjewerlyswd.azurewebsites.net/api/orders/update-quantity`,
+        {
+          "order-id": itemToUpdate["order-id"],
+          "product-id": itemToUpdate["product-id"],
+          quantity: newQty,
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+
+      setItems((prevItems) =>
+        prevItems.map((item) =>
+          item["name-product"] === itemName ? { ...item, quantity: newQty } : item
+        )
+      );
+    } catch (error) {
+      console.error("Có lỗi xảy ra khi cập nhật số lượng!", error);
+    }
   };
 
-  const handleRemove = (itemName) => {
-    setItems((prevItems) =>
-      prevItems.filter((item) => item["name-product"] !== itemName)
-    );
+  const handleRemove = async (item) => {
+    const { "order-id": orderId, "product-id": productId } = item;
+    console.log(`Removing product with orderId: ${orderId} and productId: ${productId}`);
+
+    try {
+      const response = await axios.delete(
+        `https://zodiacjewerlyswd.azurewebsites.net/api/orders/remove-product/${orderId}/${productId}`,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          }
+        }
+      );
+      console.log("Remove product response:", response.data);
+
+      setItems((prevItems) => {
+        const updatedItems = prevItems.filter((i) => i["product-id"] !== productId);
+        if (updatedItems.length === 0) {
+          setShowNoProductMessage(true); // Show "No product" message if no items left
+        }
+        return updatedItems;
+      });
+    } catch (error) {
+      if (error.response) {
+        console.error("Error response data:", error.response.data);
+        console.error("Error response status:", error.response.status);
+        console.error("Error response headers:", error.response.headers);
+      } else if (error.request) {
+        console.error("Error request data:", error.request);
+      } else {
+        console.error("General error message:", error.message);
+      }
+    }
   };
 
   const calculateTotal = () => {
-    return formatPrice(selectedItems.reduce((total, index) => {
+    return selectedItems.reduce((total, index) => {
       const item = items[index];
       return total + item.price * item.quantity;
-    }, 0));
+    }, 0);
   };
 
   const handleCheckout = () => {
@@ -186,28 +240,36 @@ function ViewCart() {
     }
   }, [selectedItems, items]);
 
+  useEffect(() => {
+    setShowNoProductMessage(items.length === 0); // Show "No product" message if items array is empty
+  }, [items]);
+
   return (
     <>
       <div className="shopping-cart-container mt-5">
         <section className="shopping-cart">
-          {Array.isArray(items) && items.map((item, index) => (
-            <CartItem
-              key={index}
-              imageSrc={item["image-url"]}
-              itemName={item["name-product"]}
-              itemDetails={`${item["name-category"]} / ${item["name-material"]}`}
-              itemPrice={item.price}
-              itemQty={item.quantity}
-              isChecked={selectedItems.includes(index)}
-              onCheck={() => handleCheck(index)}
-              onQtyChange={handleQtyChange}
-              onRemove={handleRemove}
-            />
-          ))}
+          {showNoProductMessage ? (
+            <div className="no-product-message">No products have been added to cart.</div>
+          ) : (
+            items.map((item, index) => (
+              <CartItem
+                key={index}
+                imageSrc={item["image-url"]}
+                itemName={item["name-product"]}
+                itemDetails={`${item["name-category"]} / ${item["name-material"]}`}
+                itemPrice={item.price}
+                itemQty={item.quantity}
+                isChecked={selectedItems.includes(index)}
+                onCheck={() => handleCheck(index)}
+                onQtyChange={handleQtyChange}
+                onRemove={() => handleRemove(item)}
+              />
+            ))
+          )}
         </section>
         <div className="checkout-section-fixed">
           <div className="total-amount">
-            TOTAL: <span className="amount">{calculateTotal()}<span className="currency">đ</span></span>
+            TOTAL: <span className="amount">{formatPrice(calculateTotal())}<span className="currency">đ</span></span>
           </div>
           <div className="flex gap-4">
             <Button

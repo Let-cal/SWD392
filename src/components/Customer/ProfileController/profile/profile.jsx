@@ -17,17 +17,30 @@ function Profile() {
   const [prevPhoneNumber, setPrevPhoneNumber] = useState("");
 
   useEffect(() => {
-    // Giả sử API endpoint để lấy thông tin profile là /api/profile
-    axios
-      .get("/api/profile")
-      .then((response) => {
-        setProfileData(response.data);
-        setIsLoading(false);
-      })
-      .catch((error) => {
-        console.error("There was an error fetching the profile data!", error);
-        setIsLoading(false);
-      });
+    const userId = localStorage.getItem("hint");
+    const token = localStorage.getItem("token");
+    const url = `https://zodiacjewerlyswd.azurewebsites.net/api/users/${userId}`;
+
+    if (token && userId) {
+      axios
+        .get(url, {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        })
+        .then((response) => {
+          const { email, "full-name": name, address, "telephone-number": phoneNumber } = response.data.data;
+          setProfileData({ email, name, phoneNumber, address });
+          setIsLoading(false);
+        })
+        .catch((error) => {
+          console.error("There was an error fetching the profile data!", error);
+          setIsLoading(false);
+        });
+    } else {
+      console.error("No token or userId found in localStorage");
+      setIsLoading(false);
+    }
   }, []);
 
   const handleChange = (e) => {
@@ -58,17 +71,46 @@ function Profile() {
   const handleSubmit = (e) => {
     e.preventDefault();
     setIsUpdating(true);
-    // Giả sử API endpoint để cập nhật thông tin profile là /api/profile
-    axios
-      .put("/api/profile", profileData)
-      .then((response) => {
-        console.log("Profile updated successfully:", response.data);
-        setIsUpdating(false);
-      })
-      .catch((error) => {
-        console.error("There was an error updating the profile!", error);
-        setIsUpdating(false);
-      });
+    const token = localStorage.getItem("token");
+    const hint = localStorage.getItem("hint");
+    const url = `https://zodiacjewerlyswd.azurewebsites.net/api/users`;
+
+    const payload = {
+      id: parseInt(hint),
+      "full-name": profileData.name,
+      address: profileData.address,
+      "telephone-number": profileData.phoneNumber,
+      email: profileData.email,
+      status: 1, // Giữ nguyên giá trị status
+      "role-name": "Customer", // Giữ nguyên giá trị role-name
+    };
+
+    if (token) {
+      axios
+        .put(url, payload, {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        })
+        .then((response) => {
+          console.log("Profile updated successfully:", response.data);
+          setIsUpdating(false);
+          // Cập nhật lại profile data sau khi cập nhật thành công
+          setProfileData({
+            email: response.data.email,
+            name: response.data["full-name"],
+            phoneNumber: response.data["telephone-number"],
+            address: response.data.address,
+          });
+        })
+        .catch((error) => {
+          console.error("There was an error updating the profile!", error);
+          setIsUpdating(false);
+        });
+    } else {
+      console.error("No token found in localStorage");
+      setIsUpdating(false);
+    }
   };
 
   if (isLoading) {
