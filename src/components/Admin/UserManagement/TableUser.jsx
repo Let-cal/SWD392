@@ -1,5 +1,5 @@
-import VisibilityIcon from "@mui/icons-material/Visibility";
-import Button from "@mui/material/Button";
+import { Edit } from "@mui/icons-material";
+import IconButton from "@mui/material/Button";
 import Paper from "@mui/material/Paper";
 import Table from "@mui/material/Table";
 import TableBody from "@mui/material/TableBody";
@@ -107,22 +107,13 @@ const TableUser = ({ data, updateUser }) => {
                   {user.status === 1 ? "Active" : "Inactive"}
                 </StyledTableCell>
                 <StyledTableCell align="center">
-                  <Button
-                    variant="contained"
-                    endIcon={<VisibilityIcon />}
-                    sx={{
-                      height: "20%",
-                      fontSize: "13px",
-                      backgroundColor: "black",
-                      color: "white",
-                      "&:hover": {
-                        backgroundColor: "gray",
-                      },
-                    }}
+                  <IconButton
                     onClick={() => handleViewDetails(user)}
+                    aria-label="edit product"
+                    sx={{ color: "gray" }}
                   >
-                    View details
-                  </Button>
+                    <Edit />
+                  </IconButton>
                 </StyledTableCell>
               </StyledTableRow>
             ))}

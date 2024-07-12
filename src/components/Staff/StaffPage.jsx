@@ -48,6 +48,7 @@ function StaffPage() {
         <Sidebar
           setSelectedContent={setSelectedContent}
           setIsSidebarCollapsed={setIsSidebarCollapsed}
+          selectedContent={selectedContent}
         />
       </div>
       <div

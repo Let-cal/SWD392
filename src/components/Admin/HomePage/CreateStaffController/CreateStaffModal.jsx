@@ -11,8 +11,8 @@ import axios from "axios";
 import { enqueueSnackbar } from "notistack";
 import PropTypes from "prop-types";
 import { useState } from "react";
+import swal from "sweetalert";
 import InputForm from "./InputForm";
-
 const CreateStaffModal = ({ isOpen, onClose }) => {
   const [formData, setFormData] = useState({
     email: "",
@@ -68,10 +68,8 @@ const CreateStaffModal = ({ isOpen, onClose }) => {
           },
         }
       );
+      swal("No error!", "Image updated successfully!", "success");
 
-      enqueueSnackbar("Staff account created successfully", {
-        variant: "success",
-      });
       onClose();
     } catch (error) {
       console.error("Error:", error.response?.data); // Log the error response

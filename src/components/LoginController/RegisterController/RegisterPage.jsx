@@ -76,8 +76,8 @@ const RegisterPage = () => {
         {
           email: formData.email,
           password: formData.password,
-          fullName: formData.fullname,
-          telephoneNumber: formData.phoneNumber,
+          "full-name": formData.fullname,
+          "telephone-number": formData.phoneNumber,
         }
       );
       if (response.status === 200) {

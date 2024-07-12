@@ -31,7 +31,7 @@ function OrdersManagement() {
     let url = `https://zodiacjewerlyswd.azurewebsites.net/api/orders?page=${page}&pageSize=${pageSize}&sort=8`;
 
     if (status !== "All") {
-      url += `&filter=${getStatusValue(status)}`;
+      url += `&status=${getStatusValue(status)}`;
     }
     const token = localStorage.getItem("token");
     console.log("Fetching orders from:", url);
@@ -95,8 +95,6 @@ function OrdersManagement() {
 
   const getStatusText = (status) => {
     switch (status) {
-      case 0:
-        return "Cancelled";
       case 1:
         return "Pending";
       case 2:
@@ -112,8 +110,6 @@ function OrdersManagement() {
         return "green";
       case 1:
         return "orange";
-      case 0:
-        return "red";
       default:
         return "gray";
     }
@@ -125,8 +121,6 @@ function OrdersManagement() {
         return 2;
       case "Pending":
         return 1;
-      case "Cancelled":
-        return 0;
       default:
         return null;
     }
@@ -176,7 +170,6 @@ function OrdersManagement() {
         <Tab value="All" label="All" />
         <Tab value="Completed" label="Completed" />
         <Tab value="Pending" label="Pending" />
-        <Tab value="Cancelled" label="Cancelled" />
       </Tabs>
       <section className="w-full mt-8">
         <TableOrder orders={orders} />

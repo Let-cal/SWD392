@@ -63,6 +63,12 @@
   cursor: pointer;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 }
+/* Add this to your sidebar.css */
+.sidebar-nav li.active {
+  background-color: rgba(0, 0, 0, 0.1);
+  cursor: pointer;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
 
 .sidebar-nav li a svg {
   margin-right: 10px;

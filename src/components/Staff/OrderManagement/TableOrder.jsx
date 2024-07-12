@@ -60,7 +60,7 @@ const TableOrder = ({ orders }) => {
       try {
         const token = localStorage.getItem("token");
         const response = await Axios.get(
-          `${API_BASE_URL}/customer/${order.UserID}`,
+          `${API_BASE_URL}/order/${order.OrderNumber}`,
           {
             headers: {
               Authorization: `Bearer ${token}`,

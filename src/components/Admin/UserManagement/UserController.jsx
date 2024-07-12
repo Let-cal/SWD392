@@ -17,6 +17,7 @@ import { useSnackbar } from "notistack";
 import { useEffect, useState } from "react";
 import CreateStaffModal from "../HomePage/CreateStaffController/CreateStaffModal";
 import TableUser from "./TableUser";
+
 function UserController() {
   const [data, setData] = useState([]);
   const [loading, setLoading] = useState(false);
@@ -27,6 +28,7 @@ function UserController() {
   const [roleFilter, setRoleFilter] = useState("All");
   const { enqueueSnackbar } = useSnackbar();
   const API_BASE_URL = "https://zodiacjewerlyswd.azurewebsites.net/api/users";
+
   useEffect(() => {
     fetchUsers();
   }, [page, pageSize, roleFilter]);
@@ -34,8 +36,12 @@ function UserController() {
   const fetchUsers = () => {
     setLoading(true);
     let url = `${API_BASE_URL}?page=${page}&pageSize=${pageSize}&search=${search}`;
-    if (roleFilter !== "All") {
-      url = `${API_BASE_URL}/role/${roleFilter}?page=${page}&pageSize=${pageSize}`;
+    if (roleFilter === "Customer") {
+      url = `${API_BASE_URL}/customers?page=${page}&pageSize=${pageSize}&search=${search}`;
+    } else if (roleFilter === "Admin") {
+      url = `${API_BASE_URL}/admin?page=${page}&pageSize=${pageSize}&search=${search}`;
+    } else if (roleFilter === "Staff") {
+      url = `${API_BASE_URL}/staff?page=${page}&pageSize=${pageSize}&search=${search}`;
     }
 
     fetch(url, {
@@ -92,6 +98,7 @@ function UserController() {
     setPageSize(size);
     setPage(1); // Reset to the first page when changing page size
   };
+
   const [isModalOpen, setIsModalOpen] = useState(false);
 
   const handleOpenModal = () => {
@@ -101,6 +108,7 @@ function UserController() {
   const handleCloseModal = () => {
     setIsModalOpen(false);
   };
+
   return (
     <div>
       <div className="flex flex-row justify-between w-full items-center">
