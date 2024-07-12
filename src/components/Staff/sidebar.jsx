@@ -40,8 +40,8 @@ function Sidebar({
       <div className="title-header-Admin bg-gray-100 shadow-md h-[88px] flex items-center justify-between">
         <div className="flex items-center">
           <MenuIcon onClick={toggleSidebar} className="menu-icon" />
-          <span className="font-bold">A</span>
-          <span className={`text-Admin ${showText ? "show" : ""}`}>dmin</span>
+          <span className="font-bold">S</span>
+          <span className={`text-Admin ${showText ? "show" : ""}`}>taff</span>
         </div>
       </div>
       <Divider />

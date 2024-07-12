@@ -198,6 +198,7 @@ const EditImage = ({ productId, onGetAll }) => {
               <MenuItem value="" disabled>
                 Select Image
               </MenuItem>
+              <MenuItem value={null}>None</MenuItem> {/* Add this line */}
               {imageUrls.map((image) => (
                 <MenuItem key={image.id} value={image.id}>
                   {image["image-url"].split("/").pop()}
