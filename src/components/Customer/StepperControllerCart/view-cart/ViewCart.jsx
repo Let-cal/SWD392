@@ -47,6 +47,7 @@ const CartItem = ({
         <button
           className="quantity-button"
           onClick={() => onQtyChange(itemName, itemQty - 1)}
+          disabled={itemQty <= 1}
         >
           -
         </button>
@@ -88,11 +89,11 @@ CartItem.propTypes = {
 function ViewCart() {
   const [items, setItems] = useState([]);
   const [selectedItems, setSelectedItems] = useState([]);
-  const [showNoProductMessage, setShowNoProductMessage] = useState(false); // State to control "No product" message
-  const [isGetAll, setIsGetAll] = useState(true); // Initially "Get All"
+  const [showNoProductMessage, setShowNoProductMessage] = useState(false);
+  const [isGetAll, setIsGetAll] = useState(true);
   const navigate = useNavigate();
-  const userId = localStorage.getItem("hint"); // Lấy userId từ localStorage
-  const token = localStorage.getItem("token"); // Lấy token từ localStorage
+  const userId = localStorage.getItem("hint");
+  const token = localStorage.getItem("token");
 
   const fetchCartItems = async () => {
     try {
@@ -134,19 +135,41 @@ function ViewCart() {
     });
   };
 
-  const handleQtyChange = (itemName, newQty) => {
-    if (newQty < 0) return;
-    setItems((prevItems) =>
-      prevItems.map((item) =>
-        item["name-product"] === itemName ? { ...item, quantity: newQty } : item
-      )
-    );
+  const handleQtyChange = async (itemName, newQty) => {
+    if (newQty < 1) return; // Không cho phép giảm số lượng xuống dưới 1
+
+    const itemToUpdate = items.find((item) => item["name-product"] === itemName);
+    if (!itemToUpdate) return;
+
+    try {
+      await axios.put(
+        `https://zodiacjewerlyswd.azurewebsites.net/api/orders/update-quantity`,
+        {
+          "order-id": itemToUpdate["order-id"],
+          "product-id": itemToUpdate["product-id"],
+          quantity: newQty,
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+
+      setItems((prevItems) =>
+        prevItems.map((item) =>
+          item["name-product"] === itemName ? { ...item, quantity: newQty } : item
+        )
+      );
+    } catch (error) {
+      console.error("Có lỗi xảy ra khi cập nhật số lượng!", error);
+    }
   };
 
   const handleRemove = async (item) => {
     const { "order-id": orderId, "product-id": productId } = item;
     console.log(`Removing product with orderId: ${orderId} and productId: ${productId}`);
-    
+
     try {
       const response = await axios.delete(
         `https://zodiacjewerlyswd.azurewebsites.net/api/orders/remove-product/${orderId}/${productId}`,
@@ -157,7 +180,7 @@ function ViewCart() {
         }
       );
       console.log("Remove product response:", response.data);
-  
+
       setItems((prevItems) => {
         const updatedItems = prevItems.filter((i) => i["product-id"] !== productId);
         if (updatedItems.length === 0) {

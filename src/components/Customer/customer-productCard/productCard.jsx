@@ -86,6 +86,7 @@ const TrustedCompanies = ({ selectedZodiacId }) => {
   const handleClose = () => {
     setAnchorEl(null);
   };
+  const [gender, setGender] = useState("");
   const [category, setCategory] = useState("");
   const [material, setMaterial] = useState("");
   const [zodiac, setZodiac] = useState("");
@@ -94,6 +95,10 @@ const TrustedCompanies = ({ selectedZodiacId }) => {
   const [page, setPage] = useState(1);
   const [pageSize, setPageSize] = useState(8); // or any other suitable value
   const [totalPages, setTotalPages] = useState(1); // to store total pages from API
+
+  const handleChangeGender = (event) => {
+    setGender(event.target.value);
+  };
 
   const handleChangeCategory = (event) => {
     setCategory(event.target.value);
@@ -188,6 +193,10 @@ const TrustedCompanies = ({ selectedZodiacId }) => {
           filteredData = filteredData.filter(product => product["material-id"] === parseInt(material));
         }
 
+        if (gender) {
+          filteredData = filteredData.filter(product => product["gender-id"] === parseInt(gender));
+        }
+
         if (zodiac) {
           filteredData = filteredData.filter(product => product["zodiac-id"] === parseInt(zodiac));
         }
@@ -213,7 +222,7 @@ const TrustedCompanies = ({ selectedZodiacId }) => {
     };
 
     fetchProducts();
-  }, [selectedZodiacId, category, material, zodiac, pageSize]);
+  }, [selectedZodiacId, category, material, zodiac, gender, pageSize]);
 
   useEffect(() => {
     if (selectedZodiacId) {
@@ -266,32 +275,27 @@ const TrustedCompanies = ({ selectedZodiacId }) => {
             >
               <Box sx={{ flexGrow: 1, maxWidth: 752, paddingX: 2.5 }}>
                 <div className="flex flex-col">
-                  <FormControl>
-                    <FormLabel id="demo-row-radio-buttons-group-label">
+                  <FormControl variant="standard" sx={{ m: 1, minWidth: 120 }}>
+                    <InputLabel id="demo-simple-select-standard-label">
                       Gender
-                    </FormLabel>
-                    <RadioGroup
-                      row
-                      aria-labelledby="demo-row-radio-buttons-group-label"
-                      name="row-radio-buttons-group"
+                    </InputLabel>
+                    <Select
+                      labelId="demo-simple-select-standard-label"
+                      id="demo-simple-select-standard"
+                      value={gender}
+                      onChange={handleChangeGender}
+                      label="Gender"
                     >
-                      <FormControlLabel
-                        value="female"
-                        control={<Radio />}
-                        label="Female"
-                      />
-                      <FormControlLabel
-                        value="male"
-                        control={<Radio />}
-                        label="Male"
-                      />
-                      <FormControlLabel
-                        value="other"
-                        control={<Radio />}
-                        label="Other"
-                      />
-                    </RadioGroup>
+                      <MenuItem value="">
+                        <em>None</em>
+                      </MenuItem>
+                      <MenuItem value={1}>Male</MenuItem>
+                      <MenuItem value={2}>Female</MenuItem>
+                      <MenuItem value={3}>Other</MenuItem>
+                    </Select>
                   </FormControl>
+
+
                   <FormControl variant="standard" sx={{ m: 1, minWidth: 120 }}>
                     <InputLabel id="demo-simple-select-standard-label">
                       Category
@@ -313,6 +317,7 @@ const TrustedCompanies = ({ selectedZodiacId }) => {
                       <MenuItem value={5}>T-shirt</MenuItem>
                     </Select>
                   </FormControl>
+
                   <FormControl variant="standard" sx={{ m: 1, minWidth: 120 }}>
                     <InputLabel id="demo-simple-select-standard-label">
                       Material
@@ -361,12 +366,12 @@ const TrustedCompanies = ({ selectedZodiacId }) => {
                     </Select>
                   </FormControl> */}
                 </div>
-                <button
+                {/* <button
                   className="coolBeans w-full h-10 flex items-center justify-center"
                   onClick={handleClose}
                 >
                   <span className="uppercase font-serif">FILTER</span>
-                </button>
+                </button> */}
               </Box>
             </Menu>
           </div>
