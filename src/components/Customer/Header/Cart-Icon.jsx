@@ -1,11 +1,17 @@
 import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
 import ViewIcon from "@mui/icons-material/Visibility";
-import { Box, Button, Drawer, List } from "@mui/material";
-import Badge from "@mui/material/Badge";
-import Divider from "@mui/material/Divider";
-import IconButton from "@mui/material/IconButton";
+import {
+  Box,
+  Button,
+  Drawer,
+  List,
+  IconButton,
+  Badge,
+  Divider,
+} from "@mui/material";
 import { styled } from "@mui/material/styles";
-import React from "react";
+import { useEffect, useState } from "react";
+import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import ViewCart from "../StepperControllerCart/view-cart/ViewCart";
 
@@ -20,10 +26,24 @@ const StyledBadge = styled(Badge)(({ theme }) => ({
 
 export default function CartIcon() {
   const navigate = useNavigate();
-  const handleChange = () => {
-    navigate("/ViewCartDetails");
-  };
-  const [drawerOpen, setDrawerOpen] = React.useState(false);
+  const [drawerOpen, setDrawerOpen] = useState(false);
+  const [cartItemCount, setCartItemCount] = useState(0);
+
+  useEffect(() => {
+    const userId = localStorage.getItem("hint");
+    axios
+      .get(
+        `https://zodiacjewerlyswd.azurewebsites.net/api/orders/customer/${userId}`
+      )
+      .then((response) => {
+        if (response.data && response.data.data && response.data.data.product) {
+          setCartItemCount(response.data.data.product.length);
+        }
+      })
+      .catch((error) => {
+        console.error("There was an error fetching the cart data!", error);
+      });
+  }, []);
 
   const toggleDrawer = (open) => (event) => {
     if (
@@ -41,34 +61,34 @@ export default function CartIcon() {
     }
   };
 
+  const handleChange = () => {
+    navigate("/ViewCartDetails");
+  };
+
   const drawerList = (
     <Box
-      sx={{ width: 600 }} // Thay đổi giá trị width ở đây
+      sx={{ width: 600 }}
       role="presentation"
-      onClick={(event) => event.stopPropagation()} // Ngăn chặn sự kiện onClick lan truyền
-      onKeyDown={(event) => event.stopPropagation()} // Ngăn chặn sự kiện onKeyDown lan truyền
+      onClick={(event) => event.stopPropagation()}
+      onKeyDown={(event) => event.stopPropagation()}
     >
       <List
         sx={{
-          maxHeight: "calc(100vh - 136px)", // Điều chỉnh giá trị này để chừa khoảng trống cho nút khác
-          overflowY: "auto", // Cho phép cuộn dọc
+          maxHeight: "calc(100vh - 136px)",
+          overflowY: "auto",
         }}
       >
         <ViewCart />
       </List>
-      <Divider
-        style={{
-          backgroundColor: "black",
-        }}
-      />
+      <Divider style={{ backgroundColor: "black" }} />
       <Box
         sx={{
           display: "flex",
-          justifyContent: "flex-end", // Canh nút "View Detail" về bên phải
+          justifyContent: "flex-end",
           position: "sticky",
-          bottom: 0, // Đảm bảo nút "View Detail" luôn nằm ở dưới cùng
+          bottom: 0,
           backgroundColor: "white",
-          padding: "10px", // Thêm khoảng đệm để nút không dính sát vào cạnh dưới
+          padding: "10px",
         }}
       >
         <Button
@@ -77,8 +97,8 @@ export default function CartIcon() {
           style={{
             color: "white",
             backgroundColor: "black",
-            fontSize: "12px", // Chỉnh kích thước chữ nhỏ lại
-            whiteSpace: "nowrap", // Đảm bảo chữ không bị xuống hàng
+            fontSize: "12px",
+            whiteSpace: "nowrap",
             "&:hover": { backgroundColor: "gray" },
           }}
           startIcon={<ViewIcon />}
@@ -92,7 +112,7 @@ export default function CartIcon() {
   return (
     <>
       <IconButton aria-label="cart" onClick={toggleDrawer(true)}>
-        <StyledBadge badgeContent={4} color="secondary">
+        <StyledBadge badgeContent={cartItemCount} color="secondary">
           <ShoppingCartIcon />
         </StyledBadge>
       </IconButton>
@@ -100,9 +120,7 @@ export default function CartIcon() {
         anchor="right"
         open={drawerOpen}
         onClose={toggleDrawer(false)}
-        BackdropProps={{
-          onClick: handleBackdropClick,
-        }}
+        BackdropProps={{ onClick: handleBackdropClick }}
       >
         {drawerList}
       </Drawer>

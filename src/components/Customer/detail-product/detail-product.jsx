@@ -1,10 +1,10 @@
+import AddShoppingCartIcon from "@mui/icons-material/AddShoppingCart";
 import axios from "axios";
+import { useSnackbar } from "notistack";
 import React, { useEffect, useState } from "react";
 import { useLocation, useNavigate, useParams } from "react-router-dom";
-import { useSnackbar } from "notistack";
 import Header from "../Header/header";
 import "./detail-product.css";
-import AddShoppingCartIcon from '@mui/icons-material/AddShoppingCart';
 
 const ProductImage = ({ src, alt, index, onClick, isSelected }) => (
   <img
@@ -113,15 +113,17 @@ const ProductTabs = ({ activeTab, setActiveTab, product }) => {
     <div>
       <div className="product-tabs">
         <div
-          className={`product-tab ${activeTab === "description" ? "active" : ""
-            }`}
+          className={`product-tab ${
+            activeTab === "description" ? "active" : ""
+          }`}
           onClick={() => setActiveTab("description")}
         >
           Information
         </div>
         <div
-          className={`product-tab ${activeTab === "additional" ? "active" : ""
-            }`}
+          className={`product-tab ${
+            activeTab === "additional" ? "active" : ""
+          }`}
           onClick={() => setActiveTab("additional")}
         >
           Product description
@@ -152,16 +154,21 @@ const DetailProduct = () => {
   // Hàm lấy thông tin sản phẩm từ API
   const fetchProduct = async (productId) => {
     try {
-      const response = await axios.get(`https://zodiacjewerlyswd.azurewebsites.net/api/products/${productId}`, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
+      const response = await axios.get(
+        `https://zodiacjewerlyswd.azurewebsites.net/api/products/${productId}`,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
       if (response.data && response.data.success && response.data.data) {
         setProduct(response.data.data);
         setMainImageSrc(response.data.data["image-urls"][0]);
       } else {
-        console.error("Invalid response format or missing data in API response");
+        console.error(
+          "Invalid response format or missing data in API response"
+        );
       }
     } catch (error) {
       console.error("Error fetching product:", error);
@@ -171,24 +178,39 @@ const DetailProduct = () => {
   // Hàm lấy toàn bộ sản phẩm từ các trang
   const fetchAllProducts = async () => {
     try {
-      const response = await axios.get(`https://zodiacjewerlyswd.azurewebsites.net/api/products`, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
-      if (response.data && response.data.success && response.data.data && Array.isArray(response.data.data['list-data'])) {
-        const totalPages = response.data.data['total-page'];
+      const response = await axios.get(
+        `https://zodiacjewerlyswd.azurewebsites.net/api/products`,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+      if (
+        response.data &&
+        response.data.success &&
+        response.data.data &&
+        Array.isArray(response.data.data["list-data"])
+      ) {
+        const totalPages = response.data.data["total-page"];
         const allProducts = [];
 
         // Lặp qua từng trang để lấy danh sách sản phẩm
         for (let page = 1; page <= totalPages; page++) {
-          const pageResponse = await axios.get(`https://zodiacjewerlyswd.azurewebsites.net/api/products?page=${page}&pageSize=5`, {
-            headers: {
-              Authorization: `Bearer ${token}`,
-            },
-          });
-          if (pageResponse.data && pageResponse.data.success && Array.isArray(pageResponse.data.data['list-data'])) {
-            allProducts.push(...pageResponse.data.data['list-data']);
+          const pageResponse = await axios.get(
+            `https://zodiacjewerlyswd.azurewebsites.net/api/products?page=${page}&pageSize=5`,
+            {
+              headers: {
+                Authorization: `Bearer ${token}`,
+              },
+            }
+          );
+          if (
+            pageResponse.data &&
+            pageResponse.data.success &&
+            Array.isArray(pageResponse.data.data["list-data"])
+          ) {
+            allProducts.push(...pageResponse.data.data["list-data"]);
           } else {
             console.error(`Failed to fetch products for page ${page}`);
           }
@@ -196,10 +218,14 @@ const DetailProduct = () => {
 
         // Loại bỏ sản phẩm đang xem chi tiết
         const viewedProductId = parseInt(id);
-        const filteredProducts = allProducts.filter(p => p.id !== viewedProductId);
+        const filteredProducts = allProducts.filter(
+          (p) => p.id !== viewedProductId
+        );
         setSimilarProducts(filteredProducts);
       } else {
-        console.error("Invalid response format or missing data in API response");
+        console.error(
+          "Invalid response format or missing data in API response"
+        );
         setSimilarProducts([]);
       }
     } catch (error) {
@@ -223,23 +249,30 @@ const DetailProduct = () => {
 
     for (let i = 0; i < quantity; i++) {
       try {
-        const response = await axios.post(`https://zodiacjewerlyswd.azurewebsites.net/api/orders/${hint}/${productID}`, {}, {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        });
+        const response = await axios.post(
+          `https://zodiacjewerlyswd.azurewebsites.net/api/orders/${hint}/${productID}`,
+          {},
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        );
         if (response.data && response.data.success) {
-          console.log(`Sản phẩm ${productID} đã được thêm vào giỏ hàng cho người dùng ${hint}`);
+          console.log(
+            `Sản phẩm ${productID} đã được thêm vào giỏ hàng cho người dùng ${hint}`
+          );
           enqueueSnackbar("The product has been added to cart", {
             variant: "success",
-            anchorOrigin: { horizontal: "right", vertical: "top" },
             preventDuplicate: true,
           });
         } else {
-          console.error("Có lỗi xảy ra khi thêm sản phẩm vào giỏ hàng:", response.data);
+          console.error(
+            "Có lỗi xảy ra khi thêm sản phẩm vào giỏ hàng:",
+            response.data
+          );
           enqueueSnackbar("An error occurred", {
             variant: "error",
-            anchorOrigin: { horizontal: "right", vertical: "top" },
             preventDuplicate: true,
           });
         }
@@ -247,7 +280,6 @@ const DetailProduct = () => {
         console.error("Có lỗi xảy ra khi thêm sản phẩm vào giỏ hàng!", error);
         enqueueSnackbar("An error occurred", {
           variant: "error",
-          anchorOrigin: { horizontal: "right", vertical: "top" },
           preventDuplicate: true,
         });
       }

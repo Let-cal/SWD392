@@ -7,10 +7,11 @@ import {
   Table,
   TableBody,
   TableCell,
+  tableCellClasses,
   TableContainer,
   TableHead,
   TableRow,
-  tableCellClasses,
+  Typography,
 } from "@mui/material";
 import { styled } from "@mui/material/styles";
 import PropTypes from "prop-types";
@@ -45,7 +46,7 @@ const StyledTableContainer = styled(TableContainer)(() => ({
   overflow: "hidden",
 }));
 
-const OrderDetailsDialog = ({ open, onClose, orderDetails }) => {
+const OrderDetailsDialog = ({ open, onClose, orderDetails, TotalPrice }) => {
   return (
     <Dialog open={open} onClose={onClose} maxWidth="md" fullWidth>
       <DialogTitle>Order Details</DialogTitle>
@@ -93,7 +94,10 @@ const OrderDetailsDialog = ({ open, onClose, orderDetails }) => {
           </Table>
         </StyledTableContainer>
       </DialogContent>
-      <DialogActions>
+      <DialogActions sx={{ width: "100%", justifyContent: "space-between" }}>
+        <Typography sx={{ display: "flex", flexDirection: "row", gap: "5px" }}>
+          <p className="font-bold">Total Price: </p> ${TotalPrice}
+        </Typography>
         <Button onClick={onClose} color="primary">
           Close
         </Button>
@@ -106,6 +110,7 @@ OrderDetailsDialog.propTypes = {
   open: PropTypes.bool.isRequired,
   onClose: PropTypes.func.isRequired,
   orderDetails: PropTypes.array.isRequired,
+  TotalPrice: PropTypes.string.isRequired,
 };
 
 export default OrderDetailsDialog;

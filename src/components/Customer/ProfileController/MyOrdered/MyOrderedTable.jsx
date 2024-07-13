@@ -12,8 +12,9 @@ import {
 import { styled } from "@mui/material/styles";
 import Axios from "axios";
 import PropTypes from "prop-types";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import OrderDetailsDialog from "../../../Admin/OrderManagement/OrderDetailsDialog";
+
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
   [`&.${tableCellClasses.head}`]: {
     backgroundColor: theme.palette.common.black,
@@ -48,53 +49,71 @@ const ProfileContent = ({ orders = [], loading }) => {
   const statusClasses = {
     COMPLETED: "text-green-600 font-bold",
     PROCESSING: "text-yellow-600 font-bold",
-    CANCELLED: "text-red-600 font-bold",
   };
 
   const showOrdersTable = orders.length > 0;
   const [open, setOpen] = useState(false);
   const [selectedOrder, setSelectedOrder] = useState(null);
   const [orderDetails, setOrderDetails] = useState([]);
-  const [loaded, setLoaded] = useState(false);
+  const [totalPrices, setTotalPrices] = useState({});
   const API_BASE_URL = "https://zodiacjewerlyswd.azurewebsites.net/api/orders";
+
+  useEffect(() => {
+    const fetchTotalPrices = async () => {
+      const token = localStorage.getItem("token");
+      const totalPricesData = {};
+
+      for (const order of orders) {
+        try {
+          const response = await Axios.get(
+            `${API_BASE_URL}/order/${order.orderNumber}`,
+            {
+              headers: {
+                Authorization: `Bearer ${token}`,
+                accept: "*/*",
+              },
+            }
+          );
+
+          totalPricesData[order.orderNumber] =
+            response.data.data["price-total"];
+        } catch (error) {
+          console.error("Error fetching order details:", error);
+        }
+      }
+
+      setTotalPrices(totalPricesData);
+    };
+
+    fetchTotalPrices();
+  }, [orders]);
+
   const handleViewDetails = async (order) => {
     setSelectedOrder(order);
     setOpen(true);
 
-    if (!loaded) {
-      try {
-        const token = localStorage.getItem("token");
-        const UserId = localStorage.getItem("hint");
-        const response = await Axios.get(`${API_BASE_URL}/customer/${UserId}`, {
+    try {
+      const token = localStorage.getItem("token");
+
+      const response = await Axios.get(
+        `${API_BASE_URL}/order/${order.orderNumber}`,
+        {
           headers: {
             Authorization: `Bearer ${token}`,
             accept: "*/*",
           },
-        });
-        setOrderDetails(response.data.data.product);
-        setLoaded(true);
-      } catch (error) {
-        console.error("Error fetching order details:", error);
-        if (error.response) {
-          // Server responded with a status other than 200 range
-          console.error("Response data:", error.response.data);
-          console.error("Response status:", error.response.status);
-          console.error("Response headers:", error.response.headers);
-        } else if (error.request) {
-          // Request was made but no response was received
-          console.error("Request data:", error.request);
-        } else {
-          // Something happened in setting up the request that triggered an Error
-          console.error("Error message:", error.message);
         }
-      }
+      );
+      setOrderDetails(response.data.data.product);
+    } catch (error) {
+      console.error("Error fetching order details:", error);
     }
   };
+
   const handleClose = () => {
     setOpen(false);
     setSelectedOrder(null);
     setOrderDetails([]);
-    setLoaded(false);
   };
 
   return (
@@ -127,7 +146,7 @@ const ProfileContent = ({ orders = [], loading }) => {
                     {order.status}
                   </StyledTableCell>
                   <StyledTableCell align="center">
-                    {order.total}
+                    {totalPrices[order.orderNumber] || "Loading..."}
                   </StyledTableCell>
                   <StyledTableCell align="center">
                     <IconButton onClick={() => handleViewDetails(order)}>
@@ -143,6 +162,7 @@ const ProfileContent = ({ orders = [], loading }) => {
               open={open}
               onClose={handleClose}
               orderDetails={orderDetails}
+              TotalPrice={totalPrices[selectedOrder.orderNumber]}
             />
           )}
         </StyledTableContainer>
@@ -176,7 +196,6 @@ ProfileContent.propTypes = {
       orderNumber: PropTypes.string.isRequired,
       date: PropTypes.string.isRequired,
       status: PropTypes.string.isRequired,
-      total: PropTypes.string.isRequired,
     })
   ),
   loading: PropTypes.bool.isRequired,

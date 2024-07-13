@@ -11,23 +11,25 @@ const AccountOrders = ({ status }) => {
   const [pageSize, setPageSize] = useState(5);
   const [totalPages, setTotalPages] = useState(1);
   const token = localStorage.getItem("token");
+  console.log(token);
   const userHint = localStorage.getItem("hint");
   const sort = userHint || 8; // Default to 8 if no hint is found
 
   useEffect(() => {
     const fetchOrders = async () => {
       setLoading(true);
+      let url = `https://zodiacjewerlyswd.azurewebsites.net/api/orders?page=${page}&pageSize=${pageSize}`;
+      if (status !== "All") {
+        url += `&status=${getStatusValue(status)}`;
+      }
       try {
-        const response = await fetch(
-          `https://zodiacjewerlyswd.azurewebsites.net/api/orders?page=${page}&pageSize=${pageSize}&sort=${sort}`,
-          {
-            method: "GET",
-            headers: {
-              accept: "*/*",
-              Authorization: `Bearer ${token}`,
-            },
-          }
-        );
+        const response = await fetch(url, {
+          method: "GET",
+          headers: {
+            accept: "*/*",
+            Authorization: `Bearer ${token}`,
+          },
+        });
         const result = await response.json();
         if (result.success) {
           const filteredOrders = result.data["list-data"]
@@ -53,11 +55,18 @@ const AccountOrders = ({ status }) => {
 
     fetchOrders();
   }, [status, page, pageSize, sort]);
-
+  const getStatusValue = (statusText) => {
+    switch (statusText) {
+      case "Completed":
+        return 2;
+      case "Pending":
+        return 1;
+      default:
+        return null;
+    }
+  };
   const getStatusText = (status) => {
     switch (status) {
-      case 0:
-        return "CANCELLED";
       case 1:
         return "PENDING";
       case 2:
