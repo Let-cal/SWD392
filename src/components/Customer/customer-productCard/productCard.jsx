@@ -22,7 +22,7 @@ const formatPrice = (price) => {
   return price.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".");
 };
 
-const Card = ({ image, alt, title, price, tags, product }) => {
+const Card = ({ image, alt, title, price, quantity, tags, product }) => {
   const navigate = useNavigate();
 
   const handleDetailClick = (e) => {
@@ -51,6 +51,7 @@ const Card = ({ image, alt, title, price, tags, product }) => {
         <p>
           <span className="price">{formatPrice(price)}</span>
           <span className="currency">đ</span>
+          {/* <span className="quantity"> (Qty: {quantity})</span> */}
         </p>
         <ul>
           {tags.map((tag, index) => (
@@ -206,6 +207,7 @@ const TrustedCompanies = ({ selectedZodiacId }) => {
           alt: product["name-product"],
           title: product["name-product"],
           price: product.price,
+          quantity: product.quantity,
           product,
           tags: [
             { name: categoryMap[product["category-id"]], color: '#ff5733', className: 'tag-category' },
@@ -389,6 +391,7 @@ const TrustedCompanies = ({ selectedZodiacId }) => {
               alt={card.alt}
               title={card.title}
               price={card.price}
+              quantity={card.quantity}
               tags={card.tags}
               product={card.product}
             />

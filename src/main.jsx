@@ -9,6 +9,7 @@ import LoadingBackdrop from "./components/Loading/LoadingBackdrop.jsx"; // Impor
 import { AuthProvider } from "./components/LoginController/AuthContext.jsx";
 import ProtectedRoute from "./components/LoginController/ProtectedRoute.jsx";
 import Collection from "./components/Customer/CollectionProduct/Collection.jsx";
+import PaySuccess from "./components/Customer/Payment/PaySuccess.jsx";
 import "./index.css";
 
 // Lazy loading components
@@ -142,6 +143,10 @@ const App = () => {
               <Route
                 path="/Collection"
                 element={<Collection />}
+              />
+              <Route
+                path="/paysuccess"
+                element={<PaySuccess />}
               />
             </Routes>
           </Suspense>

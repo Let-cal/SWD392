@@ -113,17 +113,15 @@ const ProductTabs = ({ activeTab, setActiveTab, product }) => {
     <div>
       <div className="product-tabs">
         <div
-          className={`product-tab ${
-            activeTab === "description" ? "active" : ""
-          }`}
+          className={`product-tab ${activeTab === "description" ? "active" : ""
+            }`}
           onClick={() => setActiveTab("description")}
         >
           Information
         </div>
         <div
-          className={`product-tab ${
-            activeTab === "additional" ? "active" : ""
-          }`}
+          className={`product-tab ${activeTab === "additional" ? "active" : ""
+            }`}
           onClick={() => setActiveTab("additional")}
         >
           Product description
@@ -146,6 +144,7 @@ const DetailProduct = () => {
   );
   const [activeTab, setActiveTab] = useState("description");
   const [quantity, setQuantity] = useState(1);
+
   const [similarProducts, setSimilarProducts] = useState([]);
 
   // Lấy token từ localStorage
@@ -315,6 +314,10 @@ const DetailProduct = () => {
             <span className="currency">đ</span>
           </p>
 
+          {product.quantity === 0 && (
+            <span className="out-of-stock">OUT OF STOCK</span>
+          )}
+
           <div className="quantity-and-cart">
             <div className="quantity-selector">
               <button
@@ -325,15 +328,20 @@ const DetailProduct = () => {
               <div className="quantity-value">{quantity}</div>
               <button onClick={() => setQuantity(quantity + 1)}>+</button>
             </div>
+
+            <div className="current-quantity">({product.quantity} products available) </div>
           </div>
 
-          <button className="add-to-cart-button" onClick={handleAddToCart}>
+          <button className="add-to-cart-button"
+            onClick={handleAddToCart}
+            disabled={product.quantity === 0}
+          >
             <AddShoppingCartIcon /> ADD TO CART
           </button>
-
-          <button className="checkout-button" onClick={handleAddToCart}>
+          
+          {/* <button className="checkout-button" onClick={handleAddToCart}>
             PROCESS TO CHECKOUT
-          </button>
+          </button> */}
           <ProductTabs
             activeTab={activeTab}
             setActiveTab={setActiveTab}
