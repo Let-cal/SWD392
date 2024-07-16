@@ -24,6 +24,7 @@ const SimilarProduct = ({ imageSrc, name, price, product }) => {
 
   const handleClick = () => {
     navigate(`/DetailProduct/${product.id}`, { state: { product } });
+    window.location.reload();
   };
 
   return (
@@ -285,6 +286,8 @@ const DetailProduct = () => {
     }
   };
 
+
+  
   return (
     <div>
       <Header />
@@ -314,7 +317,7 @@ const DetailProduct = () => {
             <span className="currency">đ</span>
           </p>
 
-          {product.quantity === 0 && (
+          {product.quantity === 0 || product.quantity < 0 && (
             <span className="out-of-stock">OUT OF STOCK</span>
           )}
 
@@ -322,11 +325,17 @@ const DetailProduct = () => {
             <div className="quantity-selector">
               <button
                 onClick={() => setQuantity(quantity > 1 ? quantity - 1 : 1)}
+                disabled={product.quantity === 0 || product.quantity < 0}
               >
                 -
               </button>
               <div className="quantity-value">{quantity}</div>
-              <button onClick={() => setQuantity(quantity + 1)}>+</button>
+              <button
+                onClick={() => setQuantity(quantity >= product.quantity ? product.quantity : quantity + 1)}
+                disabled={product.quantity === 0 || product.quantity < 0}
+              >
+                +
+              </button>
             </div>
 
             <div className="current-quantity">({product.quantity} products available) </div>
@@ -334,11 +343,11 @@ const DetailProduct = () => {
 
           <button className="add-to-cart-button"
             onClick={handleAddToCart}
-            disabled={product.quantity === 0}
+            disabled={product.quantity === 0 || product.quantity < 0}
           >
             <AddShoppingCartIcon /> ADD TO CART
           </button>
-          
+
           {/* <button className="checkout-button" onClick={handleAddToCart}>
             PROCESS TO CHECKOUT
           </button> */}
