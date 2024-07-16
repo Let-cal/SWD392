@@ -1,4 +1,3 @@
-// TableProduct.jsx
 import AddIcon from "@mui/icons-material/Add";
 import {
   IconButton,
@@ -32,7 +31,7 @@ const StyledTableCell = styled(TableCell)(({ theme }) => ({
   },
 }));
 
-const StyledTableRow = styled(TableRow)(({ theme }) => ({
+const StyledTableRow = styled(TableRow)(({ theme, soldOut }) => ({
   "&:nth-of-type(odd)": {
     backgroundColor: theme.palette.action.hover,
   },
@@ -45,10 +44,24 @@ const StyledTableRow = styled(TableRow)(({ theme }) => ({
   "&:last-child td, &:last-child th": {
     border: 0,
   },
+  ...(soldOut && {
+    backgroundColor: theme.palette.grey[200],
+    color: theme.palette.grey[600],
+    textDecoration: "line-through 2px",
+    fontWeight: "bold",
+  }),
 }));
 
-// eslint-disable-next-line no-unused-vars
-const StyledTableContainer = styled(TableContainer)(({ theme }) => ({
+const SoldOutText = styled("span")(() => ({
+  display: "inline-block",
+  width: "100%",
+  textAlign: "center",
+  position: "relative",
+  color: "red",
+  fontWeight: "bold",
+}));
+
+const StyledTableContainer = styled(TableContainer)(() => ({
   overflow: "hidden",
 }));
 
@@ -56,7 +69,7 @@ const TableProduct = ({
   products = [],
   onUpdate,
   onAddProduct,
-  showAddButton,
+  showAddButton = false,
 }) => {
   return (
     <StyledTableContainer>
@@ -78,7 +91,7 @@ const TableProduct = ({
         <TableBody>
           {Array.isArray(products) &&
             products.map((product) => (
-              <StyledTableRow key={product.id}>
+              <StyledTableRow key={product.id} soldOut={product.quantity === 0}>
                 <StyledTableCell align="center">{product.id}</StyledTableCell>
                 <StyledTableCell align="center">
                   {product["name-product"]}
@@ -90,7 +103,11 @@ const TableProduct = ({
                   {product.price}
                 </StyledTableCell>
                 <StyledTableCell align="center">
-                  {product.quantity}
+                  {product.quantity === 0 ? (
+                    <SoldOutText>Sold out</SoldOutText>
+                  ) : (
+                    product.quantity
+                  )}
                 </StyledTableCell>
                 <StyledTableCell align="center">
                   {getCategoryName(product["category-id"])}
@@ -135,10 +152,6 @@ TableProduct.propTypes = {
   onUpdate: PropTypes.func,
   onAddProduct: PropTypes.func,
   showAddButton: PropTypes.bool,
-};
-
-TableProduct.defaultProps = {
-  showAddButton: false,
 };
 
 export default TableProduct;

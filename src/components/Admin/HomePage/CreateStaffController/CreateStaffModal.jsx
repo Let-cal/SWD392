@@ -13,7 +13,7 @@ import PropTypes from "prop-types";
 import { useState } from "react";
 import swal from "sweetalert";
 import InputForm from "./InputForm";
-const CreateStaffModal = ({ isOpen, onClose }) => {
+const CreateStaffModal = ({ isOpen, onClose, onFetchAPI }) => {
   const [formData, setFormData] = useState({
     email: "",
     password: "",
@@ -68,8 +68,8 @@ const CreateStaffModal = ({ isOpen, onClose }) => {
           },
         }
       );
-      swal("No error!", "Image updated successfully!", "success");
-
+      swal("No error!", "Staff created successfullys!", "success");
+      await onFetchAPI();
       onClose();
     } catch (error) {
       console.error("Error:", error.response?.data); // Log the error response
@@ -150,6 +150,7 @@ const CreateStaffModal = ({ isOpen, onClose }) => {
 CreateStaffModal.propTypes = {
   isOpen: PropTypes.bool.isRequired,
   onClose: PropTypes.func.isRequired,
+  onFetchAPI: PropTypes.func,
 };
 
 export default CreateStaffModal;

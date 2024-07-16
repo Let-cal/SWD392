@@ -12,7 +12,7 @@ import {
 import { styled } from "@mui/material/styles";
 import Axios from "axios";
 import PropTypes from "prop-types";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import OrderDetailsDialog from "./OrderDetailsDialog";
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
@@ -49,30 +49,56 @@ const TableOrder = ({ orders }) => {
   const [open, setOpen] = useState(false);
   const [selectedOrder, setSelectedOrder] = useState(null);
   const [orderDetails, setOrderDetails] = useState([]);
-  const [loaded, setLoaded] = useState(false);
+  const [orderTotals, setOrderTotals] = useState({});
   const API_BASE_URL = "https://zodiacjewerlyswd.azurewebsites.net/api/orders";
+
+  useEffect(() => {
+    const fetchOrderDetails = async () => {
+      try {
+        const token = localStorage.getItem("token");
+        const fetchedOrderTotals = {};
+
+        for (const order of orders) {
+          const response = await Axios.get(
+            `${API_BASE_URL}/order/${order.OrderNumber}`,
+            {
+              headers: {
+                Authorization: `Bearer ${token}`,
+                accept: "*/*",
+              },
+            }
+          );
+          fetchedOrderTotals[order.OrderNumber] =
+            response.data.data["price-total"];
+        }
+
+        setOrderTotals(fetchedOrderTotals);
+      } catch (error) {
+        console.error("Error fetching order details:", error);
+      }
+    };
+
+    fetchOrderDetails();
+  }, [orders]);
 
   const handleViewDetails = async (order) => {
     setSelectedOrder(order);
     setOpen(true);
 
-    if (!loaded) {
-      try {
-        const token = localStorage.getItem("token");
-        const response = await Axios.get(
-          `${API_BASE_URL}/order/${order.OrderNumber}`,
-          {
-            headers: {
-              Authorization: `Bearer ${token}`,
-              accept: "*/*",
-            },
-          }
-        );
-        setOrderDetails(response.data.data.product);
-        setLoaded(true);
-      } catch (error) {
-        console.error("Error fetching order details:", error);
-      }
+    try {
+      const token = localStorage.getItem("token");
+      const response = await Axios.get(
+        `${API_BASE_URL}/order/${order.OrderNumber}`,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+            accept: "*/*",
+          },
+        }
+      );
+      setOrderDetails(response.data.data.product);
+    } catch (error) {
+      console.error("Error fetching order details:", error);
     }
   };
 
@@ -80,10 +106,7 @@ const TableOrder = ({ orders }) => {
     setOpen(false);
     setSelectedOrder(null);
     setOrderDetails([]);
-    setLoaded(false);
   };
-
-  console.log("Orders:", orders);
 
   return (
     <StyledTableContainer>
@@ -95,7 +118,7 @@ const TableOrder = ({ orders }) => {
             <StyledTableCell align="center">User Name</StyledTableCell>
             <StyledTableCell align="center">Date</StyledTableCell>
             <StyledTableCell align="center">Status</StyledTableCell>
-            <StyledTableCell align="center">Total Price</StyledTableCell>
+            <StyledTableCell align="center">Total Price $</StyledTableCell>
             <StyledTableCell align="center">Action</StyledTableCell>
           </TableRow>
         </TableHead>
@@ -115,7 +138,7 @@ const TableOrder = ({ orders }) => {
                 {order.Status}
               </StyledTableCell>
               <StyledTableCell align="center">
-                {order.TotalPrice}
+                {orderTotals[order.OrderNumber] ?? "Loading..."}
               </StyledTableCell>
               <StyledTableCell align="center">
                 <IconButton onClick={() => handleViewDetails(order)}>
@@ -131,6 +154,7 @@ const TableOrder = ({ orders }) => {
           open={open}
           onClose={handleClose}
           orderDetails={orderDetails}
+          TotalPrice={orderTotals[selectedOrder.OrderNumber]}
         />
       )}
     </StyledTableContainer>

@@ -81,11 +81,14 @@ const RegisterPage = () => {
         }
       );
       if (response.status === 200) {
-        enqueueSnackbar("Registration successful!", {
-          variant: "success",
-          anchorOrigin: { horizontal: "right", vertical: "top" },
-          preventDuplicate: true,
-        });
+        enqueueSnackbar(
+          "Registration successful! Please comfirm your email before login !!!",
+          {
+            variant: "success",
+            anchorOrigin: { horizontal: "right", vertical: "top" },
+            preventDuplicate: true,
+          }
+        );
         navigate("/login");
       }
     } catch (error) {

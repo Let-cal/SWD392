@@ -1,5 +1,3 @@
-
-
 import { Container, Grid, Paper, Typography } from "@mui/material";
 import LineChartComponent from "./LineChartComponent";
 import PieChartComponent from "./PieChartComponent";
@@ -10,7 +8,6 @@ function Dashboard() {
       <div className="w-[70%]">
         <Container sx={{ mt: 4, mb: 4 }}>
           <Grid container spacing={3}>
-
             <Grid item xs={12} md={8} lg={12}>
               <Paper
                 sx={{
@@ -26,7 +23,6 @@ function Dashboard() {
                 <LineChartComponent />
               </Paper>
             </Grid>
-
           </Grid>
         </Container>
       </div>

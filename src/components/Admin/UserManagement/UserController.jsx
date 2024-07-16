@@ -216,7 +216,7 @@ function UserController() {
       >
         <CircularProgress color="inherit" />
       </Backdrop>
-      <CreateStaffModal isOpen={isModalOpen} onClose={handleCloseModal} />
+      <CreateStaffModal isOpen={isModalOpen} onClose={handleCloseModal} onFetchAPI={fetchUsers}/>
     </div>
   );
 }
