@@ -97,17 +97,21 @@ function LoginForm() {
         }
       }
     } catch (error) {
-      console.error("Đăng nhập thất bại:", error);
-      enqueueSnackbar("Email or password is incorrect. Please try again.", {
-        variant: "error",
-        anchorOrigin: { horizontal: "right", vertical: "top" },
-        preventDuplicate: true,
+      console.error("Login failed:", error);
+      const errorMessages = error.response?.data?.["error-messages"] || [
+        "An error occurred. Please try again.",
+      ];
+      errorMessages.forEach((message) => {
+        enqueueSnackbar(`Error: ${message}`, {
+          variant: "error",
+          anchorOrigin: { horizontal: "right", vertical: "top" },
+          preventDuplicate: true,
+        });
       });
     } finally {
       setLoading(false); // Stop loading
     }
   };
-
   return (
     <div className="flex flex-col ml-5 w-2/5 max-md:ml-0 max-md:w-full">
       <LoadingBackdrop open={loading} />

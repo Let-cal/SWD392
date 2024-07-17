@@ -3,12 +3,12 @@ import { SnackbarProvider } from "notistack";
 import React, { Suspense, lazy, useState } from "react";
 import ReactDOM from "react-dom/client";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
+import Collection from "./components/Customer/CollectionProduct/Collection.jsx";
 import "./components/Customer/Customer.css";
 import "./components/Customer/Header/header.css";
 import LoadingBackdrop from "./components/Loading/LoadingBackdrop.jsx"; // Import LoadingBackdrop
 import { AuthProvider } from "./components/LoginController/AuthContext.jsx";
 import ProtectedRoute from "./components/LoginController/ProtectedRoute.jsx";
-import Collection from "./components/Customer/CollectionProduct/Collection.jsx";
 import "./index.css";
 
 // Lazy loading components
@@ -139,10 +139,7 @@ const App = () => {
                 path="/ChangePasswordPage"
                 element={<ChangePasswordPage />}
               />
-              <Route
-                path="/Collection"
-                element={<Collection />}
-              />
+              <Route path="/Collection" element={<Collection />} />
             </Routes>
           </Suspense>
         </BrowserRouter>

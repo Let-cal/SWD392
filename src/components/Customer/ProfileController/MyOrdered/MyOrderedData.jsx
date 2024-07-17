@@ -36,10 +36,7 @@ const AccountOrders = ({ status }) => {
               .filter((order) => order["user-id"] == userHint)
               .map((order) => ({
                 orderNumber: order.id.toString(),
-                date: format(
-                  new Date(order["payment-date"]),
-                  "dd/MM/yyyy HH:mm"
-                ),
+                paymentDate: new Date(order["payment-date"]),
                 status: getStatusText(order.status),
               }));
             allOrders = [...allOrders, ...filteredOrders];
@@ -53,7 +50,16 @@ const AccountOrders = ({ status }) => {
         }
       }
 
-      setAllOrdersData(allOrders);
+      // Sort the orders by paymentDate and take the latest 10 orders
+      const sortedOrders = allOrders.sort(
+        (a, b) => b.paymentDate - a.paymentDate
+      );
+      const latestOrders = sortedOrders.slice(0, 10).map((order) => ({
+        ...order,
+        date: format(order.paymentDate, "dd/MM/yyyy HH:mm"),
+      }));
+
+      setAllOrdersData(latestOrders);
       setLoading(false);
     };
 
@@ -61,9 +67,9 @@ const AccountOrders = ({ status }) => {
   }, [userHint, token]);
 
   const filteredAndSortedOrders = useMemo(() => {
-    return allOrdersData
-      .filter((order) => status === "All" || order.status === status)
-      .sort((a, b) => new Date(b.date) - new Date(a.date));
+    return allOrdersData.filter(
+      (order) => status === "All" || order.status === status
+    );
   }, [allOrdersData, status]);
 
   const totalPages = Math.ceil(filteredAndSortedOrders.length / pageSize);
