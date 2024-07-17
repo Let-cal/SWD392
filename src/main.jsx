@@ -8,6 +8,7 @@ import "./components/Customer/Header/header.css";
 import LoadingBackdrop from "./components/Loading/LoadingBackdrop.jsx";
 import { AuthProvider } from "./components/LoginController/AuthContext.jsx";
 import ProtectedRoute from "./components/LoginController/ProtectedRoute.jsx";
+import PaySuccess from "./components/Customer/Payment/PaySuccess.jsx"
 import "./index.css";
 
 const AdminPage = lazy(() => import("./components/Admin/AminPage.jsx"));
@@ -124,6 +125,7 @@ const App = () => {
               <Route path="/Register-page" element={<RegisterPage />} />
               <Route path="/DetailProduct/:id" element={<DetailProduct />} />
               <Route path="/AboutPage" element={<AboutPage />} />
+              <Route path="/paysuccess" element={<PaySuccess />} />
               <Route
                 path="/OTPVerificationPage"
                 element={<OTPVerification />}

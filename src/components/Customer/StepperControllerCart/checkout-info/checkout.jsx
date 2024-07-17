@@ -152,11 +152,11 @@ function Checkout() {
                     </div>
                     <div className="checkout-item-price">
                       <span>Unit price</span>{" "}
-                      <span>{formatPrice(item.itemPrice)}đ</span>
+                      <span>${formatPrice(item.itemPrice)}</span>
                     </div>
                     <div className="checkout-item-total">
                       <span>Total</span>{" "}
-                      <span>{formatPrice(item.itemPrice * item.itemQty)}đ</span>
+                      <span>${formatPrice(item.itemPrice * item.itemQty)}</span>
                     </div>
                   </div>
                 </div>
@@ -167,13 +167,14 @@ function Checkout() {
         <div>
           <div className="checkout-summary">
             BILL TOTAL:{" "}
+            $
             {formatPrice(
               selectedItems.reduce(
                 (total, item) => total + item.itemPrice * item.itemQty,
                 0
               )
             )}
-            đ
+            
           </div>
           <form onSubmit={(e) => e.preventDefault()} className="checkout-form">
             <h2>Delivery Information</h2>

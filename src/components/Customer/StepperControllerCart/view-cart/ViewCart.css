@@ -67,6 +67,10 @@ body {
   margin-top: 5px;
 }
 
+.cart-item .item-info .item-price .currency {
+  font-size: 16px;
+}
+
 .cart-item .item-quantity {
   display: flex;
   align-items: center;

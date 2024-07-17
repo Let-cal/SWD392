@@ -37,8 +37,9 @@ const CartItem = ({
         <div className="item-name">{itemName}</div>
         <div className="item-details">{itemDetails}</div>
         <div className="item-price">
+          <span className="currency">$</span>
           {formatPrice(itemPrice * itemQty)}
-          <span className="currency">đ</span>
+
         </div>
       </div>
     </div>
@@ -108,7 +109,7 @@ function ViewCart() {
       );
       if (response.data && response.data.success && Array.isArray(response.data.data.product)) {
         setItems(response.data.data.product);
-        
+
         // Check if there is at least one product in the array
         if (response.data.data.product.length > 0) {
           const orderId = response.data.data.product[0]["order-id"]; // Lấy orderId từ sản phẩm đầu tiên trong mảng
@@ -211,11 +212,11 @@ function ViewCart() {
   };
 
   const calculateTotal = () => {
-    return selectedItems.reduce((total, index) => {
-      const item = items[index];
+    return items.reduce((total, item) => {
       return total + item.price * item.quantity;
     }, 0);
   };
+  
 
   const handleCheckout = () => {
     const selectedProducts = items.map((item) => ({
@@ -275,7 +276,9 @@ function ViewCart() {
         </section>
         <div className="checkout-section-fixed">
           <div className="total-amount">
-            TOTAL: <span className="amount">{formatPrice(calculateTotal())}<span className="currency">đ</span></span>
+            TOTAL:<span className="currency">$</span>
+            <span className="amount">{formatPrice(calculateTotal())}</span>
+
           </div>
           <div className="flex gap-4">
             {/* <Button

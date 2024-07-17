@@ -49,8 +49,9 @@ const Card = ({ image, alt, title, price, quantity, tags, product }) => {
       <div className="content">
         <h3>{title}</h3>
         <p>
+          <span className="currency">$</span>
           <span className="price">{formatPrice(price)}</span>
-          <span className="currency">đ</span>
+
           {/* <span className="quantity"> (Qty: {quantity})</span> */}
         </p>
         <ul>

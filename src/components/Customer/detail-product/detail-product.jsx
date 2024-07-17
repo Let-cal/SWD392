@@ -32,8 +32,9 @@ const SimilarProduct = ({ imageSrc, name, price, product }) => {
       <img className="similar-product-image" src={imageSrc} alt={name} />
       <div className="similar-product-name">{name}</div>
       <div className="similar-product-price">
+        <span className="currency">$</span>
         <span className="price">{formatPrice(price)}</span>
-        <span className="currency">đ</span>
+
       </div>
     </div>
   );
@@ -317,8 +318,9 @@ const DetailProduct = () => {
           <h1 className="product-name">{product["name-product"]}</h1>
 
           <p className="product-price">
+            <span className="currency">$</span>
             <span className="price">{formatPrice(product.price)}</span>
-            <span className="currency">đ</span>
+
           </p>
 
           {product.quantity < 1 && (
