@@ -1,3 +1,4 @@
+// ProfileColorTabs.jsx
 import { Box, Tab, Tabs, Typography } from "@mui/material";
 import PropTypes from "prop-types";
 import { useState } from "react";
@@ -68,8 +69,8 @@ export default function ProfileColorTabs() {
         >
           <Tab label="COMPLETED" {...a11yProps(0)} />
           <Tab label="PENDING" {...a11yProps(1)} />
-          <Tab label="ACCOUNT DETAIL" {...a11yProps(3)} />
-          {/* <Tab label="LOGOUT" {...a11yProps(4)} onClick={handleLogout} /> */}
+          <Tab label="ACCOUNT DETAIL" {...a11yProps(2)} />
+          <Tab label="LOGOUT" {...a11yProps(3)} onClick={handleLogout} />
         </Tabs>
       </Box>
 
@@ -79,9 +80,8 @@ export default function ProfileColorTabs() {
       <CustomTabPanel value={value} index={1}>
         <AccountOrders status="PENDING" />
       </CustomTabPanel>
-      <CustomTabPanel value={value} index={3}>
-        <h1>Haha</h1>
-        <Profile/>
+      <CustomTabPanel value={value} index={2}>
+        <Profile />
       </CustomTabPanel>
     </Box>
   );

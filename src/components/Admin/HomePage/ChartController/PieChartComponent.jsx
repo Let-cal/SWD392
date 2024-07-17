@@ -1,3 +1,5 @@
+import axios from "axios";
+import { useEffect, useState } from "react";
 import {
   Cell,
   Legend,
@@ -6,58 +8,90 @@ import {
   ResponsiveContainer,
   Tooltip,
 } from "recharts";
+import styled from "styled-components";
 
-const data = [
-  { name: "Ring", value: 400 },
-  { name: "Bracelet", value: 300 },
-  { name: "Necklace", value: 300 },
-  { name: "Earrings", value: 200 },
-  { name: "Others", value: 100 },
+// Define the updated color palette
+const COLORS = [
+  "#82ca9d",
+  "#8884d8",
+  "#ffc658",
+  "#ff7f50",
+  "#a6dcef",
+  "#b4aee8",
+  "#ffbb78",
+  "#8dd1e1",
+  "#ff9896",
+  "#98df8a",
 ];
 
-const COLORS = ["#0088FE", "#00C49F", "#FFBB28", "#FF8042", "#AA22AA"];
-const SPECIAL_COLORS = ["#FF0000", "#FF4500", "#32CD32", "#FFD700", "#808080"]; // Colors for the top 4 items
+// Styled component for the chart wrapper
+const ChartWrapper = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+`;
 
 function PieChartComponent() {
-  // Sort the data to find the top 4 items
-  const sortedData = [...data].sort((a, b) => b.value - a.value);
+  const [data, setData] = useState([]);
+
+  useEffect(() => {
+    async function fetchData() {
+      try {
+        const response = await axios.get(
+          "https://zodiacjewerlyswd.azurewebsites.net/api/orders/sales-by-item"
+        );
+        const apiData = response.data.data;
+
+        // Convert API data into Recharts-compatible format
+        const formattedData = Object.keys(apiData).map((key) => ({
+          name: key,
+          value: apiData[key],
+        }));
+
+        setData(formattedData);
+      } catch (error) {
+        console.error("Error fetching data:", error);
+      }
+    }
+
+    fetchData();
+  }, []);
 
   return (
-    <ResponsiveContainer width="100%" height={400}>
-      <PieChart>
-        <Pie
-          data={data}
-          cx="50%"
-          cy="50%"
-          outerRadius={80}
-          fill="#8884d8"
-          dataKey="value"
-          label
-        >
-          {data.map((entry, index) => {
-            const specialIndex = sortedData.findIndex(
-              (item) => item.name === entry.name
-            );
-            const fillColor =
-              specialIndex >= 0 && specialIndex < 4
-                ? SPECIAL_COLORS[specialIndex]
-                : COLORS[index % COLORS.length];
-            return <Cell key={`cell-${index}`} fill={fillColor} />;
-          })}
-        </Pie>
-        <Tooltip />
-        <Legend
-          layout="vertical"
-          verticalAlign="bottom"
-          wrapperStyle={{
-            bottom: "30px",
-            display: "grid",
-            gridTemplateColumns: "repeat(2, 1fr)", // Create 2 columns
-            gap: "10px", // Gap between grid items
-          }}
-        />
-      </PieChart>
-    </ResponsiveContainer>
+    <ChartWrapper>
+      <ResponsiveContainer width="100%" height={400}>
+        <PieChart>
+          <Pie
+            data={data}
+            cx="50%"
+            cy="50%"
+            innerRadius={80}
+            outerRadius={100}
+            fill="#8884d8"
+            dataKey="value"
+            paddingAngle={5}
+            label={({ percent }) => ` ${(percent * 100).toFixed(0)}%`}
+          >
+            {data.map((entry, index) => (
+              <Cell
+                key={`cell-${index}`}
+                fill={COLORS[index % COLORS.length]}
+              />
+            ))}
+          </Pie>
+          <Tooltip />
+          <Legend
+            layout="horizontal"
+            verticalAlign="bottom"
+            align="center"
+            wrapperStyle={{
+              marginTop: "20px",
+            }}
+            iconType="circle"
+          />
+        </PieChart>
+      </ResponsiveContainer>
+    </ChartWrapper>
   );
 }
 

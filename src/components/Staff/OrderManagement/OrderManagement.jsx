@@ -28,7 +28,7 @@ function OrdersManagement() {
   }, [date, status, page, pageSize]);
   const fetchOrders = () => {
     setLoading(true);
-    let url = `https://zodiacjewerlyswd.azurewebsites.net/api/orders?page=${page}&pageSize=${pageSize}&sort=8`;
+    let url = `https://zodiacjewerlyswd.azurewebsites.net/api/orders?page=${page}&pageSize=${pageSize}`;
 
     if (status !== "All") {
       url += `&status=${getStatusValue(status)}`;

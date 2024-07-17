@@ -179,13 +179,9 @@ const DetailProduct = () => {
   const fetchAllProducts = async () => {
     try {
       const response = await axios.get(
-        `https://zodiacjewerlyswd.azurewebsites.net/api/products`,
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        }
+        `https://zodiacjewerlyswd.azurewebsites.net/api/products`
       );
+
       if (
         response.data &&
         response.data.success &&
@@ -198,13 +194,9 @@ const DetailProduct = () => {
         // Lặp qua từng trang để lấy danh sách sản phẩm
         for (let page = 1; page <= totalPages; page++) {
           const pageResponse = await axios.get(
-            `https://zodiacjewerlyswd.azurewebsites.net/api/products?page=${page}&pageSize=5`,
-            {
-              headers: {
-                Authorization: `Bearer ${token}`,
-              },
-            }
+            `https://zodiacjewerlyswd.azurewebsites.net/api/products?page=${page}&pageSize=5`
           );
+
           if (
             pageResponse.data &&
             pageResponse.data.success &&
@@ -317,7 +309,7 @@ const DetailProduct = () => {
             <span className="currency">đ</span>
           </p>
 
-          {product.quantity === 0 || product.quantity < 0 && (
+          {product.quantity < 1 && (
             <span className="out-of-stock">OUT OF STOCK</span>
           )}
 
