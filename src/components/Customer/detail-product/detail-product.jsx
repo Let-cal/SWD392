@@ -237,7 +237,19 @@ const DetailProduct = () => {
 
   const handleAddToCart = async () => {
     const hint = localStorage.getItem("hint");
+    const token = localStorage.getItem("token"); // Lấy token từ localStorage
     const productID = id;
+    // const navigate = useNavigate(); 
+
+    // Kiểm tra xem người dùng đã đăng nhập chưa
+    if (!token) {
+      enqueueSnackbar("Please login to add products to cart", {
+        variant: "warning",
+        preventDuplicate: true,
+      });
+      navigate("/login"); // Chuyển hướng đến trang đăng nhập
+      return;
+    }
 
     for (let i = 0; i < quantity; i++) {
       try {
@@ -279,7 +291,7 @@ const DetailProduct = () => {
   };
 
 
-  
+
   return (
     <div>
       <Header />

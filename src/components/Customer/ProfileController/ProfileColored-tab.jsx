@@ -70,7 +70,7 @@ export default function ProfileColorTabs() {
           <Tab label="COMPLETED" {...a11yProps(0)} />
           <Tab label="PENDING" {...a11yProps(1)} />
           <Tab label="ACCOUNT DETAIL" {...a11yProps(2)} />
-          <Tab label="LOGOUT" {...a11yProps(3)} onClick={handleLogout} />
+          {/* <Tab label="LOGOUT" {...a11yProps(3)} onClick={handleLogout} /> */}
         </Tabs>
       </Box>
 

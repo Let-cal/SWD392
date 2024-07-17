@@ -81,6 +81,7 @@ function LoginForm() {
         }
 
         setIsAuthenticated(true);
+
         setUserRole(response.data.role);
 
         enqueueSnackbar("Logged in successfully", {

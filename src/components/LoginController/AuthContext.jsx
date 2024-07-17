@@ -1,13 +1,7 @@
 import { jwtDecode } from "jwt-decode";
 import { useSnackbar } from "notistack";
 import PropTypes from "prop-types";
-import {
-  createContext,
-  useCallback,
-  useContext,
-  useEffect,
-  useState,
-} from "react";
+import { createContext, useCallback, useContext, useEffect, useState } from "react";
 
 const AuthContext = createContext();
 

@@ -46,7 +46,7 @@ function Collection() {
           "https://zodiacjewerlyswd.azurewebsites.net/api/collections?page=1&pageSize=8&sort=id",
           {
             headers: {
-              Authorization: `Bearer ${token}`,
+              accept: "*/*",
             },
           }
         );
@@ -60,10 +60,9 @@ function Collection() {
       }
     };
 
-    if (token) {
-      fetchCollections();
-    }
-  }, [token]);
+    fetchCollections();
+  }, []);
+
 
   useEffect(() => {
     if (location.state && location.state.selectedCollectionId) {
@@ -93,7 +92,7 @@ function Collection() {
         `https://zodiacjewerlyswd.azurewebsites.net/api/collections/${collectionId}`,
         {
           headers: {
-            Authorization: `Bearer ${token}`,
+            accept: "*/*",
           },
         }
       );
