@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
-import { useLocation } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
+
 import Header from "../../../Admin/HeaderOfAdmin";
 import CheckoutStepper from "../StepperComponent";
 import axios from "axios";
@@ -9,12 +10,16 @@ function Checkout() {
   const location = useLocation();
   const { selectedItems } = location.state || [];
 
+  const navigate = useNavigate(); // Sử dụng useNavigate để chuyển hướng
+
   const [orderInfo, setOrderInfo] = useState({
     name: "",
     address: "",
     phone: "",
     email: "",
   });
+
+  const [orderId, setOrderId] = useState(null);
 
   useEffect(() => {
     const fetchUserInfo = async () => {
@@ -50,6 +55,13 @@ function Checkout() {
     fetchUserInfo();
   }, []);
 
+  useEffect(() => {
+    const orderIdFromStorage = localStorage.getItem("order-id");
+    if (orderIdFromStorage) {
+      setOrderId(orderIdFromStorage);
+    }
+  }, []);
+
   const handleChange = (e) => {
     const { name, value } = e.target;
     setOrderInfo({ ...orderInfo, [name]: value });
@@ -67,8 +79,8 @@ function Checkout() {
       address: orderInfo.address,
       "telephone-number": orderInfo.phone,
       email: orderInfo.email,
-      status: 1, // Giữ nguyên giá trị status
-      "role-name": "Customer", // Giữ nguyên giá trị role-name
+      status: 1,
+      "role-name": "Customer",
     };
 
     try {
@@ -80,11 +92,39 @@ function Checkout() {
         });
 
         console.log("Profile updated successfully:", response.data);
+
+        await completePayment(orderId, token);
       } else {
         console.error("No token found in localStorage");
       }
     } catch (error) {
       console.error("Error updating profile:", error);
+    }
+  };
+
+  const completePayment = async (orderId, token) => {
+    if (!orderId) {
+      console.error("No order-id found to complete payment");
+      return;
+    }
+
+    const completePaymentUrl = `https://zodiacjewerlyswd.azurewebsites.net/api/orders/${orderId}/complete-payment`;
+
+    try {
+      const response = await axios.put(completePaymentUrl, null, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+
+      console.log("Payment completed successfully:", response.data);
+
+      localStorage.removeItem("order-id");
+
+      // Chuyển hướng sau khi thanh toán thành công
+      navigate("/paysuccess");
+    } catch (error) {
+      console.error("Error completing payment:", error);
     }
   };
 
@@ -112,11 +152,11 @@ function Checkout() {
                     </div>
                     <div className="checkout-item-price">
                       <span>Unit price</span>{" "}
-                      <span>{formatPrice(item.itemPrice)}đ</span>
+                      <span>${formatPrice(item.itemPrice)}</span>
                     </div>
                     <div className="checkout-item-total">
                       <span>Total</span>{" "}
-                      <span>{formatPrice(item.itemPrice * item.itemQty)}đ</span>
+                      <span>${formatPrice(item.itemPrice * item.itemQty)}</span>
                     </div>
                   </div>
                 </div>
@@ -127,13 +167,14 @@ function Checkout() {
         <div>
           <div className="checkout-summary">
             BILL TOTAL:{" "}
+            $
             {formatPrice(
               selectedItems.reduce(
                 (total, item) => total + item.itemPrice * item.itemQty,
                 0
               )
             )}
-            đ
+            
           </div>
           <form onSubmit={(e) => e.preventDefault()} className="checkout-form">
             <h2>Delivery Information</h2>

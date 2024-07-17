@@ -1,17 +1,16 @@
-/* eslint-disable react-refresh/only-export-components */
 import { SnackbarProvider } from "notistack";
 import React, { Suspense, lazy, useState } from "react";
 import ReactDOM from "react-dom/client";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
+import Collection from "./components/Customer/CollectionProduct/Collection.jsx";
 import "./components/Customer/Customer.css";
 import "./components/Customer/Header/header.css";
-import LoadingBackdrop from "./components/Loading/LoadingBackdrop.jsx"; // Import LoadingBackdrop
+import LoadingBackdrop from "./components/Loading/LoadingBackdrop.jsx";
 import { AuthProvider } from "./components/LoginController/AuthContext.jsx";
 import ProtectedRoute from "./components/LoginController/ProtectedRoute.jsx";
-import Collection from "./components/Customer/CollectionProduct/Collection.jsx";
+import PaySuccess from "./components/Customer/Payment/PaySuccess.jsx"
 import "./index.css";
 
-// Lazy loading components
 const AdminPage = lazy(() => import("./components/Admin/AminPage.jsx"));
 const AboutPage = lazy(() =>
   import("./components/Customer/AboutController/AboutPage.jsx")
@@ -57,11 +56,10 @@ const StaffPage = lazy(() => import("./components/Staff/StaffPage.jsx"));
 const App = () => {
   const [loading, setLoading] = useState(true);
 
-  // Use an effect to simulate a loading delay for demonstration purposes
   React.useEffect(() => {
     setTimeout(() => {
       setLoading(false);
-    }, 2000); // Simulate a 2 second loading time
+    }, 2000);
   }, []);
 
   return (
@@ -77,6 +75,7 @@ const App = () => {
                   <ProtectedRoute
                     element={<MyComponent />}
                     roles={["Customer"]}
+                    allowGuest={true}
                   />
                 }
               />
@@ -101,6 +100,7 @@ const App = () => {
                   <ProtectedRoute
                     element={<MyComponent />}
                     roles={["Customer"]}
+                    allowGuest={true}
                   />
                 }
               />
@@ -109,14 +109,8 @@ const App = () => {
                 exact
                 path="/ViewCartDetails"
                 element={<ViewCartDetails />}
-                roles={["Customer"]}
               />
-              <Route
-                exact
-                path="/checkout"
-                element={<Checkout />}
-                roles={["Customer"]}
-              />
+              <Route exact path="/checkout" element={<Checkout />} />
               <Route
                 exact
                 path="/CustomerProfile-order"
@@ -131,6 +125,7 @@ const App = () => {
               <Route path="/Register-page" element={<RegisterPage />} />
               <Route path="/DetailProduct/:id" element={<DetailProduct />} />
               <Route path="/AboutPage" element={<AboutPage />} />
+              <Route path="/paysuccess" element={<PaySuccess />} />
               <Route
                 path="/OTPVerificationPage"
                 element={<OTPVerification />}
@@ -139,10 +134,7 @@ const App = () => {
                 path="/ChangePasswordPage"
                 element={<ChangePasswordPage />}
               />
-              <Route
-                path="/Collection"
-                element={<Collection />}
-              />
+              <Route path="/Collection" element={<Collection />} />
             </Routes>
           </Suspense>
         </BrowserRouter>

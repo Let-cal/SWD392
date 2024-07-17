@@ -24,6 +24,7 @@ const SimilarProduct = ({ imageSrc, name, price, product }) => {
 
   const handleClick = () => {
     navigate(`/DetailProduct/${product.id}`, { state: { product } });
+    window.location.reload();
   };
 
   return (
@@ -31,8 +32,9 @@ const SimilarProduct = ({ imageSrc, name, price, product }) => {
       <img className="similar-product-image" src={imageSrc} alt={name} />
       <div className="similar-product-name">{name}</div>
       <div className="similar-product-price">
+        <span className="currency">$</span>
         <span className="price">{formatPrice(price)}</span>
-        <span className="currency">đ</span>
+
       </div>
     </div>
   );
@@ -113,17 +115,15 @@ const ProductTabs = ({ activeTab, setActiveTab, product }) => {
     <div>
       <div className="product-tabs">
         <div
-          className={`product-tab ${
-            activeTab === "description" ? "active" : ""
-          }`}
+          className={`product-tab ${activeTab === "description" ? "active" : ""
+            }`}
           onClick={() => setActiveTab("description")}
         >
           Information
         </div>
         <div
-          className={`product-tab ${
-            activeTab === "additional" ? "active" : ""
-          }`}
+          className={`product-tab ${activeTab === "additional" ? "active" : ""
+            }`}
           onClick={() => setActiveTab("additional")}
         >
           Product description
@@ -146,6 +146,7 @@ const DetailProduct = () => {
   );
   const [activeTab, setActiveTab] = useState("description");
   const [quantity, setQuantity] = useState(1);
+
   const [similarProducts, setSimilarProducts] = useState([]);
 
   // Lấy token từ localStorage
@@ -179,13 +180,9 @@ const DetailProduct = () => {
   const fetchAllProducts = async () => {
     try {
       const response = await axios.get(
-        `https://zodiacjewerlyswd.azurewebsites.net/api/products`,
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        }
+        `https://zodiacjewerlyswd.azurewebsites.net/api/products`
       );
+
       if (
         response.data &&
         response.data.success &&
@@ -198,13 +195,9 @@ const DetailProduct = () => {
         // Lặp qua từng trang để lấy danh sách sản phẩm
         for (let page = 1; page <= totalPages; page++) {
           const pageResponse = await axios.get(
-            `https://zodiacjewerlyswd.azurewebsites.net/api/products?page=${page}&pageSize=5`,
-            {
-              headers: {
-                Authorization: `Bearer ${token}`,
-              },
-            }
+            `https://zodiacjewerlyswd.azurewebsites.net/api/products?page=${page}&pageSize=5`
           );
+
           if (
             pageResponse.data &&
             pageResponse.data.success &&
@@ -245,7 +238,19 @@ const DetailProduct = () => {
 
   const handleAddToCart = async () => {
     const hint = localStorage.getItem("hint");
+    const token = localStorage.getItem("token"); // Lấy token từ localStorage
     const productID = id;
+    // const navigate = useNavigate(); 
+
+    // Kiểm tra xem người dùng đã đăng nhập chưa
+    if (!token) {
+      enqueueSnackbar("Please login to add products to cart", {
+        variant: "warning",
+        preventDuplicate: true,
+      });
+      navigate("/login"); // Chuyển hướng đến trang đăng nhập
+      return;
+    }
 
     for (let i = 0; i < quantity; i++) {
       try {
@@ -286,6 +291,8 @@ const DetailProduct = () => {
     }
   };
 
+
+
   return (
     <div>
       <Header />
@@ -311,29 +318,45 @@ const DetailProduct = () => {
           <h1 className="product-name">{product["name-product"]}</h1>
 
           <p className="product-price">
+            <span className="currency">$</span>
             <span className="price">{formatPrice(product.price)}</span>
-            <span className="currency">đ</span>
+
           </p>
+
+          {product.quantity < 1 && (
+            <span className="out-of-stock">OUT OF STOCK</span>
+          )}
 
           <div className="quantity-and-cart">
             <div className="quantity-selector">
               <button
                 onClick={() => setQuantity(quantity > 1 ? quantity - 1 : 1)}
+                disabled={product.quantity === 0 || product.quantity < 0}
               >
                 -
               </button>
               <div className="quantity-value">{quantity}</div>
-              <button onClick={() => setQuantity(quantity + 1)}>+</button>
+              <button
+                onClick={() => setQuantity(quantity >= product.quantity ? product.quantity : quantity + 1)}
+                disabled={product.quantity === 0 || product.quantity < 0}
+              >
+                +
+              </button>
             </div>
+
+            <div className="current-quantity">({product.quantity} products available) </div>
           </div>
 
-          <button className="add-to-cart-button" onClick={handleAddToCart}>
+          <button className="add-to-cart-button"
+            onClick={handleAddToCart}
+            disabled={product.quantity === 0 || product.quantity < 0}
+          >
             <AddShoppingCartIcon /> ADD TO CART
           </button>
 
-          <button className="checkout-button" onClick={handleAddToCart}>
+          {/* <button className="checkout-button" onClick={handleAddToCart}>
             PROCESS TO CHECKOUT
-          </button>
+          </button> */}
           <ProductTabs
             activeTab={activeTab}
             setActiveTab={setActiveTab}

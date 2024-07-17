@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "./AuthContext.jsx";
 
-const ProtectedRoute = ({ element, roles }) => {
+const ProtectedRoute = ({ element, roles, allowGuest = false }) => {
   const { isAuthenticated, userRole, loading } = useAuth();
   const { enqueueSnackbar } = useSnackbar();
   const [showNotification, setShowNotification] = useState(false);
@@ -12,10 +12,9 @@ const ProtectedRoute = ({ element, roles }) => {
 
   useEffect(() => {
     if (!loading) {
-      // Chỉ thực hiện logic khi không loading
-      if (!isAuthenticated) {
+      if (!isAuthenticated && !allowGuest) {
         navigate("/login");
-      } else if (roles && !roles.includes(userRole)) {
+      } else if (roles && !roles.includes(userRole) && isAuthenticated) {
         if (!showNotification) {
           enqueueSnackbar("You do not have permission to access this page.", {
             variant: "error",
@@ -23,11 +22,12 @@ const ProtectedRoute = ({ element, roles }) => {
           });
           setShowNotification(true);
         }
-        if (userRole.includes("Admin")) {
+        // Navigate based on userRole
+        if (userRole === "Admin") {
           navigate("/AdminPage");
-        } else if (userRole.includes("Customer")) {
+        } else if (userRole === "Customer") {
           navigate("/customer-page");
-        } else {
+        } else if (userRole === "Staff") {
           navigate("/StaffPage");
         }
       }
@@ -40,9 +40,14 @@ const ProtectedRoute = ({ element, roles }) => {
     enqueueSnackbar,
     showNotification,
     loading,
+    allowGuest,
   ]);
 
-  if (loading || !isAuthenticated || (roles && !roles.includes(userRole))) {
+  if (loading) {
+    return null; // Or you can return a loading spinner here
+  }
+
+  if (!isAuthenticated && !allowGuest) {
     return null;
   }
 
@@ -52,6 +57,7 @@ const ProtectedRoute = ({ element, roles }) => {
 ProtectedRoute.propTypes = {
   element: PropTypes.node.isRequired,
   roles: PropTypes.arrayOf(PropTypes.string),
+  allowGuest: PropTypes.bool,
 };
 
 export default ProtectedRoute;
