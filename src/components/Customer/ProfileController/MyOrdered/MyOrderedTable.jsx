@@ -46,9 +46,9 @@ const StyledTableContainer = styled(TableContainer)(() => ({
 }));
 
 const ProfileContent = ({ orders = [], loading }) => {
-  const statusClasses = {
-    COMPLETED: "text-green-600 font-bold",
-    PROCESSING: "text-yellow-600 font-bold",
+  const statusStyles = {
+    COMPLETED: { color: "#28a745", fontWeight: "bold" },
+    PENDING: { color: "#ffa500", fontWeight: "bold" },
   };
 
   const showOrdersTable = orders.length > 0;
@@ -141,12 +141,12 @@ const ProfileContent = ({ orders = [], loading }) => {
                   <StyledTableCell align="center">{order.date}</StyledTableCell>
                   <StyledTableCell
                     align="center"
-                    className={statusClasses[order.status]}
+                    style={statusStyles[order.status]}
                   >
                     {order.status}
                   </StyledTableCell>
                   <StyledTableCell align="center">
-                    {totalPrices[order.orderNumber] || "Loading..."}
+                    {totalPrices[order.orderNumber] || "Not payment yet"}
                   </StyledTableCell>
                   <StyledTableCell align="center">
                     <IconButton onClick={() => handleViewDetails(order)}>
