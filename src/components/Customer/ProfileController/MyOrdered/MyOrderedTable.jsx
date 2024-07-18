@@ -138,7 +138,7 @@ const ProfileContent = ({ orders = [], loading }) => {
                   <StyledTableCell align="center">
                     {order.orderNumber}
                   </StyledTableCell>
-                  <StyledTableCell align="center">{order.date}</StyledTableCell>
+                  <StyledTableCell align="center">{order.date || "Not payment yet"}</StyledTableCell>
                   <StyledTableCell
                     align="center"
                     style={statusStyles[order.status]}

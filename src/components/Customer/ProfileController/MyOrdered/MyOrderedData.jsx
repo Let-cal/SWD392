@@ -38,10 +38,13 @@ const AccountOrders = ({ status }) => {
               .filter((order) => order["user-id"] == userHint)
               .map((order) => ({
                 orderNumber: order.id.toString(),
-                paymentDate: new Date(order["payment-date"]),
+                paymentDate: order["payment-date"]
+                  ? new Date(order["payment-date"])
+                  : null,
                 status: getStatusText(order.status),
               }));
             allOrders = [...allOrders, ...filteredOrders];
+            console.log(allOrders);
             currentPage++;
           } else {
             hasMorePages = false;
@@ -53,12 +56,20 @@ const AccountOrders = ({ status }) => {
       }
 
       // Sort the orders by paymentDate and take the latest 10 orders
-      const sortedOrders = allOrders.sort(
-        (a, b) => b.paymentDate - a.paymentDate
-      );
+      const sortedOrders = allOrders.sort((a, b) => {
+        if (a.paymentDate && b.paymentDate) {
+          return b.paymentDate - a.paymentDate;
+        } else if (a.paymentDate) {
+          return -1;
+        } else {
+          return 1;
+        }
+      });
       const latestOrders = sortedOrders.slice(0, 10).map((order) => ({
         ...order,
-        date: format(order.paymentDate, "dd/MM/yyyy HH:mm"),
+        date: order.paymentDate
+          ? format(order.paymentDate, "dd/MM/yyyy HH:mm")
+          : "Not payment yet",
       }));
 
       setAllOrdersData(latestOrders);
