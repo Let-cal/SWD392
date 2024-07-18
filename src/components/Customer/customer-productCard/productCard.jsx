@@ -22,7 +22,7 @@ const formatPrice = (price) => {
   return price.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".");
 };
 
-const Card = ({ image, alt, title, price, tags, product }) => {
+const Card = ({ image, alt, title, price, quantity, tags, product }) => {
   const navigate = useNavigate();
 
   const handleDetailClick = (e) => {
@@ -49,8 +49,10 @@ const Card = ({ image, alt, title, price, tags, product }) => {
       <div className="content">
         <h3>{title}</h3>
         <p>
+          <span className="currency">$</span>
           <span className="price">{formatPrice(price)}</span>
-          <span className="currency">đ</span>
+
+          {/* <span className="quantity"> (Qty: {quantity})</span> */}
         </p>
         <ul>
           {tags.map((tag, index) => (
@@ -116,19 +118,7 @@ const TrustedCompanies = ({ selectedZodiacId }) => {
   useEffect(() => {
     const fetchProducts = async () => {
       try {
-        const token = localStorage.getItem("token");
-
-        if (!token) {
-          console.error('No token found');
-          return;
-        }
-
-        console.log('Using token:', token);
-
         const initialResponse = await axios.get('https://zodiacjewerlyswd.azurewebsites.net/api/products', {
-          headers: {
-            Authorization: `Bearer ${token}`
-          },
           params: { page: 1, pageSize: 1 }
         });
 
@@ -139,9 +129,6 @@ const TrustedCompanies = ({ selectedZodiacId }) => {
         let allProducts = [];
         for (let i = 1; i <= totalPages; i++) {
           const response = await axios.get('https://zodiacjewerlyswd.azurewebsites.net/api/products', {
-            headers: {
-              Authorization: `Bearer ${token}`
-            },
             params: { page: i, pageSize: pageSize }
           });
           allProducts = allProducts.concat(response.data.data['list-data']);
@@ -206,6 +193,7 @@ const TrustedCompanies = ({ selectedZodiacId }) => {
           alt: product["name-product"],
           title: product["name-product"],
           price: product.price,
+          quantity: product.quantity,
           product,
           tags: [
             { name: categoryMap[product["category-id"]], color: '#ff5733', className: 'tag-category' },
@@ -389,6 +377,7 @@ const TrustedCompanies = ({ selectedZodiacId }) => {
               alt={card.alt}
               title={card.title}
               price={card.price}
+              quantity={card.quantity}
               tags={card.tags}
               product={card.product}
             />

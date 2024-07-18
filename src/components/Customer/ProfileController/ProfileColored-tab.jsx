@@ -2,7 +2,7 @@
 import { Box, Tab, Tabs, Typography } from "@mui/material";
 import PropTypes from "prop-types";
 import { useState } from "react";
-import { useAuth } from "../../LoginController/AuthContext";
+
 import AccountOrders from "./MyOrdered/MyOrderedData";
 import Profile from "./profile/profile";
 
@@ -40,7 +40,6 @@ function a11yProps(index) {
 }
 
 export default function ProfileColorTabs() {
-  const { handleLogout } = useAuth();
   const [value, setValue] = useState(0);
 
   const handleChange = (event, newValue) => {
@@ -70,7 +69,7 @@ export default function ProfileColorTabs() {
           <Tab label="COMPLETED" {...a11yProps(0)} />
           <Tab label="PENDING" {...a11yProps(1)} />
           <Tab label="ACCOUNT DETAIL" {...a11yProps(2)} />
-          <Tab label="LOGOUT" {...a11yProps(3)} onClick={handleLogout} />
+          {/* <Tab label="LOGOUT" {...a11yProps(3)} onClick={handleLogout} /> */}
         </Tabs>
       </Box>
 

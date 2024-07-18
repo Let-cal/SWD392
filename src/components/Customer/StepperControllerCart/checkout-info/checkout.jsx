@@ -1,13 +1,17 @@
-import React, { useState, useEffect } from "react";
-import { useLocation } from "react-router-dom";
+import { Backdrop, CircularProgress } from "@mui/material";
+import { useEffect, useState } from "react";
+import { useLocation, useNavigate } from "react-router-dom";
+import axios from "axios";
 import Header from "../../../Admin/HeaderOfAdmin";
 import CheckoutStepper from "../StepperComponent";
-import axios from "axios";
 import "./checkout.css";
 
 function Checkout() {
+  const [loading, setLoading] = useState(false);
   const location = useLocation();
   const { selectedItems } = location.state || [];
+
+  const navigate = useNavigate(); // Sử dụng useNavigate để chuyển hướng
 
   const [orderInfo, setOrderInfo] = useState({
     name: "",
@@ -15,6 +19,8 @@ function Checkout() {
     phone: "",
     email: "",
   });
+
+  const [orderId, setOrderId] = useState(null);
 
   useEffect(() => {
     const fetchUserInfo = async () => {
@@ -30,7 +36,12 @@ function Checkout() {
             },
           });
 
-          const { email, "full-name": name, address, "telephone-number": phone } = response.data.data;
+          const {
+            email,
+            "full-name": name,
+            address,
+            "telephone-number": phone,
+          } = response.data.data;
 
           setOrderInfo({
             ...orderInfo,
@@ -50,6 +61,13 @@ function Checkout() {
     fetchUserInfo();
   }, []);
 
+  useEffect(() => {
+    const orderIdFromStorage = localStorage.getItem("order-id");
+    if (orderIdFromStorage) {
+      setOrderId(orderIdFromStorage);
+    }
+  }, []);
+
   const handleChange = (e) => {
     const { name, value } = e.target;
     setOrderInfo({ ...orderInfo, [name]: value });
@@ -57,6 +75,7 @@ function Checkout() {
 
   const handleCheckout = async (e) => {
     e.preventDefault();
+    setLoading(true);
     const token = localStorage.getItem("token");
     const hint = localStorage.getItem("hint");
     const url = `https://zodiacjewerlyswd.azurewebsites.net/api/users`;
@@ -67,8 +86,8 @@ function Checkout() {
       address: orderInfo.address,
       "telephone-number": orderInfo.phone,
       email: orderInfo.email,
-      status: 1, // Giữ nguyên giá trị status
-      "role-name": "Customer", // Giữ nguyên giá trị role-name
+      status: 1,
+      "role-name": "Customer",
     };
 
     try {
@@ -80,11 +99,41 @@ function Checkout() {
         });
 
         console.log("Profile updated successfully:", response.data);
+
+        await completePayment(orderId, token);
       } else {
         console.error("No token found in localStorage");
       }
     } catch (error) {
       console.error("Error updating profile:", error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const completePayment = async (orderId, token) => {
+    if (!orderId) {
+      console.error("No order-id found to complete payment");
+      return;
+    }
+
+    const completePaymentUrl = `https://zodiacjewerlyswd.azurewebsites.net/api/orders/${orderId}/complete-payment`;
+
+    try {
+      const response = await axios.put(completePaymentUrl, null, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+
+      console.log("Payment completed successfully:", response.data);
+
+      localStorage.removeItem("order-id");
+
+      // Chuyển hướng sau khi thanh toán thành công
+      navigate("/paysuccess");
+    } catch (error) {
+      console.error("Error completing payment:", error);
     }
   };
 
@@ -112,11 +161,11 @@ function Checkout() {
                     </div>
                     <div className="checkout-item-price">
                       <span>Unit price</span>{" "}
-                      <span>{formatPrice(item.itemPrice)}đ</span>
+                      <span>${formatPrice(item.itemPrice)}</span>
                     </div>
                     <div className="checkout-item-total">
                       <span>Total</span>{" "}
-                      <span>{formatPrice(item.itemPrice * item.itemQty)}đ</span>
+                      <span>${formatPrice(item.itemPrice * item.itemQty)}</span>
                     </div>
                   </div>
                 </div>
@@ -126,14 +175,13 @@ function Checkout() {
 
         <div>
           <div className="checkout-summary">
-            BILL TOTAL:{" "}
+            BILL TOTAL: $
             {formatPrice(
               selectedItems.reduce(
                 (total, item) => total + item.itemPrice * item.itemQty,
                 0
               )
             )}
-            đ
           </div>
           <form onSubmit={(e) => e.preventDefault()} className="checkout-form">
             <h2>Delivery Information</h2>
@@ -166,6 +214,9 @@ function Checkout() {
           </form>
         </div>
       </div>
+      <Backdrop open={loading} sx={{ color: "#fff", zIndex: 9999 }}>
+        <CircularProgress color="inherit" />
+      </Backdrop>
     </>
   );
 }

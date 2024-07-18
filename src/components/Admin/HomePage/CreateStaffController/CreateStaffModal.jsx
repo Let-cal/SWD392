@@ -6,13 +6,14 @@ import {
   DialogActions,
   DialogContent,
   DialogTitle,
+  TextField,
 } from "@mui/material";
 import axios from "axios";
 import { enqueueSnackbar } from "notistack";
 import PropTypes from "prop-types";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import swal from "sweetalert";
-import InputForm from "./InputForm";
+
 const CreateStaffModal = ({ isOpen, onClose, onFetchAPI }) => {
   const [formData, setFormData] = useState({
     email: "",
@@ -22,30 +23,64 @@ const CreateStaffModal = ({ isOpen, onClose, onFetchAPI }) => {
     telephoneNumber: "",
   });
 
+  const [errors, setErrors] = useState({});
   const [loading, setLoading] = useState(false);
 
+  const validateEmail = (email) => {
+    const re = /\S+@\S+\.\S+/;
+    return re.test(email);
+  };
+
+  const validateTelephoneNumber = (telephoneNumber) => {
+    const re = /^[0-9]+$/;
+    return re.test(telephoneNumber);
+  };
+
   const handleChange = (e) => {
-    setFormData({ ...formData, [e.target.name]: e.target.value });
+    const { name, value } = e.target;
+    setFormData({ ...formData, [name]: value });
+
+    // Clear error for the current field
+    let newErrors = { ...errors };
+    delete newErrors[name];
+
+    switch (name) {
+      case "email":
+        if (value && !validateEmail(value)) {
+          newErrors.email = "Invalid email address";
+        }
+        break;
+      case "telephoneNumber":
+        if (value && !validateTelephoneNumber(value)) {
+          newErrors.telephoneNumber =
+            "Telephone number must contain only numbers";
+        }
+        break;
+      case "confirmPassword":
+        if (value !== formData.password) {
+          newErrors.confirmPassword = "Passwords do not match";
+        }
+        break;
+      default:
+        break;
+    }
+
+    setErrors(newErrors);
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    if (formData.password !== formData.confirmPassword) {
-      enqueueSnackbar("Passwords do not match", { variant: "error" });
+    if (Object.keys(errors).length > 0 || !formData.password) {
+      enqueueSnackbar("Please fix the errors before submitting", {
+        variant: "error",
+      });
       return;
     }
 
     const { email, password, fullName, telephoneNumber } = formData;
-    console.log("Request Data:", {
-      email: email,
-      password: password,
-      "full-name": fullName,
-      "telephone-number": telephoneNumber,
-    });
     setLoading(true);
     try {
       const token = localStorage.getItem("token");
-      console.log("Token:", token);
       if (!token) {
         enqueueSnackbar("Authentication token is missing", {
           variant: "error",
@@ -56,8 +91,8 @@ const CreateStaffModal = ({ isOpen, onClose, onFetchAPI }) => {
       await axios.post(
         "https://zodiacjewerlyswd.azurewebsites.net/api/authentication/staff",
         {
-          email: email,
-          password: password,
+          email,
+          password,
           "full-name": fullName,
           "telephone-number": telephoneNumber,
         },
@@ -68,11 +103,10 @@ const CreateStaffModal = ({ isOpen, onClose, onFetchAPI }) => {
           },
         }
       );
-      swal("No error!", "Staff created successfullys!", "success");
+      swal("No error!", "Staff created successfully!", "success");
       await onFetchAPI();
       onClose();
     } catch (error) {
-      console.error("Error:", error.response?.data); // Log the error response
       enqueueSnackbar(
         error.response?.data?.message || "Failed to create staff account",
         { variant: "error" }
@@ -82,6 +116,30 @@ const CreateStaffModal = ({ isOpen, onClose, onFetchAPI }) => {
     }
   };
 
+  useEffect(() => {
+    const { email, password, confirmPassword, telephoneNumber } = formData;
+    let newErrors = {};
+
+    if (email && !validateEmail(email)) {
+      newErrors.email = "Invalid email address";
+    }
+    if (telephoneNumber && !validateTelephoneNumber(telephoneNumber)) {
+      newErrors.telephoneNumber = "Telephone number must contain only numbers";
+    }
+    if (password !== confirmPassword) {
+      newErrors.confirmPassword = "Passwords do not match";
+    }
+
+    setErrors(newErrors);
+  }, [formData]);
+
+  const isFormValid =
+    Object.keys(errors).length === 0 &&
+    formData.email &&
+    formData.password &&
+    formData.fullName &&
+    formData.telephoneNumber;
+
   if (!isOpen) return null;
 
   return (
@@ -89,42 +147,60 @@ const CreateStaffModal = ({ isOpen, onClose, onFetchAPI }) => {
       <DialogTitle>Create Staff Account</DialogTitle>
       <DialogContent>
         <form onSubmit={handleSubmit}>
-          <InputForm
+          <TextField
             label="Email Address"
             placeholder="Enter your email"
             name="email"
             value={formData.email}
             onChange={handleChange}
+            fullWidth
+            margin="normal"
+            error={!!errors.email}
+            helperText={errors.email}
           />
-          <InputForm
+          <TextField
             label="Password"
             placeholder="Enter your password"
-            isPassword
+            type="password"
             name="password"
             value={formData.password}
             onChange={handleChange}
+            fullWidth
+            margin="normal"
+            error={!!errors.password}
+            helperText={errors.password}
           />
-          <InputForm
+          <TextField
             label="Confirm Password"
             placeholder="Confirm your password"
-            isPassword
+            type="password"
             name="confirmPassword"
             value={formData.confirmPassword}
             onChange={handleChange}
+            fullWidth
+            margin="normal"
+            error={!!errors.confirmPassword}
+            helperText={errors.confirmPassword}
           />
-          <InputForm
+          <TextField
             label="Full Name"
             placeholder="Enter your full name"
             name="fullName"
             value={formData.fullName}
             onChange={handleChange}
+            fullWidth
+            margin="normal"
           />
-          <InputForm
+          <TextField
             label="Telephone Number"
             placeholder="+84"
             name="telephoneNumber"
             value={formData.telephoneNumber}
             onChange={handleChange}
+            fullWidth
+            margin="normal"
+            error={!!errors.telephoneNumber}
+            helperText={errors.telephoneNumber}
           />
           <DialogActions>
             <Button onClick={onClose} color="secondary">
@@ -134,6 +210,7 @@ const CreateStaffModal = ({ isOpen, onClose, onFetchAPI }) => {
               type="submit"
               sx={{ backgroundColor: "black" }}
               variant="contained"
+              disabled={!isFormValid}
             >
               Create Staff
             </Button>

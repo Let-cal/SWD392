@@ -5,7 +5,7 @@ import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { useAuth } from "../../LoginController/AuthContext.jsx";
 import AvatarProfile from "./Avatar-profile.jsx";
-import CartIcon from "./Cart-Icon.jsx";
+import CartIcon from "./CartIconController/Cart-Icon.jsx";
 import ColorTabs from "./Colored-tab.jsx";
 
 function Header({ scrollToTrustedCompanies }) {

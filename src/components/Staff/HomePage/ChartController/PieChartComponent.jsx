@@ -10,7 +10,6 @@ import {
 } from "recharts";
 import styled from "styled-components";
 
-// Define the updated color palette
 const COLORS = [
   "#82ca9d",
   "#8884d8",
@@ -24,7 +23,6 @@ const COLORS = [
   "#98df8a",
 ];
 
-// Styled component for the chart wrapper
 const ChartWrapper = styled.div`
   display: flex;
   flex-direction: column;
@@ -32,7 +30,8 @@ const ChartWrapper = styled.div`
 `;
 
 function PieChartComponent() {
-  const [data, setData] = useState([]);
+  const [, setData] = useState([]);
+  const [displayData, setDisplayData] = useState([]);
 
   useEffect(() => {
     async function fetchData() {
@@ -49,6 +48,19 @@ function PieChartComponent() {
         }));
 
         setData(formattedData);
+
+        // Sort data and select top N items, group the rest into "Others"
+        const sortedData = formattedData.sort((a, b) => b.value - a.value);
+        const topItems = sortedData.slice(0, 10); // top 10 items
+        const otherItems = sortedData
+          .slice(10)
+          .reduce((acc, item) => acc + item.value, 0);
+
+        if (otherItems > 0) {
+          topItems.push({ name: "Others", value: otherItems });
+        }
+
+        setDisplayData(topItems);
       } catch (error) {
         console.error("Error fetching data:", error);
       }
@@ -62,7 +74,7 @@ function PieChartComponent() {
       <ResponsiveContainer width="100%" height={400}>
         <PieChart>
           <Pie
-            data={data}
+            data={displayData}
             cx="50%"
             cy="50%"
             innerRadius={80}
@@ -72,7 +84,7 @@ function PieChartComponent() {
             paddingAngle={5}
             label={({ percent }) => ` ${(percent * 100).toFixed(0)}%`}
           >
-            {data.map((entry, index) => (
+            {displayData.map((entry, index) => (
               <Cell
                 key={`cell-${index}`}
                 fill={COLORS[index % COLORS.length]}

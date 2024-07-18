@@ -1,4 +1,10 @@
-import { Backdrop, CircularProgress } from "@mui/material";
+import {
+  Backdrop,
+  CircularProgress,
+  Grid,
+  MenuItem,
+  Select,
+} from "@mui/material";
 import Pagination from "@mui/material/Pagination";
 import axios from "axios";
 import { format, parse } from "date-fns";
@@ -14,7 +20,7 @@ const CollectionsManagement = () => {
   const [searchName, setSearchName] = useState("");
   const [filteredData, setFilteredData] = useState([]);
   const [page, setPage] = useState(1);
-  const [pageSize] = useState(5);
+  const [pageSize, setPageSize] = useState(5);
   const [totalPages, setTotalPages] = useState(1);
   const { enqueueSnackbar } = useSnackbar();
 
@@ -120,6 +126,12 @@ const CollectionsManagement = () => {
     setPage(newPage);
   };
 
+  const handlePageSizeChange = (event) => {
+    const { value } = event.target;
+    setPageSize(value);
+    setPage(1); // Reset to first page when changing page size
+  };
+
   return (
     <div>
       <div className="flex justify-between items-center mb-4">
@@ -144,13 +156,38 @@ const CollectionsManagement = () => {
         <>
           <TableCollections data={filteredData} />
           <div className="flex justify-center mt-6">
-            <Pagination
-              count={totalPages}
-              page={page}
-              onChange={handlePageChange}
-              showFirstButton
-              showLastButton
-            />
+            <Grid
+              container
+              justifyContent="space-between"
+              alignItems="center"
+              mt={2}
+            >
+              <Pagination
+                count={totalPages}
+                page={page}
+                onChange={handlePageChange}
+                showFirstButton
+                showLastButton
+                sx={{
+                  "& .MuiPaginationItem-root.Mui-selected": {
+                    backgroundColor: "#b2b251",
+                    color: "#fff",
+                  },
+                }}
+              />
+              <Select
+                value={pageSize}
+                onChange={handlePageSizeChange}
+                displayEmpty
+                inputProps={{ "aria-label": "Without label" }}
+                size="small"
+                sx={{ minWidth: 120 }}
+              >
+                <MenuItem value={5}>5 per page</MenuItem>
+                <MenuItem value={10}>10 per page</MenuItem>
+                <MenuItem value={15}>15 per page</MenuItem>
+              </Select>
+            </Grid>
           </div>
         </>
       )}

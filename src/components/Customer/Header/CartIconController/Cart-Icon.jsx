@@ -1,19 +1,19 @@
 import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
 import ViewIcon from "@mui/icons-material/Visibility";
 import {
+  Badge,
   Box,
   Button,
-  Drawer,
-  List,
-  IconButton,
-  Badge,
   Divider,
+  Drawer,
+  IconButton,
+  List,
 } from "@mui/material";
 import { styled } from "@mui/material/styles";
-import { useEffect, useState } from "react";
-import axios from "axios";
+import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import ViewCart from "../StepperControllerCart/view-cart/ViewCart";
+import ViewCart from "../../StepperControllerCart/view-cart/ViewCart";
+import { useCart } from "./CartContext"; // Import the context
 
 const StyledBadge = styled(Badge)(({ theme }) => ({
   "& .MuiBadge-badge": {
@@ -27,23 +27,7 @@ const StyledBadge = styled(Badge)(({ theme }) => ({
 export default function CartIcon() {
   const navigate = useNavigate();
   const [drawerOpen, setDrawerOpen] = useState(false);
-  const [cartItemCount, setCartItemCount] = useState(0);
-
-  useEffect(() => {
-    const userId = localStorage.getItem("hint");
-    axios
-      .get(
-        `https://zodiacjewerlyswd.azurewebsites.net/api/orders/customer/${userId}`
-      )
-      .then((response) => {
-        if (response.data && response.data.data && response.data.data.product) {
-          setCartItemCount(response.data.data.product.length);
-        }
-      })
-      .catch((error) => {
-        console.error("There was an error fetching the cart data!", error);
-      });
-  }, []);
+  const { cartItemCount } = useCart(); // Use the context
 
   const toggleDrawer = (open) => (event) => {
     if (

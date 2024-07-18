@@ -26,19 +26,20 @@ const CartItem = ({
 }) => (
   <div className="cart-item">
     <div className="item-details">
-      <Checkbox
+      {/* <Checkbox
         checked={isChecked}
         onChange={onCheck}
         className="item-checkbox"
         color="primary"
-      />
+      /> */}
       <img src={imageSrc} alt={itemName} className="item-image" />
       <div className="item-info">
         <div className="item-name">{itemName}</div>
         <div className="item-details">{itemDetails}</div>
         <div className="item-price">
+          <span className="currency">$</span>
           {formatPrice(itemPrice * itemQty)}
-          <span className="currency">đ</span>
+
         </div>
       </div>
     </div>
@@ -91,6 +92,7 @@ function ViewCart() {
   const [selectedItems, setSelectedItems] = useState([]);
   const [showNoProductMessage, setShowNoProductMessage] = useState(false);
   const [isGetAll, setIsGetAll] = useState(true);
+  const [orderId, setOrderId] = useState(null);
   const navigate = useNavigate();
   const userId = localStorage.getItem("hint");
   const token = localStorage.getItem("token");
@@ -107,6 +109,14 @@ function ViewCart() {
       );
       if (response.data && response.data.success && Array.isArray(response.data.data.product)) {
         setItems(response.data.data.product);
+
+        // Check if there is at least one product in the array
+        if (response.data.data.product.length > 0) {
+          const orderId = response.data.data.product[0]["order-id"]; // Lấy orderId từ sản phẩm đầu tiên trong mảng
+          localStorage.setItem('order-id', orderId.toString()); // Lưu orderId vào localStorage
+        } else {
+          console.error("Không có sản phẩm trong giỏ hàng:", response.data);
+        }
       } else {
         console.error("Dữ liệu giỏ hàng không hợp lệ hoặc thiếu các thuộc tính cần thiết:", response.data);
       }
@@ -202,24 +212,21 @@ function ViewCart() {
   };
 
   const calculateTotal = () => {
-    return selectedItems.reduce((total, index) => {
-      const item = items[index];
+    return items.reduce((total, item) => {
       return total + item.price * item.quantity;
     }, 0);
   };
+  
 
   const handleCheckout = () => {
-    const selectedProducts = selectedItems.map((index) => {
-      const item = items[index];
-      return {
-        itemName: item["name-product"],
-        itemDetails: `${item["name-category"]} / ${item["name-material"]}`,
-        itemPrice: item.price,
-        itemQty: item.quantity,
-        imageSrc: item["image-url"],
-      };
-    });
-    navigate("/checkout", { state: { selectedItems: selectedProducts } });
+    const selectedProducts = items.map((item) => ({
+      itemName: item["name-product"],
+      itemDetails: `${item["name-category"]} / ${item["name-material"]}`,
+      itemPrice: item.price,
+      itemQty: item.quantity,
+      imageSrc: item["image-url"],
+    }));
+    navigate("/checkout", { state: { selectedItems: selectedProducts, orderId } });
   };
 
   const handleGetAll = () => {
@@ -227,9 +234,9 @@ function ViewCart() {
       const allIndices = items.map((_, index) => index);
       setSelectedItems(allIndices);
     } else {
-      setSelectedItems([]); // Clear all selected items
+      setSelectedItems([]);
     }
-    setIsGetAll(!isGetAll); // Toggle between "Get All" and "Cancel"
+    setIsGetAll(!isGetAll);
   };
 
   useEffect(() => {
@@ -269,10 +276,12 @@ function ViewCart() {
         </section>
         <div className="checkout-section-fixed">
           <div className="total-amount">
-            TOTAL: <span className="amount">{formatPrice(calculateTotal())}<span className="currency">đ</span></span>
+            TOTAL:<span className="currency">$</span>
+            <span className="amount">{formatPrice(calculateTotal())}</span>
+
           </div>
           <div className="flex gap-4">
-            <Button
+            {/* <Button
               variant="contained"
               color="secondary"
               startIcon={isGetAll ? <CheckCircleOutlineIcon /> : <CancelIcon />}
@@ -284,9 +293,9 @@ function ViewCart() {
               }}
             >
               {isGetAll ? "Get All" : "Cancel"}
-            </Button>
+            </Button> */}
             <Button
-              disabled={selectedItems.length === 0}
+              // disabled={selectedItems.length === 0}
               className="checkout-button"
               onClick={handleCheckout}
               style={{

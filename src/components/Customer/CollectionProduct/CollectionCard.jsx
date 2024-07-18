@@ -91,21 +91,12 @@ const CollectionsCarousel = () => {
 
   useEffect(() => {
     const fetchCollections = async () => {
-      const token = localStorage.getItem("token");
-      if (!token) {
-        enqueueSnackbar("Token not found, please log in again", {
-          variant: "error",
-        });
-        return;
-      }
-
       try {
         const response = await axios.get(
           `https://zodiacjewerlyswd.azurewebsites.net/api/collections?page=${page}&pageSize=${pageSize}&sort=id`,
           {
             headers: {
               accept: "*/*",
-              Authorization: `Bearer ${token}`,
             },
           }
         );
