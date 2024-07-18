@@ -141,8 +141,9 @@ const CollectionsManagement = () => {
     // Refresh collections or handle success action
     fetchCollections();
   };
-  const handlePageSizeChange = (size) => {
-    setPageSize(size);
+  const handlePageSizeChange = (event) => {
+    const { value } = event.target;
+    setPageSize(value);
     setPage(1); // Reset to first page when changing page size
   };
   return (
