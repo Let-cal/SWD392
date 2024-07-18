@@ -127,8 +127,8 @@
 }
 
 .collection-product-item p span {
-  font-size: 15px;
-  text-decoration: underline;
+  font-size: 20px;
+  /* text-decoration: underline; */
   color: black;
 }
 
