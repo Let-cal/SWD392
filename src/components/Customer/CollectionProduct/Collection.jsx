@@ -128,9 +128,8 @@ function Collection() {
           {collections.map((collection) => (
             <div
               key={collection.id}
-              className={`collection-item ${
-                selectedCollectionId === collection.id ? "selected" : ""
-              }`}
+              className={`collection-item ${selectedCollectionId === collection.id ? "selected" : ""
+                }`}
               onClick={() => handleCollectionClick(collection.id)}
             >
               <img
@@ -276,8 +275,9 @@ function Collection() {
                 <div className="product-details">
                   <h4>{product["name-product"]}</h4>
                   <p>
+                    <span>$</span>
                     {formatPrice(product["price"])}
-                    <span>đ</span>
+
                   </p>
                 </div>
               </div>
