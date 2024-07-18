@@ -32,7 +32,7 @@ const CreateStaffModal = ({ isOpen, onClose, onFetchAPI }) => {
   };
 
   const validateTelephoneNumber = (telephoneNumber) => {
-    const re = /^[0-9]+$/;
+    const re = /^[0-9]{9}$/;
     return re.test(telephoneNumber);
   };
 
@@ -53,7 +53,7 @@ const CreateStaffModal = ({ isOpen, onClose, onFetchAPI }) => {
       case "telephoneNumber":
         if (value && !validateTelephoneNumber(value)) {
           newErrors.telephoneNumber =
-            "Telephone number must contain only numbers";
+            "Telephone number must contain only numbers and must be exactly 9 digits";
         }
         break;
       case "confirmPassword":
@@ -124,7 +124,7 @@ const CreateStaffModal = ({ isOpen, onClose, onFetchAPI }) => {
       newErrors.email = "Invalid email address";
     }
     if (telephoneNumber && !validateTelephoneNumber(telephoneNumber)) {
-      newErrors.telephoneNumber = "Telephone number must contain only numbers";
+      newErrors.telephoneNumber = "Telephone number must contain only numbers and must be exactly 9 digits";
     }
     if (password !== confirmPassword) {
       newErrors.confirmPassword = "Passwords do not match";

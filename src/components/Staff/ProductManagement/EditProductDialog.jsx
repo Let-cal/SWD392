@@ -34,6 +34,7 @@ const EditProductDialog = ({ product, onUpdate }) => {
   const [materialId, setMaterialId] = useState(product["material-id"]);
   const [genderId, setGenderId] = useState(product["gender-id"]);
   const { enqueueSnackbar } = useSnackbar();
+  const [errors, setErrors] = useState({}); // State for errors
   const token = localStorage.getItem("token");
   const API_BASE_URL = "https://zodiacjewerlyswd.azurewebsites.net/api";
   const handleOpen = () => {
@@ -42,6 +43,23 @@ const EditProductDialog = ({ product, onUpdate }) => {
 
   const handleClose = () => {
     setOpen(false);
+  };
+  const validateQuantity = (value) => {
+    if (value < 0) {
+      return "Quantity must be a non-negative number";
+    }
+    return "";
+  };
+
+  const handleQuantityChange = (e) => {
+    const value = e.target.value;
+    setQuantity(value);
+
+    const error = validateQuantity(value);
+    setErrors((prevErrors) => ({
+      ...prevErrors,
+      quantity: error,
+    }));
   };
 
   const handleUpdate = async () => {
@@ -159,7 +177,9 @@ const EditProductDialog = ({ product, onUpdate }) => {
             type="number"
             fullWidth
             value={quantity}
-            onChange={(e) => setQuantity(e.target.value)}
+            onChange={handleQuantityChange}
+            error={!!errors.quantity}
+            helperText={errors.quantity}
           />
           <FormControl fullWidth margin="dense">
             <InputLabel id="category-label">Category</InputLabel>

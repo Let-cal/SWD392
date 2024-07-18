@@ -1,12 +1,23 @@
-import { useState, useMemo } from 'react';
-import TextField from '@mui/material/TextField';
-import IconButton from '@mui/material/IconButton';
-import InputAdornment from '@mui/material/InputAdornment';
-import Visibility from '@mui/icons-material/Visibility';
-import VisibilityOff from '@mui/icons-material/VisibilityOff';
-import PropTypes from 'prop-types';
-
-const Input = ({ className = '', Content, Placeholder, propMinWidth, isPassword = false, inputType = 'text', name, onChange }) => {
+import Visibility from "@mui/icons-material/Visibility";
+import VisibilityOff from "@mui/icons-material/VisibilityOff";
+import FormHelperText from "@mui/material/FormHelperText"; // Import FormHelperText
+import IconButton from "@mui/material/IconButton";
+import InputAdornment from "@mui/material/InputAdornment";
+import TextField from "@mui/material/TextField";
+import PropTypes from "prop-types";
+import { useMemo, useState } from "react";
+const Input = ({
+  className = "",
+  Content,
+  Placeholder,
+  propMinWidth,
+  isPassword = false,
+  inputType = "text",
+  name,
+  onChange,
+  error,
+  helperText,
+}) => {
   const [showPassword, setShowPassword] = useState(false);
 
   const toggleShowPassword = () => {
@@ -20,8 +31,13 @@ const Input = ({ className = '', Content, Placeholder, propMinWidth, isPassword 
   }, [propMinWidth]);
 
   return (
-    <div className={`self-stretch flex flex-col items-start justify-start gap-[6px] max-w-full text-left text-sm text-slate-900 font-body-medium ${className}`}>
-      <div className="relative leading-[20px] font-medium inline-block min-w-[36px]" style={FormStyle}>
+    <div
+      className={`self-stretch flex flex-col items-start justify-start gap-[6px] max-w-full text-left text-sm text-slate-900 font-body-medium ${className}`}
+    >
+      <div
+        className="relative leading-[20px] font-medium inline-block min-w-[36px]"
+        style={FormStyle}
+      >
         {Content}
       </div>
       <div className="self-stretch flex flex-row items-start justify-start gap-[8px] max-w-full text-light-colors-white-light">
@@ -29,18 +45,20 @@ const Input = ({ className = '', Content, Placeholder, propMinWidth, isPassword 
           <div className="w-full flex flex-col justify-center">
             <TextField
               name={name}
-              type={isPassword ? (showPassword ? 'text' : 'password') : inputType}
+              type={
+                isPassword ? (showPassword ? "text" : "password") : inputType
+              }
               placeholder={Placeholder}
-              variant="outlined"
               fullWidth
               onChange={onChange}
+              error={!!error}
               sx={{
-                height: '44px',
-                '& .MuiOutlinedInput-root': {
-                  height: '100%',
-                  '& input': {
-                    height: '100%',
-                    boxSizing: 'border-box',
+                height: "44px",
+                "& .MuiOutlinedInput-root": {
+                  height: "100%",
+                  "& input": {
+                    height: "100%",
+                    boxSizing: "border-box",
                   },
                 },
               }}
@@ -58,6 +76,9 @@ const Input = ({ className = '', Content, Placeholder, propMinWidth, isPassword 
                   : {}
               }
             />
+            {helperText && (
+              <FormHelperText error={error}>{helperText}</FormHelperText>
+            )}
           </div>
         </div>
         <div className="rounded-md bg-slate-900 hidden flex-row items-center justify-center py-2 px-4">
@@ -78,6 +99,8 @@ Input.propTypes = {
   isPassword: PropTypes.bool,
   propMinWidth: PropTypes.any,
   inputType: PropTypes.string,
+  error: PropTypes.string,
+  helperText: PropTypes.string,
   name: PropTypes.string.isRequired,
   onChange: PropTypes.func.isRequired,
 };

@@ -11,17 +11,19 @@ const AccountOrders = ({ status }) => {
   const [pageSize, setPageSize] = useState(5);
   const token = localStorage.getItem("token");
   const userHint = localStorage.getItem("hint");
-
+  console.log(status);
   useEffect(() => {
     const fetchAllOrders = async () => {
       setLoading(true);
       let allOrders = [];
       let currentPage = 1;
       let hasMorePages = true;
-
+      console.log("token: " + token);
       while (hasMorePages) {
-        let url = `https://zodiacjewerlyswd.azurewebsites.net/api/orders?page=${currentPage}&pageSize=100`;
-
+        let url = `https://zodiacjewerlyswd.azurewebsites.net/api/orders?page=${currentPage}&pageSize=100&status=${getStatusValue(
+          status
+        )}`;
+        console.log(url);
         try {
           const response = await fetch(url, {
             method: "GET",
@@ -98,7 +100,16 @@ const AccountOrders = ({ status }) => {
         return "UNKNOWN";
     }
   };
-
+  const getStatusValue = (statusText) => {
+    switch (statusText) {
+      case "COMPLETED":
+        return 2;
+      case "PENDING":
+        return 1;
+      default:
+        return null;
+    }
+  };
   return (
     <>
       <ProfileContent orders={paginatedOrders} loading={loading} />

@@ -1,11 +1,9 @@
+import { Backdrop, CircularProgress } from "@mui/material";
 import axios from "axios";
 import { useSnackbar } from "notistack";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import "../../Customer/Header/header.css";
-import LoadingBackdrop from "../../Loading/LoadingBackdrop";
 import Input from "./InputForm";
-
 const RegisterPage = () => {
   const { enqueueSnackbar } = useSnackbar();
   const navigate = useNavigate();
@@ -17,14 +15,8 @@ const RegisterPage = () => {
     fullname: "",
     phoneNumber: "",
   });
-
-  const handleChange = (e) => {
-    const { name, value } = e.target;
-    setFormData((prevFormData) => ({
-      ...prevFormData,
-      [name]: value,
-    }));
-  };
+  const [errors, setErrors] = useState({});
+  const [isFormValid, setIsFormValid] = useState(false);
 
   const validateEmail = (email) => {
     const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -35,37 +27,61 @@ const RegisterPage = () => {
     const hasUpperCase = /[A-Z]/.test(password);
     const hasSpecialChar = /[^A-Za-z0-9]/.test(password);
     const lengthValid = password.length >= 6 && password.length <= 15;
-
     return hasUpperCase && hasSpecialChar && lengthValid;
   };
 
+  const validatePhoneNumber = (phoneNumber) => {
+    return /^\d+$/.test(phoneNumber);
+  };
+
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setFormData((prevFormData) => ({
+      ...prevFormData,
+      [name]: value,
+    }));
+
+    // Validate each field
+    let newErrors = { ...errors };
+    switch (name) {
+      case "email":
+        newErrors.email = validateEmail(value) ? "" : "Invalid email format";
+        break;
+      case "password":
+        newErrors.password = validatePassword(value)
+          ? ""
+          : "Password must contain at least one uppercase letter, one special character, and be between 6 to 15 characters long";
+        break;
+      case "confirmPassword":
+        newErrors.confirmPassword =
+          value === formData.password ? "" : "Passwords do not match";
+        break;
+      case "phoneNumber":
+        newErrors.phoneNumber = validatePhoneNumber(value)
+          ? ""
+          : "Phone number must contain only digits";
+        break;
+      default:
+        break;
+    }
+    setErrors(newErrors);
+  };
+
+  useEffect(() => {
+    const isValid =
+      Object.values(errors).every((error) => error === "") &&
+      Object.values(formData).every((value) => value !== "");
+    setIsFormValid(isValid);
+  }, [errors, formData]);
+
   const handleSubmit = async (e) => {
     e.preventDefault();
-    if (!validateEmail(formData.email)) {
-      enqueueSnackbar("Invalid email format!", {
-        variant: "warning",
+    if (!isFormValid) {
+      enqueueSnackbar("Please correct all errors before submitting", {
+        variant: "error",
         anchorOrigin: { horizontal: "right", vertical: "top" },
         preventDuplicate: true,
       });
-      return;
-    }
-    if (formData.password !== formData.confirmPassword) {
-      enqueueSnackbar("Passwords do not match!", {
-        variant: "warning",
-        anchorOrigin: { horizontal: "right", vertical: "top" },
-        preventDuplicate: true,
-      });
-      return;
-    }
-    if (!validatePassword(formData.password)) {
-      enqueueSnackbar(
-        "Password must contain at least one uppercase letter, one special character, and be between 6 to 15 characters long.",
-        {
-          variant: "warning",
-          anchorOrigin: { horizontal: "right", vertical: "top" },
-          preventDuplicate: true,
-        }
-      );
       return;
     }
 
@@ -82,7 +98,7 @@ const RegisterPage = () => {
       );
       if (response.status === 200) {
         enqueueSnackbar(
-          "Registration successful! Please comfirm your email before login !!!",
+          "Registration successful! Please confirm your email before login !!!",
           {
             variant: "success",
             anchorOrigin: { horizontal: "right", vertical: "top" },
@@ -119,10 +135,11 @@ const RegisterPage = () => {
       setLoading(false);
     }
   };
-
   return (
     <div className="w-full h-[960px] relative bg-light-colors-white-light overflow-hidden flex flex-col items-center justify-start pt-[50px] px-0 pb-0 box-border gap-[50px] leading-[normal] tracking-[normal] text-left text-[38px] text-slate-900 font-body-medium mq675:gap-[25px]">
-      <LoadingBackdrop open={loading} />
+      <Backdrop open={loading} sx={{ color: "#fff", zIndex: 9999 }}>
+        <CircularProgress color="inherit" />
+      </Backdrop>
       <div className="w-[535px] flex flex-col items-center justify-start py-0 px-5 box-border gap-[32px] max-w-full mq675:gap-[16px]">
         <div className="title-header flex-auto text-6xl leading-10">
           <span className="font-bold bg-gradient-custom-header-title bg-clip-text text-transparent">
@@ -151,50 +168,50 @@ const RegisterPage = () => {
               <Input
                 Content="Email Address"
                 Placeholder="Enter your Email"
-                propMinWidth="66px"
                 name="email"
                 inputType="email"
                 onChange={handleChange}
+                error={!!errors.email}
+                helperText={errors.email}
               />
               <Input
-                className="Password"
                 Content="Password"
                 Placeholder="Enter your password"
-                propMinWidth="200px"
-                isPassword={true}
                 name="password"
+                inputType="password"
                 onChange={handleChange}
+                error={!!errors.password}
+                helperText={errors.password}
               />
               <Input
-                className="Confirm"
                 Content="Confirm your password"
                 Placeholder="Enter your password again"
-                propMinWidth="200px"
-                isPassword={true}
                 name="confirmPassword"
+                inputType="password"
                 onChange={handleChange}
+                error={!!errors.confirmPassword}
+                helperText={errors.confirmPassword}
               />
               <Input
-                className="Fullname"
                 Content="Fullname"
                 Placeholder="Enter your Fullname"
-                propMinWidth="200px"
                 name="fullname"
                 inputType="text"
                 onChange={handleChange}
               />
               <Input
-                className="PhoneNumber"
                 Content="TelephoneNumber"
                 Placeholder="+84"
-                propMinWidth="200px"
                 name="phoneNumber"
-                inputType="text"
+                inputType="tel"
                 onChange={handleChange}
+                error={!!errors.phoneNumber}
+                helperText={errors.phoneNumber}
               />
               <button
                 type="submit"
                 className="cursor-pointer [border:none] py-2 px-5 bg-slate-900 self-stretch rounded-md flex flex-row items-center justify-center hover:bg-darkslategray"
+                disabled={!isFormValid}
               >
                 <div className="relative text-sm leading-[24px] font-medium font-body-medium text-white text-left inline-block min-w-[56px]">
                   Register
