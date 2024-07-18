@@ -29,11 +29,6 @@
 
 <h3 align="left">Support:</h3>
 <p><a href="https://ko-fi.com/letcal"> <img align="left" src="https://cdn.ko-fi.com/cdn/kofi3.png?v=3" height="50" width="210" alt="letcal" /></a></p><br><br>
-
-<p><img align="left" src="https://github-readme-stats.vercel.app/api/top-langs?username=let-cal&show_icons=true&locale=en&layout=compact" alt="let-cal" /></p>
-
-<p>&nbsp;<img align="center" src="https://github-readme-stats.vercel.app/api?username=let-cal&show_icons=true&locale=en" alt="let-cal" /></p>
-
 <p><img align="center" src="https://github-readme-streak-stats.herokuapp.com/?user=let-cal&" alt="let-cal" /></p>
 
 ## © BrSe/Web-App Developer 2023  | fb:https://www.facebook.com/lam.cat.77770/
