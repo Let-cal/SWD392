@@ -7,7 +7,7 @@
 
 <p align="left"> <a href="https://github.com/ryo-ma/github-profile-trophy"><img src="https://github-profile-trophy.vercel.app/?username=let-cal" alt="let-cal" /></a> </p>
 
-- 🌱 I’m currently learning **ReactJS , TypeJS ,**
+- 🌱 I’m currently learning **ReactJS , NextJS ,**
 
 - 👨‍💻 All of my projects are available at [https://github.com/Let-cal](https://github.com/Let-cal)
 
