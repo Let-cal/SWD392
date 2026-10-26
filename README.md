@@ -1,37 +1,59 @@
-# React + Vite
+# ZodiacGems — web app
 
-<h1 align="center">Hi 👋, I'm lecal</h1>
-<h3 align="center">A passionate frontend developer/Bridge Software Engineer from VietNam</h3>
+Jewelry store where customers browse pieces by zodiac sign, plus admin and staff consoles to run the catalog and orders.
 
-<p align="left"> <img src="https://komarev.com/ghpvc/?username=let-cal&label=Profile%20views&color=0e75b6&style=flat" alt="let-cal" /> </p>
+**Status:** Course project (SWD392), FPT University, 2024 — archived. The backend is offline, so the live demo loads but cannot sign in or load products.
 
-<p align="left"> <a href="https://github.com/ryo-ma/github-profile-trophy"><img src="https://github-profile-trophy.vercel.app/?username=let-cal" alt="let-cal" /></a> </p>
+Related: [ZodiacGems-MobileApp](https://github.com/Let-cal/ZodiacGems-MobileApp) (Flutter customer app for the same backend).
 
-- 🌱 I’m currently learning **ReactJS , NextJS ,**
+## Screenshots
 
-- 👨‍💻 All of my projects are available at [https://github.com/Let-cal](https://github.com/Let-cal)
+Captured from a local build with mocked API responses (the backend is offline). Products, prices and orders in the images are sample data.
 
-- 💬 Ask me about **HTML/CSS/SCSS - JAVA SERVLET - SQL SEVER - REACTJS - DESIGN FIGMA - FLUTTER MOBILE APP**
+| | |
+| --- | --- |
+| ![Storefront home page](docs/images/01-storefront-home.png) | ![Catalog filtered by zodiac sign](docs/images/02-zodiac-catalog.png) |
+| ![Admin dashboard](docs/images/05-admin-dashboard.png) | |
 
-- 📫 How to reach me **letrancatlam123@gmail.com**
+## My role
 
-<h3 align="left">Connect with me:</h3>
-<p align="left">
-<a href="http://linkedin.com/in/le-tran-cat-lam-258465304" target="blank"><img align="center" src="https://raw.githubusercontent.com/rahuldkjain/github-profile-readme-generator/master/src/images/icons/Social/linked-in-alt.svg" alt="le tran cat lam" height="30" width="40" /></a>
-<a href="https://fb.com/https://www.facebook.com/lam.cat.77770/" target="blank"><img align="center" src="https://raw.githubusercontent.com/rahuldkjain/github-profile-readme-generator/master/src/images/icons/Social/facebook.svg" alt="https://www.facebook.com/lam.cat.77770/" height="30" width="40" /></a>
-<a href="https://instagram.com/lam.ltc" target="blank"><img align="center" src="https://raw.githubusercontent.com/rahuldkjain/github-profile-readme-generator/master/src/images/icons/Social/instagram.svg" alt="lam.ltc" height="30" width="40" /></a>
-<a href="https://www.youtube.com/c/let cal" target="blank"><img align="center" src="https://raw.githubusercontent.com/rahuldkjain/github-profile-readme-generator/master/src/images/icons/Social/youtube.svg" alt="let cal" height="30" width="40" /></a>
-<a href="https://discord.gg/letcal#0290" target="blank"><img align="center" src="https://raw.githubusercontent.com/rahuldkjain/github-profile-readme-generator/master/src/images/icons/Social/discord.svg" alt="letcal#0290" height="30" width="40" /></a>
-</p>
+Team Lead and front-end developer. In this repository I built:
 
-<h3 align="left">Languages and Tools:</h3>
-<p align="left"> <a href="https://www.arduino.cc/" target="_blank" rel="noreferrer"> <img src="https://cdn.worldvectorlogo.com/logos/arduino-1.svg" alt="arduino" width="40" height="40"/> </a> <a href="https://getbootstrap.com" target="_blank" rel="noreferrer"> <img src="https://raw.githubusercontent.com/devicons/devicon/master/icons/bootstrap/bootstrap-plain-wordmark.svg" alt="bootstrap" width="40" height="40"/> </a> <a href="https://www.cprogramming.com/" target="_blank" rel="noreferrer"> <img src="https://raw.githubusercontent.com/devicons/devicon/master/icons/c/c-original.svg" alt="c" width="40" height="40"/> </a> <a href="https://www.chartjs.org" target="_blank" rel="noreferrer"> <img src="https://www.chartjs.org/media/logo-title.svg" alt="chartjs" width="40" height="40"/> </a> <a href="https://www.w3schools.com/cpp/" target="_blank" rel="noreferrer"> <img src="https://raw.githubusercontent.com/devicons/devicon/master/icons/cplusplus/cplusplus-original.svg" alt="cplusplus" width="40" height="40"/> </a> <a href="https://www.w3schools.com/cs/" target="_blank" rel="noreferrer"> <img src="https://raw.githubusercontent.com/devicons/devicon/master/icons/csharp/csharp-original.svg" alt="csharp" width="40" height="40"/> </a> <a href="https://www.w3schools.com/css/" target="_blank" rel="noreferrer"> <img src="https://raw.githubusercontent.com/devicons/devicon/master/icons/css3/css3-original-wordmark.svg" alt="css3" width="40" height="40"/> </a> <a href="https://www.figma.com/" target="_blank" rel="noreferrer"> <img src="https://www.vectorlogo.zone/logos/figma/figma-icon.svg" alt="figma" width="40" height="40"/> </a> <a href="https://flutter.dev" target="_blank" rel="noreferrer"> <img src="https://www.vectorlogo.zone/logos/flutterio/flutterio-icon.svg" alt="flutter" width="40" height="40"/> </a> <a href="https://git-scm.com/" target="_blank" rel="noreferrer"> <img src="https://www.vectorlogo.zone/logos/git-scm/git-scm-icon.svg" alt="git" width="40" height="40"/> </a> <a href="https://www.w3.org/html/" target="_blank" rel="noreferrer"> <img src="https://raw.githubusercontent.com/devicons/devicon/master/icons/html5/html5-original-wordmark.svg" alt="html5" width="40" height="40"/> </a> <a href="https://www.java.com" target="_blank" rel="noreferrer"> <img src="https://raw.githubusercontent.com/devicons/devicon/master/icons/java/java-original.svg" alt="java" width="40" height="40"/> </a> <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript" target="_blank" rel="noreferrer"> <img src="https://raw.githubusercontent.com/devicons/devicon/master/icons/javascript/javascript-original.svg" alt="javascript" width="40" height="40"/> </a> <a href="https://www.microsoft.com/en-us/sql-server" target="_blank" rel="noreferrer"> <img src="https://www.svgrepo.com/show/303229/microsoft-sql-server-logo.svg" alt="mssql" width="40" height="40"/> </a> <a href="https://www.mysql.com/" target="_blank" rel="noreferrer"> <img src="https://raw.githubusercontent.com/devicons/devicon/master/icons/mysql/mysql-original-wordmark.svg" alt="mysql" width="40" height="40"/> </a> <a href="https://reactjs.org/" target="_blank" rel="noreferrer"> <img src="https://raw.githubusercontent.com/devicons/devicon/master/icons/react/react-original-wordmark.svg" alt="react" width="40" height="40"/> </a> <a href="https://sass-lang.com" target="_blank" rel="noreferrer"> <img src="https://raw.githubusercontent.com/devicons/devicon/master/icons/sass/sass-original.svg" alt="sass" width="40" height="40"/> </a> <a href="https://www.sketch.com/" target="_blank" rel="noreferrer"> <img src="https://www.vectorlogo.zone/logos/sketchapp/sketchapp-icon.svg" alt="sketch" width="40" height="40"/> </a> <a href="https://tailwindcss.com/" target="_blank" rel="noreferrer"> <img src="https://www.vectorlogo.zone/logos/tailwindcss/tailwindcss-icon.svg" alt="tailwind" width="40" height="40"/> </a> </p>
+- **Admin console:** dashboard with charts, product management (create, update, delete, images), collection management, zodiac data, order management, staff accounts.
+- **Staff console:** product, collection, zodiac and order management.
+- **Accounts:** login, registration, password reset with an email OTP, change password.
+- **Customer pages:** header, zodiac filter on the home page, collection cards, profile and order history.
+- **Deployment:** Vercel configuration for client-side routing.
 
-<h3 align="left">Support:</h3>
-<p><a href="https://ko-fi.com/letcal"> <img align="left" src="https://cdn.ko-fi.com/cdn/kofi3.png?v=3" height="50" width="210" alt="letcal" /></a></p><br><br>
-<p><img align="center" src="https://github-readme-streak-stats.herokuapp.com/?user=let-cal&" alt="let-cal" /></p>
+Product detail, cart and checkout were mainly built by [@giabao25](https://github.com/giabao25).
 
-## © BrSe/Web-App Developer 2023  | fb:https://www.facebook.com/lam.cat.77770/
-## Mọi thứ bạn tìm thấy tại https://github.com/Let-cal hoàn toàn miễn phí. Cảm ơn cộng đồng mạng đã rộng lòng chia sẻ giúp tôi thu nhặt được kiến thức để từ đó tôi tiếp tục sẻ chia...
-![Imgur](https://i.imgur.com/pDiAfTO.png)
+## Team
 
+Commits in this repository: [@Let-cal](https://github.com/Let-cal) and [@giabao25](https://github.com/giabao25).
+
+## Stack
+
+React 18, Vite, JavaScript, MUI, Tailwind CSS, styled-components, React Router, Axios, Recharts, notistack, SweetAlert.
+
+## Features
+
+- Three roles: customer, staff, admin.
+- Customers browse products and collections, filter by zodiac sign, add to cart, check out and see their orders.
+- Checkout marks the order as paid through the backend API. No payment provider is called from this front end (the `payos-checkout` package is installed but not used).
+- Staff and admins manage products, collections, zodiac data and orders, with statistics charts; admins also manage staff accounts.
+
+## How to run
+
+```sh
+npm ci
+npm run dev        # development server
+npm run build      # production build
+npm run preview    # serve the production build
+```
+
+API URLs are hard-coded in the components. They point to the old Azure backend, which no longer exists.
+
+## Known limitations
+
+- The backend is offline, so sign-in and all data screens fail outside a mocked setup.
+- No automated tests.
